@@ -6,17 +6,15 @@
     <title>Bombay Bioenergy — Project File Tracker</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
             color: #333;
         }
-
         .container {
-            max-width: 1700px;
+            max-width: 1750px;
             margin: 0 auto;
             background: white;
             border-radius: 12px;
@@ -28,43 +26,76 @@
         header {
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
-            padding: 36px 40px;
-            text-align: center;
+            padding: 32px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
         }
-        header h1 { font-size: 30px; font-weight: 700; margin-bottom: 6px; }
-        header p { font-size: 13px; opacity: 0.85; }
+        .header-text { text-align: left; }
+        .header-text h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+        .header-text p { font-size: 13px; opacity: 0.8; }
+        .header-actions { display: flex; gap: 10px; flex-shrink: 0; }
+        .btn-sync {
+            padding: 10px 20px;
+            background: #f90;
+            color: #1a2a00;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            transition: background 0.2s, transform 0.1s;
+            white-space: nowrap;
+        }
+        .btn-sync:hover { background: #ffaa22; transform: translateY(-1px); }
+        .btn-add {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .btn-add:hover { background: rgba(255,255,255,0.25); }
 
         /* ── STATS ── */
         .stats {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             background: #f5f7fa;
             border-bottom: 1px solid #e1e4e8;
         }
         .stat-card {
             text-align: center;
-            padding: 18px 12px;
+            padding: 16px 10px;
             border-right: 1px solid #e1e4e8;
         }
         .stat-card:last-child { border-right: none; }
-        .stat-number { font-size: 26px; font-weight: 700; color: #2a5298; }
-        .stat-label { font-size: 10px; color: #777; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-number { font-size: 24px; font-weight: 700; color: #2a5298; }
+        .stat-label { font-size: 10px; color: #777; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.4px; }
 
         /* ── CONTROLS ── */
         .controls {
-            padding: 18px 32px;
+            padding: 16px 32px;
             background: white;
             border-bottom: 1px solid #e1e4e8;
             display: flex;
-            gap: 14px;
+            gap: 12px;
             flex-wrap: wrap;
             align-items: flex-end;
         }
-        .control-group { display: flex; flex-direction: column; gap: 5px; }
-        .control-group.flex-grow { flex: 1; min-width: 220px; }
+        .control-group { display: flex; flex-direction: column; gap: 4px; }
+        .control-group.flex-grow { flex: 1; min-width: 200px; }
         .control-group label { font-size: 10px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 0.6px; }
         input[type="text"], select {
-            padding: 8px 11px;
+            padding: 8px 10px;
             border: 1px solid #d0d4d9;
             border-radius: 6px;
             font-size: 13px;
@@ -102,20 +133,13 @@
         .reset-btn:hover { background: #1e3c72; }
 
         /* ── TABLE ── */
-        .table-wrapper {
-            overflow-x: auto;
-            padding: 20px 32px 40px;
-        }
+        .table-wrapper { overflow-x: auto; padding: 16px 32px 40px; }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
 
         thead th {
             text-align: left;
-            padding: 11px 14px;
+            padding: 10px 14px;
             background: #1e3c72;
             color: white;
             font-size: 10px;
@@ -130,78 +154,59 @@
         thead th.th-sorted { background: #2a5298; }
         thead th.th-nosort { cursor: default; }
         thead th.th-nosort:hover { background: #1e3c72; }
-        .sort-arrow { margin-left: 4px; font-size: 9px; opacity: 0.5; }
+        .sort-arrow { margin-left: 4px; font-size: 9px; opacity: 0.45; }
         thead th.th-sorted .sort-arrow { opacity: 1; }
 
-        tbody tr {
-            border-bottom: 1px solid #eef0f3;
-            transition: background 0.1s;
-        }
+        tbody tr { border-bottom: 1px solid #eef0f3; transition: background 0.1s; }
         tbody tr:hover { background: #eef3ff !important; }
         tbody tr:nth-child(even) { background: #fafbfc; }
+        tbody tr.new-row { background: #fffbeb !important; }
+        tbody tr.new-row:hover { background: #fff3cc !important; }
 
-        td { padding: 13px 14px; vertical-align: top; }
+        td { padding: 12px 14px; vertical-align: top; }
 
-        /* col: # */
         .td-num { color: #ccc; font-size: 11px; width: 36px; text-align: center; vertical-align: middle; }
-
-        /* col: file */
-        .td-file { vertical-align: middle; min-width: 220px; }
-        .file-name-wrap { display: flex; align-items: flex-start; gap: 10px; }
-        .file-emoji { font-size: 20px; flex-shrink: 0; line-height: 1.3; }
-        .file-name-inner {}
+        .td-file { vertical-align: middle; min-width: 200px; }
+        .file-name-wrap { display: flex; align-items: flex-start; gap: 9px; }
+        .file-emoji { font-size: 19px; flex-shrink: 0; line-height: 1.3; }
         .file-link {
-            color: #1a3a78;
-            font-weight: 600;
-            text-decoration: none;
-            font-size: 13px;
-            line-height: 1.4;
-            display: block;
+            color: #1a3a78; font-weight: 600; text-decoration: none;
+            font-size: 13px; line-height: 1.4; display: block;
         }
         .file-link:hover { color: #2a5298; text-decoration: underline; }
         .no-link { color: #222; font-weight: 600; font-size: 13px; line-height: 1.4; display: block; }
-        .file-thread { font-size: 10px; color: #aaa; margin-top: 3px; letter-spacing: 0.3px; }
+        .file-thread { font-size: 10px; color: #aaa; margin-top: 2px; letter-spacing: 0.3px; }
+        .new-badge {
+            display: inline-block; background: #f90; color: white;
+            font-size: 9px; font-weight: 700; padding: 1px 5px;
+            border-radius: 3px; margin-left: 6px; vertical-align: middle;
+            text-transform: uppercase; letter-spacing: 0.4px;
+        }
 
-        /* col: type */
         .td-type { vertical-align: middle; white-space: nowrap; }
-
-        /* col: description */
-        .td-desc { min-width: 280px; max-width: 360px; font-size: 12px; color: #555; line-height: 1.6; vertical-align: top; padding-top: 15px; }
-
-        /* col: status */
+        .td-desc { min-width: 260px; max-width: 340px; font-size: 12px; color: #555; line-height: 1.6; vertical-align: top; padding-top: 14px; }
         .td-status { vertical-align: middle; white-space: nowrap; }
-
-        /* col: location */
         .td-location { font-size: 12px; color: #666; white-space: nowrap; vertical-align: middle; }
-
-        /* col: updated */
         .td-date { font-size: 12px; color: #888; white-space: nowrap; vertical-align: middle; }
 
-        /* badges */
         .badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            white-space: nowrap;
+            display: inline-block; padding: 3px 8px; border-radius: 4px;
+            font-size: 10px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.3px; white-space: nowrap;
         }
-        .badge-type    { background: #e8f0fe; color: #1a4ba0; }
-        .badge-live    { background: #d4edda; color: #155724; }
-        .badge-draft   { background: #fff3cd; color: #856404; }
-        .badge-signed  { background: #d1ecf1; color: #0c5460; }
+        .badge-type      { background: #e8f0fe; color: #1a4ba0; }
+        .badge-artifact  { background: #f3e8ff; color: #6b21a8; }
+        .badge-live      { background: #d4edda; color: #155724; }
+        .badge-draft     { background: #fff3cd; color: #856404; }
+        .badge-signed    { background: #d1ecf1; color: #0c5460; }
         .badge-delivered { background: #cce5ff; color: #004085; }
-        .badge-archived { background: #f0f0f0; color: #777; }
+        .badge-archived  { background: #f0f0f0; color: #777; }
 
-        /* no results */
         .no-results { text-align: center; padding: 60px; color: #bbb; }
         .no-results p { font-size: 16px; margin-bottom: 16px; }
 
-        /* footer */
         footer {
-            padding: 22px 32px;
+            padding: 20px 32px;
             background: #f5f7fa;
             border-top: 1px solid #e1e4e8;
             text-align: center;
@@ -210,11 +215,106 @@
         }
         footer .highlight { font-weight: 600; color: #2a5298; }
 
-        @media (max-width: 768px) {
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: white;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 620px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+        }
+        .modal-header {
+            padding: 24px 28px 16px;
+            border-bottom: 1px solid #e1e4e8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border-radius: 12px 12px 0 0;
+        }
+        .modal-header h2 { font-size: 18px; font-weight: 700; }
+        .modal-header p { font-size: 12px; opacity: 0.8; margin-top: 3px; }
+        .modal-close {
+            background: none; border: none; color: white;
+            font-size: 22px; cursor: pointer; opacity: 0.7; padding: 0 4px;
+        }
+        .modal-close:hover { opacity: 1; }
+        .modal-body { padding: 24px 28px; }
+        .modal-body .form-row {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;
+        }
+        .modal-body .form-row.full { grid-template-columns: 1fr; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group label { font-size: 11px; font-weight: 700; color: #444; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 9px 11px;
+            border: 1px solid #d0d4d9;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            background: white;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42,82,152,0.1);
+        }
+        .form-group textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+        .form-group .hint { font-size: 11px; color: #999; margin-top: 2px; }
+        .modal-footer {
+            padding: 16px 28px 24px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            border-top: 1px solid #f0f0f0;
+        }
+        .btn-cancel {
+            padding: 10px 20px; background: #f5f5f5; color: #555;
+            border: 1px solid #d0d4d9; border-radius: 7px;
+            cursor: pointer; font-size: 13px; font-weight: 600;
+        }
+        .btn-cancel:hover { background: #e8e8e8; }
+        .btn-submit {
+            padding: 10px 24px; background: #2a5298; color: white;
+            border: none; border-radius: 7px;
+            cursor: pointer; font-size: 13px; font-weight: 700;
+            transition: background 0.2s;
+        }
+        .btn-submit:hover { background: #1e3c72; }
+        .btn-export {
+            padding: 10px 20px; background: #28a745; color: white;
+            border: none; border-radius: 7px;
+            cursor: pointer; font-size: 13px; font-weight: 600;
+            transition: background 0.2s;
+        }
+        .btn-export:hover { background: #218838; }
+
+        /* sync pulse animation */
+        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.6; } }
+        .syncing { animation: pulse 1s infinite; pointer-events: none; }
+
+        @media (max-width: 900px) {
             .stats { grid-template-columns: repeat(3, 1fr); }
+            header { flex-direction: column; text-align: center; }
+            .header-text { text-align: center; }
+        }
+        @media (max-width: 600px) {
             .table-wrapper, .controls, .filter-bar { padding-left: 16px; padding-right: 16px; }
             header { padding: 24px 16px; }
-            .td-desc { min-width: 180px; }
+            .modal-body .form-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -222,8 +322,14 @@
 <div class="container">
 
     <header>
-        <h1>🔥 Bombay Bioenergy</h1>
-        <p>Complete Project File &amp; Document Tracker — All Threads Integrated &nbsp;·&nbsp; Auto-updated weekly</p>
+        <div class="header-text">
+            <h1>🔥 Bombay Bioenergy</h1>
+            <p>Complete Project File &amp; Document Tracker — All Threads Integrated &nbsp;·&nbsp; Weekly auto-sync</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-sync" onclick="openSyncModal()">⟳ Sync Now</button>
+            <button class="btn-add" onclick="openAddModal()">+ Add File</button>
+        </div>
     </header>
 
     <div class="stats">
@@ -237,10 +343,14 @@
         </div>
         <div class="stat-card">
             <div class="stat-number" id="stat-drive">0</div>
-            <div class="stat-label">In Google Drive</div>
+            <div class="stat-label">Google Drive</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number" id="stat-threads">5</div>
+            <div class="stat-number" id="stat-artifacts">0</div>
+            <div class="stat-label">Artifacts</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="stat-threads">6</div>
             <div class="stat-label">Chat Threads</div>
         </div>
         <div class="stat-card">
@@ -264,6 +374,7 @@
                 <option value="word">Word Documents</option>
                 <option value="pdf">PDF Reports</option>
                 <option value="markdown">Markdown / Text</option>
+                <option value="artifact">Web Artifacts</option>
             </select>
         </div>
         <div class="control-group">
@@ -283,6 +394,7 @@
                 <option value="">All Locations</option>
                 <option value="Google Drive">Google Drive</option>
                 <option value="Desktop">Local / Desktop</option>
+                <option value="Claude Chat">Claude Chat</option>
             </select>
         </div>
         <div class="control-group">
@@ -294,6 +406,7 @@
                 <option value="Thread 3">Thread 3 — Supply Chain</option>
                 <option value="Thread 4">Thread 4 — CBG Plant</option>
                 <option value="Thread 5">Thread 5 — Integration</option>
+                <option value="Thread 6">Thread 6 — Exports &amp; Torrefaction</option>
             </select>
         </div>
     </div>
@@ -307,7 +420,7 @@
         <table id="files-table">
             <thead>
                 <tr>
-                    <th class="th-nosort" style="width:40px">#</th>
+                    <th class="th-nosort" style="width:38px">#</th>
                     <th onclick="sortBy('name')">File Name <span class="sort-arrow">↕</span></th>
                     <th onclick="sortBy('type')">Type <span class="sort-arrow">↕</span></th>
                     <th class="th-nosort">Description</th>
@@ -325,15 +438,150 @@
     </div>
 
     <footer>
-        <p>Bombay Bioenergy Project Management System &nbsp;·&nbsp; 5 Conversation Threads</p>
-        <p style="margin-top:6px;">Last indexed: <span class="highlight" id="last-indexed">June 7, 2026</span> &nbsp;·&nbsp; Weekly auto-sync enabled</p>
+        <p>Bombay Bioenergy Project Management System &nbsp;·&nbsp; 6 Conversation Threads</p>
+        <p style="margin-top:5px;">Last indexed: <span class="highlight" id="last-indexed">June 7, 2026</span> &nbsp;·&nbsp; Weekly auto-sync active &nbsp;·&nbsp; <a href="https://github.com/gattooze/bombay-bioenergy-tracker" target="_blank" rel="noopener" style="color:#2a5298;text-decoration:none;font-weight:600;">View on GitHub ↗</a></p>
     </footer>
-
 </div>
+
+<!-- ── ADD FILE MODAL ── -->
+<div class="modal-overlay" id="add-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <div>
+                <h2>+ Add New File</h2>
+                <p>Fill in the details below — the file will appear in the tracker immediately.</p>
+            </div>
+            <button class="modal-close" onclick="closeModal('add-modal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row full">
+                <div class="form-group">
+                    <label>File Name *</label>
+                    <input type="text" id="f-name" placeholder="e.g. Buyer Outreach Tracker Q3">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>File Type *</label>
+                    <select id="f-type">
+                        <option value="">Select type…</option>
+                        <option value="Google Sheet">Google Sheet</option>
+                        <option value="Google Doc">Google Doc</option>
+                        <option value="Excel">Excel</option>
+                        <option value="Word">Word</option>
+                        <option value="PDF">PDF</option>
+                        <option value="Markdown">Markdown</option>
+                        <option value="Text">Text</option>
+                        <option value="Web App">Web App / Artifact</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="f-status">
+                        <option value="Live">Live</option>
+                        <option value="Draft">Draft</option>
+                        <option value="Signed">Signed</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Archived">Archived</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row full">
+                <div class="form-group">
+                    <label>Description *</label>
+                    <textarea id="f-desc" placeholder="What does this file contain? What is it used for?"></textarea>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Location</label>
+                    <select id="f-location">
+                        <option value="Desktop">Local / Desktop</option>
+                        <option value="Google Drive">Google Drive</option>
+                        <option value="Claude Chat">Claude Chat</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Chat Thread</label>
+                    <select id="f-thread">
+                        <option value="Thread 6">Thread 6</option>
+                        <option value="Thread 1">Thread 1</option>
+                        <option value="Thread 2">Thread 2</option>
+                        <option value="Thread 3">Thread 3</option>
+                        <option value="Thread 4">Thread 4</option>
+                        <option value="Thread 5">Thread 5</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Google Drive / Doc ID</label>
+                    <input type="text" id="f-id" placeholder="Paste file ID from URL">
+                    <span class="hint">From the URL: /spreadsheets/d/<b>THIS_PART</b>/edit</span>
+                </div>
+                <div class="form-group">
+                    <label>Direct Link (optional)</label>
+                    <input type="text" id="f-link" placeholder="https://…">
+                    <span class="hint">For artifacts, paste the share URL</span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Tags</label>
+                    <input type="text" id="f-tags" placeholder="e.g. Biochar, Analysis, Q3">
+                </div>
+                <div class="form-group">
+                    <label>Date Created</label>
+                    <input type="date" id="f-date" value="">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeModal('add-modal')">Cancel</button>
+            <button class="btn-export" onclick="exportUpdatedHTML()">💾 Export Updated HTML</button>
+            <button class="btn-submit" onclick="submitAddFile()">Add to Tracker →</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── SYNC MODAL ── -->
+<div class="modal-overlay" id="sync-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <div>
+                <h2>⟳ Sync Now</h2>
+                <p>Scan recent Claude sessions and update the tracker with new files.</p>
+            </div>
+            <button class="modal-close" onclick="closeModal('sync-modal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size:14px;color:#333;line-height:1.7;margin-bottom:18px;">
+                The <strong>weekly auto-sync</strong> runs every Monday at 9am and scans your Claude sessions for new biomass project files. To trigger a sync right now, open Claude Code and run:
+            </p>
+            <div style="background:#1e3c72;color:#e8f0fe;padding:16px 18px;border-radius:8px;font-family:monospace;font-size:13px;line-height:1.7;position:relative;">
+                <div id="sync-prompt-text">Run the scheduled task "bombay-bioenergy-weekly-tracker-sync" now to scan recent Claude sessions for new Bombay Bioenergy project files and push any new entries to the GitHub tracker at gattooze/bombay-bioenergy-tracker.</div>
+                <button onclick="copySyncPrompt()" style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.15);color:white;border:none;border-radius:5px;padding:4px 10px;font-size:11px;cursor:pointer;font-weight:600;" id="copy-btn">Copy</button>
+            </div>
+            <p style="font-size:12px;color:#888;margin-top:14px;line-height:1.6;">
+                Or add files manually using the <strong>+ Add File</strong> button. After adding files, use <strong>Export Updated HTML</strong> to save and re-upload to GitHub.
+            </p>
+            <div style="margin-top:20px;padding:14px 16px;background:#f0f7ff;border-radius:8px;border-left:3px solid #2a5298;">
+                <p style="font-size:12px;color:#2a5298;font-weight:600;margin-bottom:4px;">Weekly auto-sync is active</p>
+                <p style="font-size:12px;color:#555;">Scheduled every Monday at 9:00 AM. Runs while Claude Code is open. Manage in the <em>Scheduled</em> section of the sidebar.</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeModal('sync-modal')">Close</button>
+            <button class="btn-add" onclick="closeModal('sync-modal'); openAddModal();" style="background:#2a5298;color:white;border:none;">+ Add File Manually</button>
+        </div>
+    </div>
+</div>
+
 <script>
 // ─────────────────────────────────────────────────────────────────────────────
-//  FILE DATA
+//  BASE FILE DATA  (do not edit manually — use Add File or weekly sync)
 // ─────────────────────────────────────────────────────────────────────────────
+/* ##ALLFILES_BEGIN## */
 const allFiles = [
 
     // ── GOOGLE SHEETS ──────────────────────────────────────────────────────
@@ -344,28 +592,25 @@ const allFiles = [
         created: "2026-06-06", updated: "2026-06-06",
         status: "Live", location: "Google Drive",
         id: "172U9o0GslUnBUr9Hz0_BAvnISpYFLyWGvf3TJZGpIWk",
-        tags: "Buyers, Annual Reports, Market Research",
-        thread: "Thread 5"
+        tags: "Buyers, Annual Reports, Market Research", thread: "Thread 5"
     },
     {
         name: "India Biomass Pellet Tenders Master Tracker v4",
         type: "Google Sheet", category: "google-sheet",
-        description: "Master tracker of NTPC, SAIL, and GeM biomass pellet tenders; covers bid deadlines, volume requirements, pricing benchmarks, and award status. Updated to version 4.",
+        description: "Master tracker of NTPC, SAIL, and GeM biomass pellet tenders; covers bid deadlines, volume requirements, pricing benchmarks, and award status.",
         created: "2026-06-07", updated: "2026-06-07",
         status: "Live", location: "Google Drive",
         id: "1pR5cIfA-vWNm5tahAqCtSi9ku4G47HT-sH3s_B_vAMY",
-        tags: "Tenders, NTPC, SAIL, GeM, Government",
-        thread: "Thread 5"
+        tags: "Tenders, NTPC, SAIL, GeM, Government", thread: "Thread 5"
     },
     {
         name: "Industrial Biomass Pellet Buyers CRM",
         type: "Google Sheet", category: "google-sheet",
-        description: "CRM database of 50 industrial buyers across steel, cement, pharma, textiles, and power sectors; includes contact details, annual fuel volumes, current fuel type, and deal pipeline stage.",
+        description: "CRM database of 50 industrial buyers across steel, cement, pharma, textiles, and power sectors; includes contact details, annual fuel volumes, and deal pipeline stage.",
         created: "2026-06-06", updated: "2026-06-06",
         status: "Live", location: "Google Drive",
         id: "183b-gRMX5yrnK7iAKp1CuHDRtQ17-9tBRVgD7KEIPYw",
-        tags: "CRM, Buyers, 50 companies, Pipeline",
-        thread: "Thread 5"
+        tags: "CRM, Buyers, 50 companies, Pipeline", thread: "Thread 5"
     },
     {
         name: "Feedstock Supply Chain Contacts",
@@ -374,40 +619,36 @@ const allFiles = [
         created: "2026-06-07", updated: "2026-06-07",
         status: "Live", location: "Google Drive",
         id: "1UgyWuz6QHTexi7JWTM32DOYF7Aw39u1HMChbeGLr3f8",
-        tags: "Supply Chain, Contacts, Feedstock, Solapur",
-        thread: "Thread 3"
+        tags: "Supply Chain, Contacts, Feedstock, Solapur", thread: "Thread 3"
     },
     {
         name: "Bombay Bioenergy — Live Project File Tracker",
         type: "Google Sheet", category: "google-sheet",
-        description: "Meta-tracker (this sheet in Google Drive) cataloguing all project files across all chat threads; maintained as the live single source of truth for file inventory and status.",
+        description: "Meta-tracker cataloguing all project files across all chat threads; maintained as the live single source of truth for file inventory and status.",
         created: "2026-06-07", updated: "2026-06-07",
         status: "Live", location: "Google Drive",
         id: "1WnWs7kdqvhiH80zhFa3bPRZiE5SAGEpW-sA9amcFusU",
-        tags: "Tracker, Master Inventory, Meta",
-        thread: "Thread 5"
+        tags: "Tracker, Master Inventory, Meta", thread: "Thread 5"
     },
 
     // ── GOOGLE DOCS ────────────────────────────────────────────────────────
     {
         name: "MOA — Biomass Supply Agreement (FINAL)",
         type: "Google Doc", category: "google-doc",
-        description: "Signed Memorandum of Agreement with Godbole for 30,000 MT/yr of biomass feedstock at Rs 1,800/MT; legally executed document with full terms, schedules, and delivery obligations.",
+        description: "Signed Memorandum of Agreement with Godbole for 30,000 MT/yr of biomass feedstock at Rs 1,800/MT; legally executed with full terms, schedules, and delivery obligations.",
         created: "2026-06-04", updated: "2026-06-07",
         status: "Signed", location: "Google Drive",
         id: "10iX9mQiNlSNi23KWCUQdFtyO0DgwKkjzbfNw0p4EhGM",
-        tags: "Contract, Godbole, Legal, MOA, Rs 1800/MT",
-        thread: "Thread 3"
+        tags: "Contract, Godbole, Legal, MOA, Rs 1800/MT", thread: "Thread 3"
     },
     {
         name: "Bombay Bioenergy — Tracker Setup Guide",
         type: "Google Doc", category: "google-doc",
-        description: "Step-by-step instructions for maintaining the file tracker; covers adding new entries, updating statuses, managing Google Drive permissions, and version control workflow.",
+        description: "Step-by-step instructions for maintaining the file tracker; covers adding entries, updating statuses, managing Google Drive permissions, and version control.",
         created: "2026-06-07", updated: "2026-06-07",
         status: "Live", location: "Google Drive",
         id: "1_PaTWhhAB879s_SB5Ovkhd9NebBGeZyg",
-        tags: "Instructions, Setup, Documentation",
-        thread: "Thread 5"
+        tags: "Instructions, Setup, Documentation", thread: "Thread 5"
     },
 
     // ── EXCEL WORKBOOKS ────────────────────────────────────────────────────
@@ -417,8 +658,7 @@ const allFiles = [
         description: "12 European and German bamboo pellet mill manufacturers with technical specs, annual capacity, lead times, price ranges, and direct procurement contacts.",
         created: "2026-06-06", updated: "2026-06-06",
         status: "Live", location: "Desktop",
-        tags: "Machinery, European Manufacturers, 12 mills, Bamboo",
-        thread: "Thread 1"
+        tags: "Machinery, European Manufacturers, 12 mills, Bamboo", thread: "Thread 1"
     },
     {
         name: "ANDRITZ_PM30-6_Complete_Customization_Guide_Bamboo.xlsx",
@@ -426,118 +666,123 @@ const allFiles = [
         description: "Full customization guide for the ANDRITZ PM30-6 pellet mill configured for bamboo feedstock; covers die geometry, conditioning settings, throughput targets, energy consumption, and service terms.",
         created: "2026-06-06", updated: "2026-06-06",
         status: "Live", location: "Desktop",
-        tags: "Machinery, ANDRITZ, PM30-6, Specs, Bamboo",
-        thread: "Thread 1"
+        tags: "Machinery, ANDRITZ, PM30-6, Specs, Bamboo", thread: "Thread 1"
     },
     {
         name: "pellet_machinery_deepdive.xlsx",
         type: "Excel", category: "excel",
-        description: "Side-by-side comparison of 13 pellet mill brands on capacity, energy consumption, die life, warranty, after-sales support, and bamboo suitability; includes weighted recommendation matrix.",
+        description: "Side-by-side comparison of 13 pellet mill brands on capacity, energy consumption, die life, warranty, and bamboo suitability; includes weighted recommendation matrix.",
         created: "2026-06-06", updated: "2026-06-06",
         status: "Live", location: "Desktop",
-        tags: "Machinery, 13 brands, Comparison, Deep Dive",
-        thread: "Thread 1"
+        tags: "Machinery, 13 brands, Comparison, Deep Dive", thread: "Thread 1"
     },
     {
         name: "biochar_machinery_200tpd.xlsx",
         type: "Excel", category: "excel",
-        description: "Equipment analysis and ROI model for a 200 TPD biochar plant; Beston recommended over Dingli on the basis of capex, throughput reliability, and carbon credit eligibility under VM0044.",
+        description: "Equipment analysis and ROI model for a 200 TPD biochar plant; Beston recommended over Dingli on capex, throughput reliability, and carbon credit eligibility under VM0044.",
         created: "2026-06-06", updated: "2026-06-06",
         status: "Live", location: "Desktop",
-        tags: "Biochar, 200 TPD, ROI, Beston, Scale-up",
-        thread: "Thread 2"
+        tags: "Biochar, 200 TPD, ROI, Beston, Scale-up", thread: "Thread 2"
     },
     {
         name: "torrefied_biochar_economics.xlsx",
         type: "Excel", category: "excel",
-        description: "Three-way economic comparison of standard pellets vs torrefied pellets vs biochar; models carbon credit upside under VM0044, calorific value per tonne, and net realisation at different price points.",
+        description: "Three-way economic comparison of standard pellets vs torrefied pellets vs biochar; models carbon credit upside under VM0044, calorific value per tonne, and net realisation.",
         created: "2026-06-06", updated: "2026-06-06",
         status: "Live", location: "Desktop",
-        tags: "Economics, Torrefied, Biochar, Carbon Credits, VM0044",
-        thread: "Thread 2"
+        tags: "Economics, Torrefied, Biochar, Carbon Credits, VM0044", thread: "Thread 2"
     },
     {
         name: "buyer_economics.xlsx",
         type: "Excel", category: "excel",
-        description: "Buyer-side economics across 11 industrial sectors; models cost savings vs coal, calorific value matching, handling cost delta, combustion retrofit payback, and switching barriers.",
+        description: "Buyer-side economics across 11 industrial sectors; models cost savings vs coal, calorific value matching, handling cost delta, and combustion retrofit payback.",
         created: "2026-06-06", updated: "2026-06-06",
         status: "Live", location: "Desktop",
-        tags: "Economics, 11 sectors, Buyers, Coal Substitution",
-        thread: "Thread 5"
+        tags: "Economics, 11 sectors, Buyers, Coal Substitution", thread: "Thread 5"
     },
     {
         name: "Solapur_Crop_Residue_Analysis.xlsx",
         type: "Excel", category: "excel",
-        description: "Crop residue availability study for Solapur district; total feedstock potential estimated at 10.68 lakh MT/yr across 8 crop types with month-by-month seasonal availability calendars.",
+        description: "Crop residue availability study for Solapur district; total feedstock potential estimated at 10.68 lakh MT/yr across 8 crop types with month-by-month seasonal availability.",
         created: "2026-05-20", updated: "2026-05-20",
         status: "Live", location: "Desktop",
-        tags: "Feedstock, Solapur, Crop Residue, 10.68L MT/yr",
-        thread: "Thread 3"
+        tags: "Feedstock, Solapur, Crop Residue, 10.68L MT/yr", thread: "Thread 3"
     },
     {
         name: "INDUSTRIAL_BOILER_USERS_COMPREHENSIVE_DATABASE.xlsx",
         type: "Excel", category: "excel",
-        description: "Database of 112 industrial companies across 8 sectors operating coal or biomass boilers; covers installed capacity, plant location, boiler type, contact tier, and estimated fuel-switching potential.",
+        description: "Database of 112 industrial companies across 8 sectors operating coal or biomass boilers; covers installed capacity, plant location, boiler type, and estimated fuel-switching potential.",
         created: "2026-06-07", updated: "2026-06-07",
         status: "Live", location: "Desktop",
-        tags: "Market, 112 companies, Boilers, 8 sectors",
-        thread: "Thread 5"
+        tags: "Market, 112 companies, Boilers, 8 sectors", thread: "Thread 5"
     },
     {
         name: "AMTIK_BIOMASS_MASTER_REFERENCE_SHEET.xlsx",
         type: "Excel", category: "excel",
-        description: "Master offline catalog of all 22 project output files with one-line summaries, file paths, creation dates, and recommended use cases; serves as the offline index.",
+        description: "Master offline catalog of all 22 project output files with one-line summaries, file paths, creation dates, and recommended use cases.",
         created: "2026-06-07", updated: "2026-06-07",
         status: "Live", location: "Desktop",
-        tags: "Master Reference, Catalog, 22 files, Index",
-        thread: "Thread 5"
+        tags: "Master Reference, Catalog, 22 files, Index", thread: "Thread 5"
+    },
+    {
+        name: "Torrefaction Reactor Machines — Vendor Comparison",
+        type: "Excel", category: "excel",
+        description: "Side-by-side evaluation of commercial torrefaction reactor vendors; covers continuous vs batch designs, temperature control range, throughput, capex, and suitability for bamboo and agricultural residues.",
+        created: "2026-06-07", updated: "2026-06-07",
+        status: "Live", location: "Desktop",
+        tags: "Torrefaction, Reactors, Machinery, Vendors, Bamboo",
+        thread: "Thread 6", isNew: true
     },
 
     // ── WORD DOCUMENTS ─────────────────────────────────────────────────────
     {
         name: "bamboo_biochar_report.docx",
         type: "Word", category: "word",
-        description: "Full feasibility study for a 10 TPD bamboo biochar production facility; covers site requirements, equipment selection, capex, opex, IRR projections, and sourcing recommendations.",
+        description: "Full feasibility study for a 10 TPD bamboo biochar production facility; covers site requirements, equipment selection, capex, opex, and IRR projections.",
         created: "2026-05-24", updated: "2026-05-24",
         status: "Live", location: "Desktop",
-        tags: "Biochar, Feasibility Study, 10 TPD, Bamboo",
-        thread: "Thread 2"
+        tags: "Biochar, Feasibility Study, 10 TPD, Bamboo", thread: "Thread 2"
     },
     {
         name: "torrefied_biochar_report.docx",
         type: "Word", category: "word",
-        description: "Market positioning report for torrefied biochar; benchmarks energy density and grindability vs standard pellets and lump coal, with target buyer segments and pricing strategy.",
+        description: "Market positioning report for torrefied biochar; benchmarks energy density and grindability vs standard pellets and lump coal, with target buyer segments identified.",
         created: "2026-05-24", updated: "2026-05-24",
         status: "Live", location: "Desktop",
-        tags: "Torrefied Biochar, Market Report, Positioning",
-        thread: "Thread 2"
+        tags: "Torrefied Biochar, Market Report, Positioning", thread: "Thread 2"
     },
     {
         name: "retail_pellet_gtm.docx",
         type: "Word", category: "word",
-        description: "Go-to-market strategy for retail biomass pellet distribution; covers channel selection (kirana vs modern trade), pricing architecture, pack sizes, and a phased launch plan.",
+        description: "Go-to-market strategy for retail biomass pellet distribution; covers channel selection (kirana vs modern trade), pricing architecture, pack sizes, and phased launch plan.",
         created: "2026-05-22", updated: "2026-05-22",
         status: "Live", location: "Desktop",
-        tags: "Retail, GTM, Pellets, Distribution, Strategy",
-        thread: "Thread 5"
+        tags: "Retail, GTM, Pellets, Distribution, Strategy", thread: "Thread 5"
     },
     {
         name: "retail_consumer_assessment.docx",
         type: "Word", category: "word",
-        description: "Consumer demand assessment for the retail pellet market; surveys household and SME buyer intent, willingness to pay, purchase frequency, and key adoption barriers.",
+        description: "Consumer demand assessment for the retail pellet market; surveys household and SME buyer intent, willingness to pay, purchase frequency, and adoption barriers.",
         created: "2026-05-22", updated: "2026-05-22",
         status: "Live", location: "Desktop",
-        tags: "Retail, Consumer Research, Survey, Demand Assessment",
-        thread: "Thread 5"
+        tags: "Retail, Consumer Research, Survey, Demand Assessment", thread: "Thread 5"
     },
     {
         name: "retail_consumer_addendum.docx",
         type: "Word", category: "word",
-        description: "Addendum to the consumer assessment with qualitative focus group feedback; documents top objections, preferred pack sizes, and branding signals that drove purchase intent.",
+        description: "Addendum with qualitative focus group feedback; documents top objections, preferred pack sizes, and branding signals that drove purchase intent.",
         created: "2026-05-22", updated: "2026-05-22",
         status: "Live", location: "Desktop",
-        tags: "Retail, Focus Group, Addendum, Consumer",
-        thread: "Thread 5"
+        tags: "Retail, Focus Group, Addendum, Consumer", thread: "Thread 5"
+    },
+    {
+        name: "Torrefaction vs Biochar — Strategic Pathway Comparison",
+        type: "Word", category: "word",
+        description: "Strategic comparison of torrefied pellet vs biochar production pathways for Bombay Bioenergy; evaluates market size, margin profile, carbon credit eligibility, capital intensity, and recommended phasing.",
+        created: "2026-06-07", updated: "2026-06-07",
+        status: "Live", location: "Desktop",
+        tags: "Torrefaction, Biochar, Strategy, Comparison, Pathways",
+        thread: "Thread 6", isNew: true
     },
 
     // ── MARKDOWN & TEXT ────────────────────────────────────────────────────
@@ -547,58 +792,95 @@ const allFiles = [
         description: "Stage-by-stage procurement guide for European bamboo pellet mill suppliers; covers shortlisting criteria, RFQ process, factory audit checklist, and negotiation framework.",
         created: "2026-06-06", updated: "2026-06-06",
         status: "Live", location: "Desktop",
-        tags: "Manufacturers, Procurement Guide, Europe, Bamboo",
-        thread: "Thread 1"
+        tags: "Manufacturers, Procurement Guide, Europe, Bamboo", thread: "Thread 1"
     },
     {
         name: "Bamboo_Pellet_Mills_European_Manufacturers_Complete_Analysis.txt",
         type: "Text", category: "markdown",
-        description: "Full-text plain-text archive of the European bamboo pellet mill manufacturer analysis; complete backup of the structured markdown guide in a portable format.",
+        description: "Full-text plain-text archive of the European bamboo pellet mill manufacturer analysis; backup copy of the structured markdown guide.",
         created: "2026-06-06", updated: "2026-06-06",
         status: "Live", location: "Desktop",
-        tags: "Archive, Manufacturers, Analysis, Europe",
-        thread: "Thread 1"
+        tags: "Archive, Manufacturers, Analysis, Europe", thread: "Thread 1"
     },
     {
         name: "BIOMASS_PROJECT_MASTER_INDEX.txt",
         type: "Text", category: "markdown",
-        description: "Superseded master index of all project files; replaced by AMTIK_BIOMASS_MASTER_REFERENCE_SHEET.xlsx. Retained for historical reference only — do not use as live reference.",
+        description: "Superseded master index of all project files; replaced by AMTIK_BIOMASS_MASTER_REFERENCE_SHEET.xlsx. Retained for historical reference only.",
         created: "2026-06-06", updated: "2026-06-07",
         status: "Archived", location: "Desktop",
-        tags: "Archived, Index, Superseded",
-        thread: "Thread 5"
+        tags: "Archived, Index, Superseded", thread: "Thread 5"
     },
 
     // ── PDF REPORTS ────────────────────────────────────────────────────────
     {
         name: "CBG Plant Site Assessment — Consolidated Report",
         type: "PDF", category: "pdf",
-        description: "Consolidated technical site assessment for a Compressed Biogas (CBG) plant in Pathmeda, Rajasthan; covers soil analysis, feedstock availability, logistics, grid connection, and SATAT scheme compliance.",
+        description: "Consolidated technical site assessment for a CBG plant in Pathmeda, Rajasthan; covers soil analysis, feedstock availability, logistics, grid connection, and SATAT scheme compliance.",
         created: "2026-05-15", updated: "2026-05-15",
         status: "Delivered", location: "Google Drive",
-        tags: "CBG, Site Assessment, Rajasthan, SATAT, Technical",
-        thread: "Thread 4"
+        tags: "CBG, Site Assessment, Rajasthan, SATAT, Technical", thread: "Thread 4"
     },
     {
         name: "CBG Plant Consultant Case Study (Anonymised)",
         type: "PDF", category: "pdf",
-        description: "Anonymized case study from a CBG plant consultant; documents equipment selection, feedstock mix, design choices, common failure modes, and success factors from a live project.",
+        description: "Anonymized case study from a CBG plant consultant; documents equipment selection, feedstock mix, design choices, common failure modes, and success factors.",
         created: "2026-05-18", updated: "2026-05-18",
         status: "Delivered", location: "Google Drive",
-        tags: "CBG, Case Study, Consultant, Best Practices",
-        thread: "Thread 4"
+        tags: "CBG, Case Study, Consultant, Best Practices", thread: "Thread 4"
+    },
+
+    // ── EXPORTS ────────────────────────────────────────────────────────────
+    {
+        name: "Biomass Pellet Export Markets Analysis",
+        type: "Excel", category: "excel",
+        description: "Export market opportunity analysis for Indian biomass pellets; covers EU, Japan, and South Korea demand forecasts, ENplus/ISO certification requirements, freight logistics, and target FOB price ranges.",
+        created: "2026-06-07", updated: "2026-06-07",
+        status: "Live", location: "Desktop",
+        tags: "Exports, EU, Japan, South Korea, ENplus, Certification",
+        thread: "Thread 6", isNew: true
+    },
+
+    // ── WEB ARTIFACTS ──────────────────────────────────────────────────────
+    {
+        name: "Pellet Machine Decision Tool",
+        type: "Web App", category: "artifact",
+        description: "Interactive decision tool built as a Claude artifact; filters pellet machinery options by capacity, budget, and feedstock type and outputs a scored shortlist with ANDRITZ, CPM, and Bühler comparisons.",
+        created: "2026-06-06", updated: "2026-06-06",
+        status: "Live", location: "Claude Chat",
+        link: "https://claude.ai/artifacts",
+        tags: "Pellet Machinery, Decision Tool, Interactive, Artifact",
+        thread: "Thread 1", isNew: true
+    },
+    {
+        name: "Pathmeda CBG Plant — Technical Reference Page",
+        type: "Web App", category: "artifact",
+        description: "Interactive technical reference page for the Pathmeda (Rajasthan) CBG plant; covers site layout, equipment specs, feedstock requirements, SATAT compliance checklist, and financial projections.",
+        created: "2026-05-18", updated: "2026-05-18",
+        status: "Live", location: "Claude Chat",
+        link: "https://claude.ai/artifacts",
+        tags: "CBG, Pathmeda, Rajasthan, Technical Reference, Artifact",
+        thread: "Thread 4", isNew: true
     }
 ];
+/* ##ALLFILES_END## */
+
+// User-added files (added via + Add File button, not in source — export to persist)
+/* ##ADDEDFILES_BEGIN## */
+const addedFiles = [];
+/* ##ADDEDFILES_END## */
+
+const allTrackedFiles = allFiles.concat(addedFiles);
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  HELPERS
 // ─────────────────────────────────────────────────────────────────────────────
 
 function getIcon(type) {
-    return ({"Google Sheet":"📊","Google Doc":"📄","Excel":"📈","Word":"📝","PDF":"📋","Markdown":"✍️","Text":"📃"})[type] || "📄";
+    return ({"Google Sheet":"📊","Google Doc":"📄","Excel":"📈","Word":"📝","PDF":"📋","Markdown":"✍️","Text":"📃","Web App":"🌐"})[type] || "📄";
 }
 
-function getDriveLink(file) {
+function getFileLink(file) {
+    if (file.link) return file.link;
     if (file.category === "google-sheet" && file.id)
         return "https://docs.google.com/spreadsheets/d/" + file.id;
     if (file.category === "google-doc" && file.id)
@@ -610,13 +892,21 @@ function statusBadgeClass(status) {
     return ({"Live":"badge-live","Draft":"badge-draft","Signed":"badge-signed","Delivered":"badge-delivered","Archived":"badge-archived"})[status] || "badge-live";
 }
 
+function typeBadgeClass(cat) {
+    return cat === "artifact" ? "badge-artifact" : "badge-type";
+}
+
+function escHtml(s) {
+    return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 //  STATE
 // ─────────────────────────────────────────────────────────────────────────────
 
 let sortKey = "";
 let sortAsc = true;
-let currentFiltered = [...allFiles];
+let currentFiltered = allTrackedFiles.slice();
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  RENDER
@@ -626,11 +916,12 @@ function renderTable(files) {
     const tbody = document.getElementById("files-tbody");
     const noResults = document.getElementById("no-results-msg");
     const table = document.getElementById("files-table");
+    const allCount = allFiles.length + addedFiles.length;
 
     document.getElementById("result-count").textContent =
         files.length === 0
             ? "No files match your search"
-            : "Showing " + files.length + " of " + allFiles.length + " files";
+            : "Showing " + files.length + " of " + allCount + " files";
 
     if (files.length === 0) {
         table.style.display = "none";
@@ -641,35 +932,32 @@ function renderTable(files) {
     noResults.style.display = "none";
 
     tbody.innerHTML = files.map(function(file, i) {
-        const link = getDriveLink(file);
+        const link = getFileLink(file);
+        const newBadge = file.isNew ? '<span class="new-badge">New</span>' : '';
         const nameHtml = link
-            ? '<a class="file-link" href="' + link + '" target="_blank" rel="noopener">' + escHtml(file.name) + ' ↗</a>'
-            : '<span class="no-link">' + escHtml(file.name) + '</span>';
+            ? '<a class="file-link" href="' + escHtml(link) + '" target="_blank" rel="noopener">' + escHtml(file.name) + ' ↗</a>' + newBadge
+            : '<span class="no-link">' + escHtml(file.name) + '</span>' + newBadge;
 
-        return '<tr>' +
-            '<td class="td-num">' + (i + 1) + '</td>' +
+        return '<tr' + (file.isNew ? ' class="new-row"' : '') + '>' +
+            '<td class="td-num">' + (i+1) + '</td>' +
             '<td class="td-file"><div class="file-name-wrap">' +
                 '<span class="file-emoji">' + getIcon(file.type) + '</span>' +
                 '<div class="file-name-inner">' + nameHtml +
-                    '<div class="file-thread">' + (file.thread || "") + '</div>' +
+                    '<div class="file-thread">' + escHtml(file.thread||"") + '</div>' +
                 '</div></div></td>' +
-            '<td class="td-type"><span class="badge badge-type">' + escHtml(file.type) + '</span></td>' +
+            '<td class="td-type"><span class="badge ' + typeBadgeClass(file.category) + '">' + escHtml(file.type) + '</span></td>' +
             '<td class="td-desc">' + escHtml(file.description) + '</td>' +
-            '<td class="td-status"><span class="badge ' + statusBadgeClass(file.status) + '">' + file.status + '</span></td>' +
+            '<td class="td-status"><span class="badge ' + statusBadgeClass(file.status) + '">' + escHtml(file.status) + '</span></td>' +
             '<td class="td-location">' + escHtml(file.location) + '</td>' +
-            '<td class="td-date">' + file.updated + '</td>' +
+            '<td class="td-date">' + escHtml(file.updated) + '</td>' +
         '</tr>';
     }).join("");
 
     updateStats();
 }
 
-function escHtml(str) {
-    return (str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-}
-
 // ─────────────────────────────────────────────────────────────────────────────
-//  FILTER
+//  FILTER & SORT
 // ─────────────────────────────────────────────────────────────────────────────
 
 function filterAndRender() {
@@ -678,64 +966,50 @@ function filterAndRender() {
     const status   = document.getElementById("status-filter").value;
     const location = document.getElementById("location-filter").value;
     const thread   = document.getElementById("thread-filter").value;
+    const combined = allFiles.concat(addedFiles);
 
-    currentFiltered = allFiles.filter(function(f) {
-        const matchSearch = !search ||
+    currentFiltered = combined.filter(function(f) {
+        const ms = !search ||
             f.name.toLowerCase().includes(search) ||
             f.description.toLowerCase().includes(search) ||
-            (f.tags || "").toLowerCase().includes(search) ||
+            (f.tags||"").toLowerCase().includes(search) ||
             f.type.toLowerCase().includes(search) ||
-            (f.thread || "").toLowerCase().includes(search);
-        return matchSearch &&
+            (f.thread||"").toLowerCase().includes(search);
+        return ms &&
             (!category || f.category === category) &&
             (!status   || f.status   === status)   &&
             (!location || f.location === location) &&
             (!thread   || f.thread   === thread);
     });
-
     sortAndRender();
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  SORT
-// ─────────────────────────────────────────────────────────────────────────────
 
 function sortBy(key) {
     sortAsc = (sortKey === key) ? !sortAsc : true;
     sortKey = key;
-
-    document.querySelectorAll("thead th").forEach(function(th) { th.classList.remove("th-sorted"); });
-    // find matching header
     document.querySelectorAll("thead th[onclick]").forEach(function(th) {
-        if (th.getAttribute("onclick") === "sortBy('" + key + "')") th.classList.add("th-sorted");
+        th.classList.toggle("th-sorted", th.getAttribute("onclick") === "sortBy('"+key+"')");
     });
-
     sortAndRender();
 }
 
 function sortAndRender() {
     var sorted = currentFiltered.slice();
     if (sortKey) {
-        sorted.sort(function(a, b) {
-            var va = (a[sortKey] || "").toLowerCase();
-            var vb = (b[sortKey] || "").toLowerCase();
-            if (va < vb) return sortAsc ? -1 : 1;
-            if (va > vb) return sortAsc ? 1 : -1;
-            return 0;
+        sorted.sort(function(a,b) {
+            var va = (a[sortKey]||"").toLowerCase();
+            var vb = (b[sortKey]||"").toLowerCase();
+            return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
         });
     }
     renderTable(sorted);
 }
 
 function resetFilters() {
-    document.getElementById("search").value = "";
-    document.getElementById("category-filter").value = "";
-    document.getElementById("status-filter").value = "";
-    document.getElementById("location-filter").value = "";
-    document.getElementById("thread-filter").value = "";
-    sortKey = "";
-    sortAsc = true;
-    document.querySelectorAll("thead th").forEach(function(th) { th.classList.remove("th-sorted"); });
+    ["search","category-filter","status-filter","location-filter","thread-filter"]
+        .forEach(function(id){ document.getElementById(id).value = ""; });
+    sortKey = ""; sortAsc = true;
+    document.querySelectorAll("thead th").forEach(function(th){ th.classList.remove("th-sorted"); });
     filterAndRender();
 }
 
@@ -744,21 +1018,128 @@ function resetFilters() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function updateStats() {
-    document.getElementById("stat-total").textContent   = allFiles.length;
-    document.getElementById("stat-live").textContent    = allFiles.filter(function(f){ return f.status === "Live"; }).length;
-    document.getElementById("stat-drive").textContent   = allFiles.filter(function(f){ return f.location === "Google Drive"; }).length;
-    document.getElementById("stat-updated").textContent = new Date().toLocaleDateString("en-IN", {day:"numeric", month:"short"});
+    var all = allFiles.concat(addedFiles);
+    document.getElementById("stat-total").textContent     = all.length;
+    document.getElementById("stat-live").textContent      = all.filter(function(f){ return f.status==="Live"; }).length;
+    document.getElementById("stat-drive").textContent     = all.filter(function(f){ return f.location==="Google Drive"; }).length;
+    document.getElementById("stat-artifacts").textContent = all.filter(function(f){ return f.category==="artifact"; }).length;
+    document.getElementById("stat-updated").textContent   = new Date().toLocaleDateString("en-IN",{day:"numeric",month:"short"});
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  INIT
+//  MODALS
 // ─────────────────────────────────────────────────────────────────────────────
 
-document.getElementById("search").addEventListener("input", filterAndRender);
-document.getElementById("category-filter").addEventListener("change", filterAndRender);
-document.getElementById("status-filter").addEventListener("change", filterAndRender);
-document.getElementById("location-filter").addEventListener("change", filterAndRender);
-document.getElementById("thread-filter").addEventListener("change", filterAndRender);
+function openAddModal() {
+    document.getElementById("f-date").value = new Date().toISOString().split("T")[0];
+    document.getElementById("add-modal").classList.add("open");
+}
+function openSyncModal() {
+    document.getElementById("sync-modal").classList.add("open");
+}
+function closeModal(id) {
+    document.getElementById(id).classList.remove("open");
+}
+// close on overlay click
+document.querySelectorAll(".modal-overlay").forEach(function(el) {
+    el.addEventListener("click", function(e){ if (e.target === el) closeModal(el.id); });
+});
+
+function copySyncPrompt() {
+    var text = document.getElementById("sync-prompt-text").textContent;
+    navigator.clipboard.writeText(text).then(function(){
+        var btn = document.getElementById("copy-btn");
+        btn.textContent = "Copied!";
+        setTimeout(function(){ btn.textContent = "Copy"; }, 2000);
+    });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  ADD FILE
+// ─────────────────────────────────────────────────────────────────────────────
+
+function getCategoryFromType(type) {
+    return ({"Google Sheet":"google-sheet","Google Doc":"google-doc","Excel":"excel",
+             "Word":"word","PDF":"pdf","Markdown":"markdown","Text":"markdown",
+             "Web App":"artifact"})[type] || "other";
+}
+
+function submitAddFile() {
+    var name  = document.getElementById("f-name").value.trim();
+    var type  = document.getElementById("f-type").value;
+    var desc  = document.getElementById("f-desc").value.trim();
+    var date  = document.getElementById("f-date").value || new Date().toISOString().split("T")[0];
+
+    if (!name || !type || !desc) {
+        alert("Please fill in File Name, Type, and Description.");
+        return;
+    }
+
+    var entry = {
+        name: name,
+        type: type,
+        category: getCategoryFromType(type),
+        description: desc,
+        created: date,
+        updated: date,
+        status: document.getElementById("f-status").value,
+        location: document.getElementById("f-location").value,
+        tags: document.getElementById("f-tags").value.trim(),
+        thread: document.getElementById("f-thread").value,
+        isNew: true
+    };
+    var id   = document.getElementById("f-id").value.trim();
+    var link = document.getElementById("f-link").value.trim();
+    if (id)   entry.id   = id;
+    if (link) entry.link = link;
+
+    addedFiles.push(entry);
+    closeModal("add-modal");
+
+    // clear form
+    ["f-name","f-desc","f-id","f-link","f-tags"].forEach(function(id){ document.getElementById(id).value=""; });
+    document.getElementById("f-type").value = "";
+    document.getElementById("f-status").value = "Live";
+    document.getElementById("f-location").value = "Desktop";
+
+    filterAndRender();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  EXPORT UPDATED HTML
+// ─────────────────────────────────────────────────────────────────────────────
+
+function exportUpdatedHTML() {
+    if (addedFiles.length === 0) {
+        alert("No new files have been added yet. Use '+ Add File' first, then export.");
+        return;
+    }
+    var source = document.documentElement.outerHTML;
+    // Replace the addedFiles section with current data
+    var addedStr = "const addedFiles = " + JSON.stringify(addedFiles, null, 4) + ";";
+    var updated  = source.replace(
+        /\/\* ##ADDEDFILES_BEGIN## \*\/[\s\S]*?\/\* ##ADDEDFILES_END## \*\//,
+        "/* ##ADDEDFILES_BEGIN## */\n" + addedStr + "\n/* ##ADDEDFILES_END## */"
+    );
+    var blob = new Blob([updated], {type:"text/html"});
+    var url  = URL.createObjectURL(blob);
+    var a    = document.createElement("a");
+    a.href     = url;
+    a.download = "bombay-bioenergy-file-tracker.html";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    closeModal("add-modal");
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  EVENT LISTENERS & INIT
+// ─────────────────────────────────────────────────────────────────────────────
+
+["search","category-filter","status-filter","location-filter","thread-filter"].forEach(function(id) {
+    document.getElementById(id).addEventListener(id==="search"?"input":"change", filterAndRender);
+});
 
 window.addEventListener("DOMContentLoaded", function() {
     filterAndRender();
