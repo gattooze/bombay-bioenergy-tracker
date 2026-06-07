@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bombay Bioenergy — Complete Project File Tracker</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            padding: 30px 40px;
+            background: #f5f7fa;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        .stat-card {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2a5298;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .controls {
+            padding: 30px 40px;
+            background: white;
+            border-bottom: 1px solid #e1e4e8;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .controls { grid-template-columns: 1fr; }
+        }
+        .control-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d0d4d9;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+        }
+        .files-section {
+            padding: 40px;
+        }
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .file-card {
+            background: white;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .file-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+            border-color: #2a5298;
+        }
+        .file-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        .file-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            word-break: break-word;
+            font-size: 14px;
+        }
+        .file-meta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .badge-type {
+            background: #e8f0fe;
+            color: #2a5298;
+        }
+        .badge-status-live {
+            background: #d4edda;
+            color: #155724;
+        }
+        .badge-status-draft {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .badge-status-signed {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        .badge-status-delivered {
+            background: #cce5ff;
+            color: #004085;
+        }
+        .badge-status-archived {
+            background: #f5f5f5;
+            color: #666;
+        }
+        .file-details {
+            font-size: 12px;
+            color: #666;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+        .file-details p {
+            margin-bottom: 4px;
+        }
+        .file-details strong {
+            color: #333;
+        }
+        .no-results {
+            text-align: center;
+            padding: 60px 40px;
+            color: #999;
+        }
+        .no-results p {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        .filter-info {
+            font-size: 12px;
+            color: #666;
+            padding: 20px 40px;
+            background: #f5f7fa;
+            border-bottom: 1px solid #e1e4e8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .reset-btn {
+            padding: 6px 12px;
+            background: #2a5298;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .reset-btn:hover {
+            background: #1e3c72;
+        }
+        footer {
+            padding: 30px 40px;
+            background: #f5f7fa;
+            border-top: 1px solid #e1e4e8;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        .last-updated {
+            font-weight: 600;
+            color: #2a5298;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>🔥 Bombay Bioenergy</h1>
+        <p>Complete Project File & Document Tracker — All Threads Integrated</p>
+    </header>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-number" id="stat-total">0</div>
+            <div class="stat-label">Total Files</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="stat-live">0</div>
+            <div class="stat-label">Live/Active</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="stat-drive">0</div>
+            <div class="stat-label">In Google Drive</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="stat-updated">—</div>
+            <div class="stat-label">Last Updated</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="control-group">
+            <label for="search">🔍 Search Files</label>
+            <input type="text" id="search" placeholder="File name, tag, or description...">
+        </div>
+        <div class="control-group">
+            <label for="category-filter">📂 Filter by Category</label>
+            <select id="category-filter">
+                <option value="">All Categories</option>
+                <option value="google-sheet">Google Sheets</option>
+                <option value="google-doc">Google Docs</option>
+                <option value="excel">Excel Workbooks</option>
+                <option value="word">Word Documents</option>
+                <option value="pdf">PDF Reports</option>
+                <option value="markdown">Markdown</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label for="status-filter">✓ Filter by Status</label>
+            <select id="status-filter">
+                <option value="">All Status</option>
+                <option value="Live">Live/Active</option>
+                <option value="Draft">Draft</option>
+                <option value="Signed">Signed</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Archived">Archived</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="filter-info">
+        <span id="result-count">Loading...</span>
+        <button class="reset-btn" onclick="resetFilters()">Reset Filters</button>
+    </div>
+
+    <div class="files-section">
+        <div class="file-grid" id="files-container"></div>
+        <div id="no-results-msg" class="no-results" style="display:none;">
+            <p>No files match your filters</p>
+            <button class="reset-btn" onclick="resetFilters()" style="margin-top: 16px;">Clear Filters</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>Bombay Bioenergy Project Management System</p>
+        <p style="margin-top: 8px; font-size: 11px; color: #999;">Last indexed: <span class="last-updated" id="last-indexed">June 7, 2026</span> | Auto-updates enabled</p>
+    </footer>
+</div>
+
+<script>
+const allFiles = [
+    // GOOGLE SHEETS (Live)
+    { name: "Annual Report Biomass Scrape", type: "Google Sheet", category: "google-sheet", created: "2026-06-06", updated: "2026-06-06", status: "Live", location: "Google Drive", id: "172U9o0GslUnBUr9Hz0_BAvnISpYFLyWGvf3TJZGpIWk", tags: "Buyers, CRM, Analysis" },
+    { name: "India Biomass Pellet Tenders Master Tracker v4", type: "Google Sheet", category: "google-sheet", created: "2026-06-07", updated: "2026-06-07", status: "Live", location: "Google Drive", id: "1pR5cIfA-vWNm5tahAqCtSi9ku4G47HT-sH3s_B_vAMY", tags: "Tenders, NTPC, Government" },
+    { name: "Industrial Biomass Pellet Buyers CRM", type: "Google Sheet", category: "google-sheet", created: "2026-06-06", updated: "2026-06-06", status: "Live", location: "Google Drive", id: "183b-gRMX5yrnK7iAKp1CuHDRtQ17-9tBRVgD7KEIPYw", tags: "Buyers, 50 companies, Pipeline" },
+    { name: "Feedstock Supply Chain Contacts", type: "Google Sheet", category: "google-sheet", created: "2026-06-07", updated: "2026-06-07", status: "Live", location: "Google Drive", id: "1UgyWuz6QHTexi7JWTM32DOYF7Aw39u1HMChbeGLr3f8", tags: "Supply, Contacts, 23 entries" },
+    { name: "AMTIK Biofuels — Live Project File Tracker", type: "Google Sheet", category: "google-sheet", created: "2026-06-07", updated: "2026-06-07", status: "Live", location: "Google Drive", id: "1WnWs7kdqvhiH80zhFa3bPRZiE5SAGEpW-sA9amcFusU", tags: "Tracker, Master Inventory" },
+
+    // GOOGLE DOCS
+    { name: "MOA_Biomass_Supply_Agreement_FINAL", type: "Google Doc", category: "google-doc", created: "2026-06-04", updated: "2026-06-07", status: "Signed", location: "Google Drive", id: "10iX9mQiNlSNi23KWCUQdFtyO0DgwKkjzbfNw0p4EhGM", tags: "Contract, Godbole, Legal" },
+    { name: "AMTIK Biofuels — Live Tracker Setup Guide", type: "Google Doc", category: "google-doc", created: "2026-06-07", updated: "2026-06-07", status: "Live", location: "Google Drive", id: "1_PaTWhhAB879s_SB5Ovkhd9NebBGeZyg", tags: "Instructions, Setup, Reference" },
+
+    // EXCEL WORKBOOKS (Local)
+    { name: "European_German_Bamboo_Pellet_Mills_Complete.xlsx", type: "Excel", category: "excel", created: "2026-06-06", updated: "2026-06-06", status: "Live", location: "Desktop", path: "/mnt/user-data/outputs/", tags: "Machinery, 12 manufacturers" },
+    { name: "ANDRITZ_PM30-6_Complete_Customization_Guide_Bamboo.xlsx", type: "Excel", category: "excel", created: "2026-06-06", updated: "2026-06-06", status: "Live", location: "Desktop", path: "/mnt/user-data/outputs/", tags: "Machinery, ANDRITZ, Specs" },
+    { name: "pellet_machinery_deepdive.xlsx", type: "Excel", category: "excel", created: "2026-06-06", updated: "2026-06-06", status: "Live", location: "Desktop", path: "/mnt/user-data/outputs/", tags: "Machinery, 13 brands" },
+    { name: "biochar_machinery_200tpd.xlsx", type: "Excel", category: "excel", created: "2026-06-06", updated: "2026-06-06", status: "Live", location: "Desktop", path: "/mnt/user-data/outputs/", tags: "Biochar, ROI, 200 TPD" },
+    { name: "torrefied_biochar_economics.xlsx", type: "Excel", category: "excel", created: "2026-06-06", updated: "2026-06-06", status: "Live", location: "Desktop", path: "/mnt/user-data/outputs/", tags: "Economics, Torrefied" },
+    { name: "buyer_economics.xlsx", type: "Excel", category: "excel", created: "2026-06-06", updated: "2026-06-06", status: "Live", location: "Desktop", path: "/mnt/user-data/outputs/", tags: "Economics, 11 sectors" },
+    { name: "Solapur_Crop_Residue_Analysis.xlsx", type: "Excel", category: "excel", created: "2026-05-20", updated: "2026-05-20", status: "Live", location: "Desktop", path: "/mnt/user-data/outputs/", tags: "Feedstock, Solapur" },
+    { name: "INDUSTRIAL_BOILER_USERS_COMPREHENSIVE_DATABASE.xlsx", type: "Excel", category: "excel", created: "2026-06-07", updated: "2026-06-07", status: "Live", location: "Desktop", path: "/mnt/user-data/outputs/", tags: "Market, 112 companies" },
+    { name: "AMTIK_BIOMASS_MASTER_REFERENCE_SHEET.xlsx", type: "Excel", category: "excel", created: "2026-06-07", updated: "2026-06-07", status: "Live", location: "Desktop", path: "/mnt/user-data/outputs/", tags: "Master Reference, 22 files" },
+
+    // WORD DOCUMENTS
+    { name: "bamboo_biochar_report.docx", type: "Word", category: "word", created: "2026-05-24", updated: "2026-05-24", status: "Live", location: "Desktop", path: "/mnt/user-data/outputs/", tags: "Biochar, Report, Technical" },
+    { name: "torrefied_biochar_report.docx", type: "Word", category: "word", created: "2026-05-24", updated: "2026-05-24", status: "Live", location: "Desktop", path: "/mnt/user-data/outputs/", tags: "Biochar, Report" },
+    { name: "retail_pellet_gtm.docx", type: "Word", category: "word", created: "2026-05-22", updated: "2026-05-22", status: "Live", location: "Desktop", path: "/mnt/user-data/outputs/", tags: "Retail, Go-to-Market" },
+    { name: "retail_consumer_assessment.docx", type: "Word", category: "word", created: "2026-05-22", updated: "2026-05-22", status: "Live", location: "Desktop", path: "/mnt/user-data/outputs/", tags: "Retail, Assessment" },
+    { name: "retail_consumer_addendum.docx", type: "Word", category: "word", created: "2026-05-22", updated: "2026-05-22", status: "Live", location: "Desktop", path: "/mnt/user-data/outputs/", tags: "Retail, Addendum" },
+
+    // MARKDOWN & TEXT
+    { name: "european_bamboo_manufacturers.md", type: "Markdown", category: "markdown", created: "2026-06-06", updated: "2026-06-06", status: "Live", location: "Desktop", path: "/mnt/user-data/outputs/", tags: "Reference, Guide, Manufacturers" },
+    { name: "Bamboo_Pellet_Mills_European_Manufacturers_Complete_Analysis.txt", type: "Text", category: "markdown", created: "2026-06-06", updated: "2026-06-06", status: "Live", location: "Desktop", path: "/mnt/user-data/outputs/", tags: "Analysis, Reference" },
+    { name: "BIOMASS_PROJECT_MASTER_INDEX.txt", type: "Text", category: "markdown", created: "2026-06-06", updated: "2026-06-07", status: "Archived", location: "Desktop", path: "/mnt/user-data/outputs/", tags: "Archived, Reference" },
+
+    // PDF REPORTS
+    { name: "CBG Plant Site Assessment Consolidated Report.pdf", type: "PDF", category: "pdf", created: "2026-05-15", updated: "2026-05-15", status: "Delivered", location: "Google Drive", path: "02.2", tags: "CBG, Technical, Rajasthan" },
+    { name: "CBG Plant Consultant Case Study (Anonymised).pdf", type: "PDF", category: "pdf", created: "2026-05-18", updated: "2026-05-18", status: "Delivered", location: "Google Drive", path: "02.2", tags: "CBG, Consultant, Case Study" }
+];
+
+function getIcon(type) {
+    const icons = {
+        "Google Sheet": "📊", "Google Doc": "📄", "Excel": "📈", "Word": "📝",
+        "PDF": "📋", "Markdown": "✍️", "Text": "📃"
+    };
+    return icons[type] || "📄";
+}
+
+function renderFiles(filesToRender = allFiles) {
+    const container = document.getElementById('files-container');
+    const noResults = document.getElementById('no-results-msg');
+
+    if (filesToRender.length === 0) {
+        container.innerHTML = '';
+        noResults.style.display = 'block';
+        document.getElementById('result-count').textContent = 'No files match your search';
+        return;
+    }
+
+    noResults.style.display = 'none';
+    document.getElementById('result-count').textContent = `Showing ${filesToRender.length} of ${allFiles.length} files`;
+
+    container.innerHTML = filesToRender.map(file => `
+        <div class="file-card">
+            <div class="file-icon">${getIcon(file.type)}</div>
+            <div class="file-name">${file.name}</div>
+            <div class="file-meta">
+                <span class="badge badge-type">${file.type}</span>
+                <span class="badge badge-status-${file.status.toLowerCase().replace('/', '-')}">${file.status}</span>
+            </div>
+            <div class="file-details">
+                <p><strong>Category:</strong> ${file.category}</p>
+                <p><strong>Location:</strong> ${file.location}</p>
+                <p><strong>Updated:</strong> ${file.updated}</p>
+                ${file.tags ? `<p><strong>Tags:</strong> ${file.tags}</p>` : ''}
+            </div>
+        </div>
+    `).join('');
+
+    updateStats();
+}
+
+function filterFiles() {
+    const search = document.getElementById('search').value.toLowerCase();
+    const category = document.getElementById('category-filter').value;
+    const status = document.getElementById('status-filter').value;
+
+    const filtered = allFiles.filter(file => {
+        const matchesSearch = !search || 
+            file.name.toLowerCase().includes(search) ||
+            file.tags.toLowerCase().includes(search) ||
+            file.type.toLowerCase().includes(search);
+        
+        const matchesCategory = !category || file.category === category;
+        const matchesStatus = !status || file.status === status;
+
+        return matchesSearch && matchesCategory && matchesStatus;
+    });
+
+    renderFiles(filtered);
+}
+
+function resetFilters() {
+    document.getElementById('search').value = '';
+    document.getElementById('category-filter').value = '';
+    document.getElementById('status-filter').value = '';
+    renderFiles();
+}
+
+function updateStats() {
+    const live = allFiles.filter(f => f.status === 'Live').length;
+    const drive = allFiles.filter(f => f.location === 'Google Drive').length;
+    
+    document.getElementById('stat-total').textContent = allFiles.length;
+    document.getElementById('stat-live').textContent = live;
+    document.getElementById('stat-drive').textContent = drive;
+    document.getElementById('stat-updated').textContent = 'Just now';
+}
+
+// Event listeners
+document.getElementById('search').addEventListener('input', filterFiles);
+document.getElementById('category-filter').addEventListener('change', filterFiles);
+document.getElementById('status-filter').addEventListener('change', filterFiles);
+
+// Initial load
+window.addEventListener('DOMContentLoaded', () => {
+    renderFiles();
+    updateStats();
+});
+</script>
+</body>
+</html>
