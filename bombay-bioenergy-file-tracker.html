@@ -425,8 +425,9 @@
                     <th onclick="sortBy('type')">Type <span class="sort-arrow">↕</span></th>
                     <th class="th-nosort">Description</th>
                     <th onclick="sortBy('status')">Status <span class="sort-arrow">↕</span></th>
-                    <th onclick="sortBy('location')">Location <span class="sort-arrow">↕</span></th>
-                    <th onclick="sortBy('updated')">Updated <span class="sort-arrow">↕</span></th>
+                    <th onclick="sortBy('location')">Location / Folder <span class="sort-arrow">↕</span></th>
+                    <th onclick="sortBy('created')">Created <span class="sort-arrow">↕</span></th>
+                    <th onclick="sortBy('updated')">Modified <span class="sort-arrow">↕</span></th>
                 </tr>
             </thead>
             <tbody id="files-tbody"></tbody>
@@ -589,26 +590,35 @@ const allFiles = [
         name: "Annual Report Biomass Scrape",
         type: "Google Sheet", category: "google-sheet",
         description: "Biomass supply and consumption data scraped from 25+ company annual reports; identifies industrial procurement volumes and patterns across steel, cement, and power sectors.",
-        created: "2026-06-06", updated: "2026-06-06",
-        status: "Live", location: "Google Drive",
+        created: "2026-05-23", updated: "2026-05-23",
+        status: "Live", location: "Google Drive", folder: "03 — Customers / 03.4 CRM",
         id: "172U9o0GslUnBUr9Hz0_BAvnISpYFLyWGvf3TJZGpIWk",
         tags: "Buyers, Annual Reports, Market Research", thread: "Thread 5"
     },
     {
-        name: "India Biomass Pellet Tenders Master Tracker v4",
+        name: "India Biomass Pellet Tenders — Master Tracker v4",
         type: "Google Sheet", category: "google-sheet",
         description: "Master tracker of NTPC, SAIL, and GeM biomass pellet tenders; covers bid deadlines, volume requirements, pricing benchmarks, and award status.",
-        created: "2026-06-07", updated: "2026-06-07",
-        status: "Live", location: "Google Drive",
+        created: "2026-05-21", updated: "2026-05-21",
+        status: "Live", location: "Google Drive", folder: "06 — Policy / 06.1 NTPC GeM Tenders",
         id: "1pR5cIfA-vWNm5tahAqCtSi9ku4G47HT-sH3s_B_vAMY",
         tags: "Tenders, NTPC, SAIL, GeM, Government", thread: "Thread 5"
+    },
+    {
+        name: "India Biomass Pellet Tenders — Master Tracker v3",
+        type: "Google Sheet", category: "google-sheet",
+        description: "Earlier version of the NTPC/GeM tender tracker; retained for historical comparison of bid data and award patterns.",
+        created: "2026-05-21", updated: "2026-05-21",
+        status: "Archived", location: "Google Drive", folder: "06 — Policy / 06.1 NTPC GeM Tenders",
+        id: "1slpLbtX-p1CFmMhtzW2yME4Yd9D-1o3dhbN8srPT3PU",
+        tags: "Tenders, NTPC, GeM, Archived, v3", thread: "Thread 5"
     },
     {
         name: "Industrial Biomass Pellet Buyers CRM",
         type: "Google Sheet", category: "google-sheet",
         description: "CRM database of 50 industrial buyers across steel, cement, pharma, textiles, and power sectors; includes contact details, annual fuel volumes, and deal pipeline stage.",
-        created: "2026-06-06", updated: "2026-06-06",
-        status: "Live", location: "Google Drive",
+        created: "2026-05-23", updated: "2026-06-06",
+        status: "Live", location: "Google Drive", folder: "03 — Customers / 03.2 Industrial Boilers",
         id: "183b-gRMX5yrnK7iAKp1CuHDRtQ17-9tBRVgD7KEIPYw",
         tags: "CRM, Buyers, 50 companies, Pipeline", thread: "Thread 5"
     },
@@ -617,18 +627,108 @@ const allFiles = [
         type: "Google Sheet", category: "google-sheet",
         description: "Directory of 23 feedstock supply contacts across 18 organizations in Solapur and surrounding districts; covers crop type, seasonal availability, volume potential, and negotiation status.",
         created: "2026-06-07", updated: "2026-06-07",
-        status: "Live", location: "Google Drive",
+        status: "Live", location: "Google Drive", folder: "01 — Feedstock / 01.3 Supplier Agreements",
         id: "1UgyWuz6QHTexi7JWTM32DOYF7Aw39u1HMChbeGLr3f8",
         tags: "Supply Chain, Contacts, Feedstock, Solapur", thread: "Thread 3"
     },
     {
-        name: "Bombay Bioenergy — Live Project File Tracker",
+        name: "India Crop Master — Species & Residue Index",
         type: "Google Sheet", category: "google-sheet",
-        description: "Meta-tracker cataloguing all project files across all chat threads; maintained as the live single source of truth for file inventory and status.",
+        description: "Reference index of Indian crop species with associated residue ratios, calorific values, and biomass yield coefficients; used as the base layer for feedstock potential calculations.",
+        created: "2026-05-18", updated: "2026-05-18",
+        status: "Live", location: "Google Drive", folder: "01 — Feedstock / 01.1 Crop Residue Data",
+        id: "1hEr9CnYJeCnWs33jBEtyqLizvXk8_yJ6SoQLDHqhZlA",
+        tags: "Feedstock, Crop Species, Residue Index, Reference", thread: "Thread 3"
+    },
+    {
+        name: "India District Crop Production Master",
+        type: "Google Sheet", category: "google-sheet",
+        description: "District-level crop production dataset for India; underpins the feedstock mapping and supply chain sourcing analysis across Maharashtra and surrounding states.",
+        created: "2026-05-18", updated: "2026-05-18",
+        status: "Live", location: "Google Drive", folder: "01 — Feedstock / 01.1 Crop Residue Data",
+        id: "1QFxy3fIG57hGJduVWd2D9iP5hdWruOXW0k3cYc9zSec",
+        tags: "Feedstock, Crop Production, District Data, Maharashtra", thread: "Thread 3"
+    },
+    {
+        name: "Horticulture District Master 2016-17",
+        type: "Google Sheet", category: "google-sheet",
+        description: "Historical horticulture production data at district level for India (2016-17 baseline); used to estimate orchard residue and biomass availability from fruit and vegetable crops.",
+        created: "2026-05-18", updated: "2026-05-18",
+        status: "Live", location: "Google Drive", folder: "01 — Feedstock / 01.1 Crop Residue Data",
+        id: "13cAcFjWfwQ2iXUZzxyjyUpzJFIydp4ASFGcSn2z9DVg",
+        tags: "Feedstock, Horticulture, District Data, Baseline", thread: "Thread 3"
+    },
+    {
+        name: "Rotexmaster 4-5TPH Pellet Line — Equipment Specs",
+        type: "Google Sheet", category: "google-sheet",
+        description: "Equipment specification sheet for the Rotexmaster 4-5 TPH pellet production line; covers motor specs, die configuration, throughput, energy draw, and lead time without pricing.",
+        created: "2026-05-18", updated: "2026-05-18",
+        status: "Live", location: "Google Drive", folder: "02 — Plant & Machinery / 02.1 Quotations",
+        id: "1MlkWgIh6d0Wr6joOwR2kZdOjGd18MyLh_MQ7zQq8crs",
+        tags: "Machinery, Rotexmaster, Pellet Line, Equipment Specs", thread: "Thread 1"
+    },
+    {
+        name: "ANDRITZ PM30-6 — Complete Customization Guide (Bamboo)",
+        type: "Google Sheet", category: "google-sheet",
+        description: "Full customization guide for the ANDRITZ PM30-6 pellet mill configured for bamboo feedstock; covers die geometry, conditioning settings, throughput targets, energy consumption, and service terms.",
+        created: "2026-06-06", updated: "2026-06-06",
+        status: "Live", location: "Google Drive", folder: "02 — Plant & Machinery / 02.2 Technical Reports",
+        id: "1-hEpac3FiVgXAJcQU9ZT340IkasxKZ6YfUg6uSpkX2k",
+        tags: "Machinery, ANDRITZ, PM30-6, Specs, Bamboo", thread: "Thread 1"
+    },
+    {
+        name: "European & German Bamboo Pellet Mills — Complete",
+        type: "Google Sheet", category: "google-sheet",
+        description: "12 European and German bamboo pellet mill manufacturers with technical specs, annual capacity, lead times, price ranges, and direct procurement contacts.",
+        created: "2026-06-06", updated: "2026-06-06",
+        status: "Live", location: "Google Drive", folder: "02 — Plant & Machinery / 02.2 Technical Reports",
+        id: "1HC9ZSlr0zYvC-eiGBSR5iQhXdmrFCt4YGd_cAL4qqig",
+        tags: "Machinery, European Manufacturers, 12 mills, Bamboo", thread: "Thread 1"
+    },
+    {
+        name: "pellet_machinery_deepdive — bamboo",
+        type: "Google Sheet", category: "google-sheet",
+        description: "Bamboo-specific deep-dive on pellet machinery options; extends the general machinery comparison with bamboo-specific die specifications, pre-treatment requirements, and vendor suitability ratings.",
+        created: "2026-06-06", updated: "2026-06-06",
+        status: "Live", location: "Google Drive", folder: "02 — Plant & Machinery / 02.2 Technical Reports",
+        id: "1Y1O6ChPQhicSX3urb2oXk_ZSHPc5Kc1y7Q-9pM7rPCE",
+        tags: "Machinery, Bamboo, Pellet, Deep Dive, Comparison", thread: "Thread 1"
+    },
+    {
+        name: "EU Pellet Mill Machinery — Bamboo Reference",
+        type: "Google Sheet", category: "google-sheet",
+        description: "Reference sheet for EU-certified pellet mill machinery suitable for bamboo feedstock; cross-references CE certification status, export availability to India, and distributor contacts.",
+        created: "2026-06-06", updated: "2026-06-06",
+        status: "Live", location: "Google Drive", folder: "02 — Plant & Machinery / 02.2 Technical Reports",
+        id: "19gslpS6ZbdNXvqtZs7EzUUt9_tZUZ_PN_0kAtXS-kA4",
+        tags: "Machinery, EU, Bamboo, Reference, CE Certified", thread: "Thread 1"
+    },
+    {
+        name: "Biochar Machinery 200 TPD — Comparison ROI Breakeven",
+        type: "Google Sheet", category: "google-sheet",
+        description: "ROI and breakeven comparison for 200 TPD biochar machinery options; models IRR, payback period, and carbon credit revenue for Beston and Dingli systems.",
+        created: "2026-05-24", updated: "2026-05-24",
+        status: "Live", location: "Google Drive", folder: "07 — Market Data / 07.1 India Pellet Data",
+        id: "1dNTXEeWnhHALu-8I0cw3adejQPDl0sY5LNQETN_rEg0",
+        tags: "Biochar, 200 TPD, ROI, Breakeven, Beston, Dingli", thread: "Thread 2"
+    },
+    {
+        name: "India Biomass Pellet Manufacturers — Database",
+        type: "Google Sheet", category: "google-sheet",
+        description: "Database of active biomass pellet manufacturers in India; covers plant capacity, feedstock type, location, certifications, and current supply availability.",
+        created: "2026-05-18", updated: "2026-05-18",
+        status: "Live", location: "Google Drive", folder: "07 — Market Data / 07.1 India Pellet Data",
+        id: "1XYnWI1W3tiaZveNPGre7uDQZYmgfNrKGShx_IJ5fYds",
+        tags: "Manufacturers, India, Pellets, Database, Market", thread: "Thread 5"
+    },
+    {
+        name: "BIOMASS_MASTER_REFERENCE_SHEET",
+        type: "Google Sheet", category: "google-sheet",
+        description: "Master reference sheet for the entire Bombay Bioenergy project; catalogs all output files with summaries, creation dates, Drive links, and recommended use cases.",
         created: "2026-06-07", updated: "2026-06-07",
-        status: "Live", location: "Google Drive",
-        id: "1WnWs7kdqvhiH80zhFa3bPRZiE5SAGEpW-sA9amcFusU",
-        tags: "Tracker, Master Inventory, Meta", thread: "Thread 5"
+        status: "Live", location: "Google Drive", folder: "Root",
+        id: "1wsVLSF8R1QUXT2SklGwV14OaUcFON_1QlzvoqxwREAo",
+        tags: "Master Reference, Catalog, Index, Root", thread: "Thread 5"
     },
 
     // ── GOOGLE DOCS ────────────────────────────────────────────────────────
@@ -636,230 +736,319 @@ const allFiles = [
         name: "MOA — Biomass Supply Agreement (FINAL)",
         type: "Google Doc", category: "google-doc",
         description: "Signed Memorandum of Agreement with Godbole for 30,000 MT/yr of biomass feedstock at Rs 1,800/MT; legally executed with full terms, schedules, and delivery obligations.",
-        created: "2026-06-04", updated: "2026-06-07",
-        status: "Signed", location: "Google Drive",
+        created: "2026-05-30", updated: "2026-06-04",
+        status: "Signed", location: "Google Drive", folder: "01 — Feedstock / 01.3 Supplier Agreements",
         id: "10iX9mQiNlSNi23KWCUQdFtyO0DgwKkjzbfNw0p4EhGM",
         tags: "Contract, Godbole, Legal, MOA, Rs 1800/MT", thread: "Thread 3"
     },
     {
-        name: "Bombay Bioenergy — Tracker Setup Guide",
+        name: "⚡ WORKSPACE INDEX — Start Here",
         type: "Google Doc", category: "google-doc",
-        description: "Step-by-step instructions for maintaining the file tracker; covers adding entries, updating statuses, managing Google Drive permissions, and version control.",
-        created: "2026-06-07", updated: "2026-06-07",
-        status: "Live", location: "Google Drive",
-        id: "1_PaTWhhAB879s_SB5Ovkhd9NebBGeZyg",
-        tags: "Instructions, Setup, Documentation", thread: "Thread 5"
+        description: "Top-level workspace index for the Bombay Bioenergy Drive folder; explains the folder structure, naming conventions, and how to navigate the project files.",
+        created: "2026-05-18", updated: "2026-05-18",
+        status: "Live", location: "Google Drive", folder: "Root",
+        id: "1zjvX52G0VDNZmx9GRFqLw_pGBUOvd8YimB11OOtuTWw",
+        tags: "Index, Navigation, Workspace, Root", thread: "Thread 5"
+    },
+    {
+        name: "Pellet Machinery Report — SCT Config & Metallurgy",
+        type: "Google Doc", category: "google-doc",
+        description: "Technical report on pellet mill die and roll metallurgy choices for bamboo feedstock; covers SCT (stainless chromium tungsten) die configuration, wear rates, and maintenance intervals.",
+        created: "2026-05-18", updated: "2026-05-18",
+        status: "Live", location: "Google Drive", folder: "02 — Plant & Machinery / 02.2 Technical Reports",
+        id: "1KKcfsiXdks_dbV9rLAx9U-PTx25_GXR5C7TG9hJoJgQ",
+        tags: "Machinery, Pellet Mill, Metallurgy, SCT, Technical", thread: "Thread 1"
+    },
+    {
+        name: "european_bamboo_manufacturers.md",
+        type: "Google Doc", category: "google-doc",
+        description: "Stage-by-stage procurement guide for European bamboo pellet mill suppliers; covers shortlisting criteria, RFQ process, factory audit checklist, and negotiation framework.",
+        created: "2026-06-06", updated: "2026-06-06",
+        status: "Live", location: "Google Drive", folder: "02 — Plant & Machinery / 02.2 Technical Reports",
+        id: "1HR_HU8pc88010pehzLHDU2LSC1H3c4UL-BWyEPYM564",
+        tags: "Manufacturers, Procurement Guide, Europe, Bamboo", thread: "Thread 1"
     },
 
     // ── EXCEL WORKBOOKS ────────────────────────────────────────────────────
     {
-        name: "European_German_Bamboo_Pellet_Mills_Complete.xlsx",
+        name: "Solapur_Crop_Residue_Analysis.xlsx",
         type: "Excel", category: "excel",
-        description: "12 European and German bamboo pellet mill manufacturers with technical specs, annual capacity, lead times, price ranges, and direct procurement contacts.",
-        created: "2026-06-06", updated: "2026-06-06",
-        status: "Live", location: "Desktop",
-        tags: "Machinery, European Manufacturers, 12 mills, Bamboo", thread: "Thread 1"
+        description: "Crop residue availability study for Solapur district; total feedstock potential estimated at 10.68 lakh MT/yr across 8 crop types with month-by-month seasonal availability.",
+        created: "2026-05-20", updated: "2026-05-20",
+        status: "Live", location: "Google Drive", folder: "01 — Feedstock / 01.1 Crop Residue Data",
+        id: "1ZwA-EOTdjqSe5w2jjgVDFNekAmtTAPfi",
+        tags: "Feedstock, Solapur, Crop Residue, 10.68L MT/yr", thread: "Thread 3"
     },
     {
-        name: "ANDRITZ_PM30-6_Complete_Customization_Guide_Bamboo.xlsx",
+        name: "Dhamtari Feedstock Survey 2025 May.xlsx",
         type: "Excel", category: "excel",
-        description: "Full customization guide for the ANDRITZ PM30-6 pellet mill configured for bamboo feedstock; covers die geometry, conditioning settings, throughput targets, energy consumption, and service terms.",
-        created: "2026-06-06", updated: "2026-06-06",
-        status: "Live", location: "Desktop",
-        tags: "Machinery, ANDRITZ, PM30-6, Specs, Bamboo", thread: "Thread 1"
+        description: "On-ground feedstock survey conducted in Dhamtari district (May 2025); records crop residue availability, farmer willingness to sell, aggregator contacts, and logistics constraints.",
+        created: "2026-05-20", updated: "2026-06-02",
+        status: "Live", location: "Google Drive", folder: "01 — Feedstock / 01.4 Seasonal & Logistics",
+        id: "1Iv8eCjqTM_i06Cqov4oc4Ypc4wc1CuEr",
+        tags: "Feedstock, Dhamtari, Survey, Field Data, 2025", thread: "Thread 3"
+    },
+    {
+        name: "Feedstock_Supply_Chain_Contacts.xlsx",
+        type: "Excel", category: "excel",
+        description: "Offline Excel version of the feedstock supply chain contacts; exported from Google Sheets for sharing with field team without Drive access.",
+        created: "2026-06-08", updated: "2026-06-08",
+        status: "Live", location: "Google Drive", folder: "01 — Feedstock / 01.5 Supplier Data",
+        id: "1o0fHi1HUpQBUQX3iQOJSzUExsEUWsmn_",
+        tags: "Supply Chain, Contacts, Feedstock, Offline Copy", thread: "Thread 3"
+    },
+    {
+        name: "Yulong Output — CAPEX OPEX Model.xlsx",
+        type: "Excel", category: "excel",
+        description: "CAPEX and OPEX financial model for the Yulong RM pellet production line; models equipment cost, installation, annual operating costs, and output economics.",
+        created: "2026-05-18", updated: "2026-06-08",
+        status: "Live", location: "Google Drive", folder: "02 — Plant & Machinery / 02.1 Quotations",
+        id: "1UWxEuBD863-X-Cjigvk3OafqnlHSS8ap",
+        tags: "Machinery, Yulong, CAPEX, OPEX, Financial Model", thread: "Thread 1"
     },
     {
         name: "pellet_machinery_deepdive.xlsx",
         type: "Excel", category: "excel",
         description: "Side-by-side comparison of 13 pellet mill brands on capacity, energy consumption, die life, warranty, and bamboo suitability; includes weighted recommendation matrix.",
-        created: "2026-06-06", updated: "2026-06-06",
-        status: "Live", location: "Desktop",
+        created: "2026-06-08", updated: "2026-06-08",
+        status: "Live", location: "Google Drive", folder: "02 — Plant & Machinery / 02.2 Technical Reports",
+        id: "1lhrvULRqkfwAMN24RnP2-jMkUQvqDhvy",
         tags: "Machinery, 13 brands, Comparison, Deep Dive", thread: "Thread 1"
+    },
+    {
+        name: "Torrefaction_Reactor_Machinery_5TPH.xlsx",
+        type: "Excel", category: "excel",
+        description: "Side-by-side evaluation of commercial torrefaction reactor vendors at 5 TPH scale; covers continuous vs batch designs, temperature control range, throughput, capex, and suitability for bamboo and agricultural residues.",
+        created: "2026-06-07", updated: "2026-06-07",
+        status: "Live", location: "Google Drive", folder: "02 — Plant & Machinery / 02.2 Technical Reports",
+        id: "1LYy9EdrqNgrXXjcNSHIcyKKApF-_E6nk",
+        tags: "Torrefaction, Reactors, Machinery, Vendors, Bamboo", thread: "Thread 6"
+    },
+    {
+        name: "Torrefaction_Comparison_Report.xlsx",
+        type: "Excel", category: "excel",
+        description: "Strategic comparison of torrefied pellet vs biochar production pathways; evaluates market size, margin profile, carbon credit eligibility, capital intensity, and recommended phasing.",
+        created: "2026-06-07", updated: "2026-06-07",
+        status: "Live", location: "Google Drive", folder: "02 — Plant & Machinery / 02.2 Technical Reports",
+        id: "1G1kG4FPB_2YwQxG4nhbrSitsiiNN3-ib",
+        tags: "Torrefaction, Biochar, Strategy, Comparison, Pathways", thread: "Thread 6"
     },
     {
         name: "biochar_machinery_200tpd.xlsx",
         type: "Excel", category: "excel",
         description: "Equipment analysis and ROI model for a 200 TPD biochar plant; Beston recommended over Dingli on capex, throughput reliability, and carbon credit eligibility under VM0044.",
-        created: "2026-06-06", updated: "2026-06-06",
-        status: "Live", location: "Desktop",
+        created: "2026-06-07", updated: "2026-06-07",
+        status: "Live", location: "Google Drive", folder: "10 — Biochar",
+        id: "1HWg7KzP4q_fLSMJsRFtirhs0xaYs4v0S",
         tags: "Biochar, 200 TPD, ROI, Beston, Scale-up", thread: "Thread 2"
     },
     {
         name: "torrefied_biochar_economics.xlsx",
         type: "Excel", category: "excel",
         description: "Three-way economic comparison of standard pellets vs torrefied pellets vs biochar; models carbon credit upside under VM0044, calorific value per tonne, and net realisation.",
-        created: "2026-06-06", updated: "2026-06-06",
-        status: "Live", location: "Desktop",
+        created: "2026-06-07", updated: "2026-06-07",
+        status: "Live", location: "Google Drive", folder: "10 — Biochar",
+        id: "1FpMARvffvcfJ683PBX1l9EVD45prupXn",
         tags: "Economics, Torrefied, Biochar, Carbon Credits, VM0044", thread: "Thread 2"
     },
     {
-        name: "buyer_economics.xlsx",
+        name: "Torrefied Biochar buyer_economics.xlsx",
         type: "Excel", category: "excel",
-        description: "Buyer-side economics across 11 industrial sectors; models cost savings vs coal, calorific value matching, handling cost delta, and combustion retrofit payback.",
-        created: "2026-06-06", updated: "2026-06-06",
-        status: "Live", location: "Desktop",
-        tags: "Economics, 11 sectors, Buyers, Coal Substitution", thread: "Thread 5"
-    },
-    {
-        name: "Solapur_Crop_Residue_Analysis.xlsx",
-        type: "Excel", category: "excel",
-        description: "Crop residue availability study for Solapur district; total feedstock potential estimated at 10.68 lakh MT/yr across 8 crop types with month-by-month seasonal availability.",
-        created: "2026-05-20", updated: "2026-05-20",
-        status: "Live", location: "Desktop",
-        tags: "Feedstock, Solapur, Crop Residue, 10.68L MT/yr", thread: "Thread 3"
+        description: "Buyer-side economics across 11 industrial sectors for torrefied biochar; models cost savings vs coal, calorific value matching, handling cost delta, and combustion retrofit payback.",
+        created: "2026-06-07", updated: "2026-06-07",
+        status: "Live", location: "Google Drive", folder: "10 — Biochar",
+        id: "1vF2xYJKBghzNr8tYMf67DflnJkXkwEHt",
+        tags: "Economics, 11 sectors, Buyers, Coal Substitution, Biochar", thread: "Thread 5"
     },
     {
         name: "INDUSTRIAL_BOILER_USERS_COMPREHENSIVE_DATABASE.xlsx",
         type: "Excel", category: "excel",
         description: "Database of 112 industrial companies across 8 sectors operating coal or biomass boilers; covers installed capacity, plant location, boiler type, and estimated fuel-switching potential.",
         created: "2026-06-07", updated: "2026-06-07",
-        status: "Live", location: "Desktop",
+        status: "Live", location: "Google Drive", folder: "03 — Customers / 03.2 Industrial Boilers",
+        id: "1h9mt7cGjnj97F9-G9GF3HFMK6ct--x3r",
         tags: "Market, 112 companies, Boilers, 8 sectors", thread: "Thread 5"
     },
     {
-        name: "AMTIK_BIOMASS_MASTER_REFERENCE_SHEET.xlsx",
+        name: "Global_Pellet_Export_Market_Deepdive.xlsx",
         type: "Excel", category: "excel",
-        description: "Master offline catalog of all 22 project output files with one-line summaries, file paths, creation dates, and recommended use cases.",
-        created: "2026-06-07", updated: "2026-06-07",
-        status: "Live", location: "Desktop",
-        tags: "Master Reference, Catalog, 22 files, Index", thread: "Thread 5"
+        description: "Export market opportunity analysis for Indian biomass pellets; covers EU, Japan, and South Korea demand forecasts, ENplus/ISO certification requirements, freight logistics, and target FOB price ranges.",
+        created: "2026-06-08", updated: "2026-06-08",
+        status: "Live", location: "Google Drive", folder: "03 — Customers / 03.3 Export Customers",
+        id: "1326MBouQ94WRE71mDhVfEu3-wQfZhvlr",
+        tags: "Exports, EU, Japan, South Korea, ENplus, Certification", thread: "Thread 6"
     },
     {
-        name: "Torrefaction Reactor Machines — Vendor Comparison",
+        name: "India Biomass Pellet Manufacturers — SAMARTH Database",
         type: "Excel", category: "excel",
-        description: "Side-by-side evaluation of commercial torrefaction reactor vendors; covers continuous vs batch designs, temperature control range, throughput, capex, and suitability for bamboo and agricultural residues.",
-        created: "2026-06-07", updated: "2026-06-07",
-        status: "Live", location: "Desktop",
-        tags: "Torrefaction, Reactors, Machinery, Vendors, Bamboo",
-        thread: "Thread 6", isNew: true
+        description: "Raw data extract from the MNRE SAMARTH scheme database of registered biomass pellet manufacturers; used as input for the cleaned manufacturer database.",
+        created: "2026-05-18", updated: "2026-05-18",
+        status: "Live", location: "Google Drive", folder: "07 — Market Data / 07.1 India Pellet Data",
+        id: "1noNjnTMCigXls3lJRGMMHntC6UOYA6PP",
+        tags: "Manufacturers, SAMARTH, MNRE, Raw Data, India", thread: "Thread 5"
     },
 
     // ── WORD DOCUMENTS ─────────────────────────────────────────────────────
     {
+        name: "pellet_machinery_report.docx",
+        type: "Word", category: "word",
+        description: "Comprehensive report on pellet machinery selection for Bombay Bioenergy; covers technology evaluation, vendor shortlisting rationale, and recommended procurement strategy.",
+        created: "2026-06-07", updated: "2026-06-07",
+        status: "Live", location: "Google Drive", folder: "02 — Plant & Machinery / 02.2 Technical Reports",
+        id: "1OzF_tUC2-4y6x7sn3r4JNhjP_Wd16-Xe",
+        tags: "Machinery, Pellet, Report, Procurement, Strategy", thread: "Thread 1"
+    },
+    {
         name: "bamboo_biochar_report.docx",
         type: "Word", category: "word",
         description: "Full feasibility study for a 10 TPD bamboo biochar production facility; covers site requirements, equipment selection, capex, opex, and IRR projections.",
-        created: "2026-05-24", updated: "2026-05-24",
-        status: "Live", location: "Desktop",
+        created: "2026-06-07", updated: "2026-06-07",
+        status: "Live", location: "Google Drive", folder: "10 — Biochar",
+        id: "1cutgJspy3iltwE8X2Ykbn8n0cxayvJmB",
         tags: "Biochar, Feasibility Study, 10 TPD, Bamboo", thread: "Thread 2"
     },
     {
         name: "torrefied_biochar_report.docx",
         type: "Word", category: "word",
         description: "Market positioning report for torrefied biochar; benchmarks energy density and grindability vs standard pellets and lump coal, with target buyer segments identified.",
-        created: "2026-05-24", updated: "2026-05-24",
-        status: "Live", location: "Desktop",
+        created: "2026-06-07", updated: "2026-06-07",
+        status: "Live", location: "Google Drive", folder: "10 — Biochar",
+        id: "12k_UyU0m5BD6U_MUB1nMMBH1z0t_gNk5",
         tags: "Torrefied Biochar, Market Report, Positioning", thread: "Thread 2"
+    },
+    {
+        name: "pyrolysis_200tpd_report.docx",
+        type: "Word", category: "word",
+        description: "Technical and financial feasibility report for a 200 TPD pyrolysis/biochar plant; covers process design, equipment selection, energy balance, and scale-up economics.",
+        created: "2026-06-07", updated: "2026-06-07",
+        status: "Live", location: "Google Drive", folder: "10 — Biochar",
+        id: "1pzQu8vEv-YDna5fzSJ3cvHe2otMhLWng",
+        tags: "Pyrolysis, Biochar, 200 TPD, Feasibility, Scale-up", thread: "Thread 2"
     },
     {
         name: "retail_pellet_gtm.docx",
         type: "Word", category: "word",
         description: "Go-to-market strategy for retail biomass pellet distribution; covers channel selection (kirana vs modern trade), pricing architecture, pack sizes, and phased launch plan.",
-        created: "2026-05-22", updated: "2026-05-22",
-        status: "Live", location: "Desktop",
+        created: "2026-06-07", updated: "2026-06-07",
+        status: "Live", location: "Google Drive", folder: "03 — Customers / 03.6 Retail",
+        id: "1uHfbQRVWzu3ioYGTOHTl0wlxRKK4VEfG",
         tags: "Retail, GTM, Pellets, Distribution, Strategy", thread: "Thread 5"
     },
     {
         name: "retail_consumer_assessment.docx",
         type: "Word", category: "word",
         description: "Consumer demand assessment for the retail pellet market; surveys household and SME buyer intent, willingness to pay, purchase frequency, and adoption barriers.",
-        created: "2026-05-22", updated: "2026-05-22",
-        status: "Live", location: "Desktop",
+        created: "2026-05-22", updated: "2026-05-23",
+        status: "Live", location: "Google Drive", folder: "03 — Customers / 03.6 Retail",
+        id: "1Am8r8_ES5TtG5wgEpWFICSgFJh01tpiw",
         tags: "Retail, Consumer Research, Survey, Demand Assessment", thread: "Thread 5"
     },
     {
         name: "retail_consumer_addendum.docx",
         type: "Word", category: "word",
         description: "Addendum with qualitative focus group feedback; documents top objections, preferred pack sizes, and branding signals that drove purchase intent.",
-        created: "2026-05-22", updated: "2026-05-22",
-        status: "Live", location: "Desktop",
+        created: "2026-05-23", updated: "2026-05-23",
+        status: "Live", location: "Google Drive", folder: "03 — Customers / 03.6 Retail",
+        id: "13s_nQ-u2AVMt1a8GbDW2YYVJLFEqJlip",
         tags: "Retail, Focus Group, Addendum, Consumer", thread: "Thread 5"
     },
     {
-        name: "Torrefaction vs Biochar — Strategic Pathway Comparison",
+        name: "Pathmeda CBG Recommendations Report.docx",
         type: "Word", category: "word",
-        description: "Strategic comparison of torrefied pellet vs biochar production pathways for Bombay Bioenergy; evaluates market size, margin profile, carbon credit eligibility, capital intensity, and recommended phasing.",
-        created: "2026-06-07", updated: "2026-06-07",
-        status: "Live", location: "Desktop",
-        tags: "Torrefaction, Biochar, Strategy, Comparison, Pathways",
-        thread: "Thread 6", isNew: true
-    },
-
-    // ── MARKDOWN & TEXT ────────────────────────────────────────────────────
-    {
-        name: "european_bamboo_manufacturers.md",
-        type: "Markdown", category: "markdown",
-        description: "Stage-by-stage procurement guide for European bamboo pellet mill suppliers; covers shortlisting criteria, RFQ process, factory audit checklist, and negotiation framework.",
-        created: "2026-06-06", updated: "2026-06-06",
-        status: "Live", location: "Desktop",
-        tags: "Manufacturers, Procurement Guide, Europe, Bamboo", thread: "Thread 1"
+        description: "Expert recommendations report for improving the Pathmeda CBG plant; covers feedstock optimisation, process efficiency, equipment upgrades, and revenue enhancement strategies.",
+        created: "2026-06-01", updated: "2026-06-01",
+        status: "Delivered", location: "Google Drive", folder: "09 — Gas & Other / 09.1.1 Pathmeda",
+        id: "1MD8oEw_fU-w4FeM8g7pT3YzUt8MyQLzM",
+        tags: "CBG, Pathmeda, Recommendations, Expert Review", thread: "Thread 4"
     },
     {
-        name: "Bamboo_Pellet_Mills_European_Manufacturers_Complete_Analysis.txt",
-        type: "Text", category: "markdown",
-        description: "Full-text plain-text archive of the European bamboo pellet mill manufacturer analysis; backup copy of the structured markdown guide.",
-        created: "2026-06-06", updated: "2026-06-06",
-        status: "Live", location: "Desktop",
-        tags: "Archive, Manufacturers, Analysis, Europe", thread: "Thread 1"
+        name: "CBG Plant CaseStudy — Expert Review.docx",
+        type: "Word", category: "word",
+        description: "Expert-reviewed case study of the Pathmeda CBG plant; documents equipment performance, operational lessons, feedstock mix findings, and consultant recommendations.",
+        created: "2026-06-01", updated: "2026-06-01",
+        status: "Delivered", location: "Google Drive", folder: "09 — Gas & Other / 09.1.1 Pathmeda",
+        id: "1YB6RaqqtcfeeNIzVJuBcNhnpq3XiT9hX",
+        tags: "CBG, Case Study, Expert Review, Pathmeda", thread: "Thread 4"
     },
     {
-        name: "BIOMASS_PROJECT_MASTER_INDEX.txt",
-        type: "Text", category: "markdown",
-        description: "Superseded master index of all project files; replaced by AMTIK_BIOMASS_MASTER_REFERENCE_SHEET.xlsx. Retained for historical reference only.",
-        created: "2026-06-06", updated: "2026-06-07",
-        status: "Archived", location: "Desktop",
-        tags: "Archived, Index, Superseded", thread: "Thread 5"
+        name: "Urja Biosystems — Pathmeda Plant Report.docx",
+        type: "Word", category: "word",
+        description: "Full operational report on the Urja Biosystems CBG plant at Pathmeda; covers plant design, actual vs design throughput, bottlenecks, and corrective actions taken.",
+        created: "2026-06-02", updated: "2026-06-02",
+        status: "Delivered", location: "Google Drive", folder: "09 — Gas & Other / 09.1.1 Pathmeda",
+        id: "1RLMJZ_oOls47I2QFsUSm57FtQ2vVst_e",
+        tags: "CBG, Pathmeda, Urja Biosystems, Operations, Plant Report", thread: "Thread 4"
     },
 
     // ── PDF REPORTS ────────────────────────────────────────────────────────
     {
-        name: "CBG Plant Site Assessment — Consolidated Report",
+        name: "Pathmeda Site Assessment — HPCL Rajasthan.pdf",
         type: "PDF", category: "pdf",
-        description: "Consolidated technical site assessment for a CBG plant in Pathmeda, Rajasthan; covers soil analysis, feedstock availability, logistics, grid connection, and SATAT scheme compliance.",
-        created: "2026-05-15", updated: "2026-05-15",
-        status: "Delivered", location: "Google Drive",
-        tags: "CBG, Site Assessment, Rajasthan, SATAT, Technical", thread: "Thread 4"
-    },
-    {
-        name: "CBG Plant Consultant Case Study (Anonymised)",
-        type: "PDF", category: "pdf",
-        description: "Anonymized case study from a CBG plant consultant; documents equipment selection, feedstock mix, design choices, common failure modes, and success factors.",
-        created: "2026-05-18", updated: "2026-05-18",
-        status: "Delivered", location: "Google Drive",
-        tags: "CBG, Case Study, Consultant, Best Practices", thread: "Thread 4"
+        description: "Consolidated technical site assessment for the Pathmeda CBG plant (HPCL, Rajasthan); covers soil analysis, feedstock availability, logistics, grid connection, and SATAT scheme compliance.",
+        created: "2026-06-01", updated: "2026-05-22",
+        status: "Delivered", location: "Google Drive", folder: "09 — Gas & Other / 09.1.1 Pathmeda",
+        id: "1TWXhOeWDN3frEtBw7OpMdt17yDVqoS4A",
+        tags: "CBG, Site Assessment, Rajasthan, SATAT, HPCL, Technical", thread: "Thread 4"
     },
 
-    // ── EXPORTS ────────────────────────────────────────────────────────────
+    // ── TEXT / POLICY ──────────────────────────────────────────────────────
     {
-        name: "Biomass Pellet Export Markets Analysis",
-        type: "Excel", category: "excel",
-        description: "Export market opportunity analysis for Indian biomass pellets; covers EU, Japan, and South Korea demand forecasts, ENplus/ISO certification requirements, freight logistics, and target FOB price ranges.",
+        name: "Maharashtra CBG Policy 2026 (English).txt",
+        type: "Text", category: "markdown",
+        description: "Full English text of the Maharashtra state CBG / biofuels policy 2026; covers subsidy structures, tariff orders, grid connectivity norms, and SATAT alignment.",
         created: "2026-06-07", updated: "2026-06-07",
-        status: "Live", location: "Desktop",
-        tags: "Exports, EU, Japan, South Korea, ENplus, Certification",
-        thread: "Thread 6", isNew: true
+        status: "Live", location: "Google Drive", folder: "06 — Policy / Direct",
+        id: "1FkgMoApinXmdYnFkCsyqugDfV_OGMJjt",
+        tags: "Policy, Maharashtra, CBG, 2026, Regulatory", thread: "Thread 4"
+    },
+    {
+        name: "BIOMASS_PROJECT_MASTER_INDEX.txt",
+        type: "Text", category: "markdown",
+        description: "Superseded master index of all project files; replaced by BIOMASS_MASTER_REFERENCE_SHEET. Retained for historical reference only.",
+        created: "2026-06-06", updated: "2026-06-07",
+        status: "Archived", location: "Local / Desktop",
+        tags: "Archived, Index, Superseded", thread: "Thread 5"
     },
 
-    // ── WEB ARTIFACTS ──────────────────────────────────────────────────────
+    // ── WEB ARTIFACTS / HTML ───────────────────────────────────────────────
     {
-        name: "Pellet Machine Decision Tool",
+        name: "Pellet Machine Decision Engine",
         type: "Web App", category: "artifact",
-        description: "Interactive decision tool built as a Claude artifact; filters pellet machinery options by capacity, budget, and feedstock type and outputs a scored shortlist with ANDRITZ, CPM, and Bühler comparisons.",
-        created: "2026-06-06", updated: "2026-06-06",
-        status: "Live", location: "Claude Chat",
-        link: "https://claude.ai/artifacts",
-        tags: "Pellet Machinery, Decision Tool, Interactive, Artifact",
-        thread: "Thread 1", isNew: true
+        description: "Interactive HTML decision tool; filters pellet machinery options by capacity, budget, and feedstock type and outputs a scored shortlist with ANDRITZ, CPM, and Bühler comparisons.",
+        created: "2026-06-07", updated: "2026-06-07",
+        status: "Live", location: "Google Drive", folder: "02 — Plant & Machinery / 02.2 Technical Reports",
+        id: "1KBpyXnwpbf9YWl7UMIX9rzNUetVV40WK",
+        link: "https://drive.google.com/file/d/1KBpyXnwpbf9YWl7UMIX9rzNUetVV40WK/view",
+        tags: "Pellet Machinery, Decision Tool, Interactive, HTML", thread: "Thread 1"
     },
     {
-        name: "Pathmeda CBG Plant — Technical Reference Page",
+        name: "Pathmeda CBG Plant — Consolidated Findings",
         type: "Web App", category: "artifact",
-        description: "Interactive technical reference page for the Pathmeda (Rajasthan) CBG plant; covers site layout, equipment specs, feedstock requirements, SATAT compliance checklist, and financial projections.",
-        created: "2026-05-18", updated: "2026-05-18",
+        description: "Interactive HTML reference page for the Pathmeda CBG plant; covers site layout, equipment specs, feedstock requirements, SATAT compliance checklist, and financial projections.",
+        created: "2026-06-07", updated: "2026-06-07",
+        status: "Live", location: "Google Drive", folder: "09 — Gas & Other Projects",
+        id: "1Yx6_pLVJjJkP-Snq8-ir05g7M7k8ez4M",
+        link: "https://drive.google.com/file/d/1Yx6_pLVJjJkP-Snq8-ir05g7M7k8ez4M/view",
+        tags: "CBG, Pathmeda, Rajasthan, Technical Reference, HTML", thread: "Thread 4"
+    },
+    {
+        name: "Solapur Crop & Residue Map",
+        type: "Web App", category: "artifact",
+        description: "Interactive HTML map of Solapur district crop and residue availability; visualizes feedstock potential by taluka, crop type, and season.",
+        created: "2026-06-07", updated: "2026-06-07",
+        status: "Live", location: "Google Drive", folder: "01 — Feedstock & Supply Chain",
+        id: "1y1RVEU1QL5ztt1xRG3Bnfs9burt1NYOh",
+        link: "https://drive.google.com/file/d/1y1RVEU1QL5ztt1xRG3Bnfs9burt1NYOh/view",
+        tags: "Feedstock, Solapur, Map, Interactive, HTML", thread: "Thread 3"
+    },
+    {
+        name: "Bombay Bioenergy — Live File Tracker (GitHub Pages)",
+        type: "Web App", category: "artifact",
+        description: "This tracker itself, hosted publicly on GitHub Pages; auto-updated weekly from Claude sessions. Single-file HTML with search, filter, and sort across all project documents.",
+        created: "2026-06-07", updated: "2026-06-08",
         status: "Live", location: "Claude Chat",
-        link: "https://claude.ai/artifacts",
-        tags: "CBG, Pathmeda, Rajasthan, Technical Reference, Artifact",
-        thread: "Thread 4", isNew: true
+        link: "https://gattooze.github.io/bombay-bioenergy-tracker/bombay-bioenergy-file-tracker.html",
+        tags: "Tracker, GitHub Pages, Live, Public, Meta", thread: "Thread 5"
     }
 ];
 /* ##ALLFILES_END## */
@@ -885,6 +1074,8 @@ function getFileLink(file) {
         return "https://docs.google.com/spreadsheets/d/" + file.id;
     if (file.category === "google-doc" && file.id)
         return "https://docs.google.com/document/d/" + file.id;
+    if (file.id)
+        return "https://drive.google.com/file/d/" + file.id + "/view";
     return null;
 }
 
@@ -948,7 +1139,8 @@ function renderTable(files) {
             '<td class="td-type"><span class="badge ' + typeBadgeClass(file.category) + '">' + escHtml(file.type) + '</span></td>' +
             '<td class="td-desc">' + escHtml(file.description) + '</td>' +
             '<td class="td-status"><span class="badge ' + statusBadgeClass(file.status) + '">' + escHtml(file.status) + '</span></td>' +
-            '<td class="td-location">' + escHtml(file.location) + '</td>' +
+            '<td class="td-location">' + escHtml(file.location) + (file.folder ? '<div style="font-size:10px;color:#888;margin-top:2px;">' + escHtml(file.folder) + '</div>' : '') + '</td>' +
+            '<td class="td-date">' + escHtml(file.created||"") + '</td>' +
             '<td class="td-date">' + escHtml(file.updated) + '</td>' +
         '</tr>';
     }).join("");
