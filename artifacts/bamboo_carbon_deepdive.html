@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bamboo Carbon Products — Bombay Bioenergy Deep-Dive</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0f1210; --panel:#161b18; --panel2:#1c2220; --border:#2a322d;
+  --text:#e8ece8; --textdim:#9aa69e; --accent:#5dcaa5; --accent2:#f0997b;
+  --accent3:#85b7eb; --warn:#ef9f27; --mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);margin:0;padding:0;line-height:1.5;}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 20px 60px;}
+.masthead{border-bottom:2px solid var(--accent);padding-bottom:14px;margin-bottom:22px;}
+.masthead .tag{color:var(--accent);font-size:11px;letter-spacing:2px;text-transform:uppercase;}
+.masthead h1{font-size:22px;margin:6px 0 4px;font-weight:600;color:var(--text);}
+.masthead .sub{color:var(--textdim);font-size:12.5px;}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;}
+.tab{background:var(--panel);border:1px solid var(--border);color:var(--textdim);padding:9px 14px;font-size:12px;cursor:pointer;border-radius:3px;letter-spacing:.3px;transition:all .15s;}
+.tab:hover{border-color:var(--accent);color:var(--text);}
+.tab.active{background:var(--accent);color:#06241a;border-color:var(--accent);font-weight:600;}
+.panel{display:none;}
+.panel.active{display:block;animation:fade .2s;}
+@keyframes fade{from{opacity:0;}to{opacity:1;}}
+h2.sect{font-size:16px;color:var(--accent);border-left:3px solid var(--accent);padding-left:10px;margin:26px 0 12px;text-transform:uppercase;letter-spacing:1px;}
+h3.sub{font-size:13.5px;color:var(--accent3);margin:20px 0 8px;}
+p{font-size:13px;color:var(--text);}
+.callout{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--accent2);padding:12px 14px;font-size:12.5px;margin:12px 0;border-radius:0 4px 4px 0;}
+.callout.warn{border-left-color:var(--warn);}
+.callout.good{border-left-color:var(--accent);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:14px 0;}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:14px 16px;}
+.card .k{color:var(--accent);font-size:11px;letter-spacing:1px;text-transform:uppercase;}
+.card .v{font-size:20px;font-weight:600;margin:6px 0 4px;color:var(--text);}
+.card .d{font-size:11.5px;color:var(--textdim);}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0 18px;}
+th{background:var(--panel2);color:var(--accent);text-align:left;padding:8px 10px;border:1px solid var(--border);font-size:11px;letter-spacing:.5px;text-transform:uppercase;}
+td{padding:7px 10px;border:1px solid var(--border);color:var(--text);}
+tr:nth-child(even) td{background:#13181590;}
+.pill{display:inline-block;font-size:10.5px;padding:2px 8px;border-radius:10px;border:1px solid var(--border);color:var(--textdim);margin-right:4px;}
+.pill.g{border-color:var(--accent);color:var(--accent);}
+.pill.o{border-color:var(--accent2);color:var(--accent2);}
+.pill.b{border-color:var(--accent3);color:var(--accent3);}
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:14px 0;}
+.flowbox{background:var(--panel2);border:1px solid var(--border);padding:10px 14px;border-radius:4px;font-size:11.5px;text-align:center;min-width:110px;}
+.flowbox.hi{border-color:var(--accent);color:var(--accent);}
+.arrow{color:var(--textdim);font-size:14px;}
+.chartwrap{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:16px;margin:14px 0;position:relative;height:300px;}
+.note{font-size:11px;color:var(--textdim);margin-top:4px;}
+.src{font-size:10.5px;color:var(--textdim);border-top:1px solid var(--border);margin-top:24px;padding-top:10px;}
+.kv{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.kv span:first-child{color:var(--textdim);}
+.kv span:last-child{color:var(--text);font-weight:600;}
+.badge-row{display:flex;gap:6px;margin:8px 0;flex-wrap:wrap;}
+.toc{display:flex;flex-direction:column;gap:4px;}
+.toc a{color:var(--textdim);font-size:11.5px;text-decoration:none;cursor:pointer;}
+.toc a:hover{color:var(--accent);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="masthead">
+  <div class="tag">Bombay Bioenergy — Future Fuels Research</div>
+  <h1>Bamboo carbon products: terminology, taxonomy, demand & supply</h1>
+  <div class="sub">Biochar / charcoal / activated carbon — definitions, AC types & processes, India market deep-dive (demand + production), bamboo-specific lens</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-p="t1">1 · Terminology</button>
+  <button class="tab" data-p="t2">2 · AC taxonomy</button>
+  <button class="tab" data-p="t3">3 · Demand deep-dive</button>
+  <button class="tab" data-p="t4">4 · Production deep-dive</button>
+  <button class="tab" data-p="t5">5 · Bombay Bioenergy lens</button>
+</div>
+
+<!-- ============ PANEL 1: TERMINOLOGY ============ -->
+<div class="panel active" id="t1">
+
+<h2 class="sect">Are biochar, charcoal, and activated carbon the same?</h2>
+<p>No — and the confusion is mostly because all three start the same way: <b>pyrolysis</b> (heating bamboo without oxygen). What happens after pyrolysis, and what the product is <i>for</i>, is what separates them. Think of it as one process tree with three exit branches.</p>
+
+<div class="flow">
+  <div class="flowbox hi">Raw bamboo<br><span style="color:var(--textdim)">culm / waste</span></div>
+  <div class="arrow">→</div>
+  <div class="flowbox hi">Pyrolysis<br><span style="color:var(--textdim)">400–800°C, no O₂</span></div>
+  <div class="arrow">→</div>
+  <div class="flowbox">Charcoal / Biochar<br><span style="color:var(--textdim)">(same physical thing)</span></div>
+  <div class="arrow">→</div>
+  <div class="flowbox">+ Activation<br><span style="color:var(--textdim)">steam / chemical, 700–1000°C</span></div>
+  <div class="arrow">→</div>
+  <div class="flowbox hi">Activated Carbon</div>
+</div>
+
+<table>
+<tr><th>Term</th><th>What it physically is</th><th>Intended use</th><th>Key property</th></tr>
+<tr><td><b>Charcoal</b></td><td>Pyrolyzed bamboo, low-to-mid temp (400–600°C), minimal post-processing</td><td>Fuel — cooking, heating, industrial firing</td><td>Energy density (GCV), burns clean, low smoke</td></tr>
+<tr><td><b>Biochar</b></td><td>Physically near-identical to charcoal but produced under controlled conditions and tested for purity/stability</td><td>Soil amendment, carbon sequestration, livestock bedding/feed additive</td><td>Cation exchange capacity, stability (high O:C ratio = more stable carbon), porosity for microbial habitat</td></tr>
+<tr><td><b>Activated carbon / activated charcoal</b></td><td>Charcoal or biochar that has undergone a <i>second</i> high-temperature step (steam/CO₂ or chemical) to blow open the pore structure</td><td>Adsorption — water/air filtration, gold recovery, medicine, gas masks, decolorization</td><td>Surface area (BET, m²/g), iodine number (mg/g) — both far higher than raw charcoal</td></tr>
+</table>
+
+<div class="callout">
+<b>The honest answer on "interchangeable":</b> In casual trade and even in some industry literature, <i>yes</i>, people use these terms loosely — "bamboo charcoal" sold for odor-absorption is functionally marketed like activated carbon even when it isn't activated. The terms differ mainly in end application and source material rather than fundamental chemistry, and the terminology is still settling out across industries. But technically and commercially, the difference matters enormously — biochar cannot be substituted for activated carbon in a water treatment plant, and you legally/functionally cannot sell unactivated charcoal as "activated carbon" to a serious industrial buyer who will test iodine number on receipt.
+</div>
+
+<h3 class="sub">Why bamboo specifically is talked about as superior feedstock</h3>
+<p>Bamboo charcoal is often preferred over regular wood charcoal because reports indicate roughly four times the absorption rate and ten times more surface area — this is the marketing claim you'll see everywhere. The real driver is structural: bamboo's vascular bundle architecture (hollow culm + radial micro-channels) gives it a naturally more porous starting point than solid hardwood, even before activation.</p>
+
+<div class="callout warn">
+<b>Caveat — vet this claim before you repeat it externally.</b> The "4x / 10x" figure traces back to Japanese moso bamboo (<i>Phyllostachys edulis</i>) studies, often comparing <i>activated</i> bamboo carbon to <i>unactivated</i> ordinary wood charcoal — not an apples-to-apples comparison. Independent test data on adsorption (chloroform test) actually ranked bamboo-derived carbon <i>behind</i> Japanese cedar and roughly on par with coconut shell and oak in controlled studies. In one rigorous study ranking chloroform adsorption across raw materials, the order was vinylidene film, then Japanese cedar, then coconut shell roughly tied with evergreen oak, with bamboo last among the materials tested. Use bamboo's real advantages (yield, growth speed, India availability, cost) rather than the inflated 4x/10x claim in technical conversations with buyers.
+</div>
+
+<h3 class="sub">Production temperature is the master variable</h3>
+<div class="chartwrap"><canvas id="tempChart"></canvas></div>
+<p class="note">Illustrative ranges synthesized from pyrolysis/activation literature. At low temp, tars/oils remain and block pores (good for fuel — extra combustible material; bad for adsorption). At high temp, tars burn off, porosity opens up, and with a secondary activation step (steam/CO₂ ~800–1000°C, or chemical agents like H₃PO₄/KOH) you get true activated carbon territory.</p>
+
+</div>
+
+<!-- ============ PANEL 2: AC TAXONOMY ============ -->
+<div class="panel" id="t2">
+
+<h2 class="sect">Activated carbon: the full taxonomy</h2>
+<p>Two independent axes define any activated carbon product: <b>physical form</b> (how it's shaped/sized) and <b>activation process</b> (how the pores were opened). A bamboo-based PAC and a bamboo-based GAC are completely different products serving different customers, even from identical raw feedstock.</p>
+
+<h3 class="sub">Axis 1 — Physical form</h3>
+<table>
+<tr><th>Form</th><th>Particle size</th><th>How made</th><th>Primary application</th><th>Typical customer</th></tr>
+<tr><td><b>PAC</b> — Powdered</td><td>&lt;0.18mm (80 mesh), up to 200–300 mesh for premium grades</td><td>Crushed directly after carbonization/activation</td><td>Liquid-phase: water treatment (batch dosing), sugar decolorization, pharma purification</td><td>Sugar mills, municipal water utilities, food processors, pharma</td></tr>
+<tr><td><b>GAC</b> — Granular</td><td>0.2–5mm; sizes like 8×20, 8×30, 4×8 mesh</td><td>Sized/screened after activation, no binder</td><td>Fixed-bed filtration — gas & liquid phase, longest service life of the three forms</td><td>Water treatment plants, gas masks, air purification, gold recovery (cyanide leach circuits)</td></tr>
+<tr><td><b>EAC</b> — Extruded / pelletized</td><td>0.8–8mm diameter cylinders</td><td>Powder + binder, extruded, then carbonized/activated</td><td>Gas-phase: VOC removal, solvent recovery, low pressure-drop systems</td><td>Industrial gas purification, automotive canisters, chemical plants</td></tr>
+<tr><td><b>Bead (BAC)</b></td><td>0.35–0.8mm spheres</td><td>From petroleum pitch (not typically a bamboo route)</td><td>Multi-cycle regeneration systems</td><td>Speciality industrial — low relevance to bamboo supply chain</td></tr>
+</table>
+<p class="note">Powdered activated carbon's defining standard is particle size below 0.18mm (80 mesh), with high-end products reaching 200–300 mesh for fast, thorough contact with the medium being treated. Granular activated carbon has a relatively larger particle size and smaller external surface area than powder, but is well suited to gases, vapors, and liquids because these diffuse rapidly through the filter bed, and is designated by mesh sizes such as 8×20, 20×40, or 8×30 for liquid-phase use and 4×6, 4×8, or 4×10 for vapor-phase use. Extruded activated carbon combines powdered carbon with a binder, fused and extruded into cylindrical shapes from 0.8 to 130mm in diameter, mainly for gas-phase use due to low pressure drop, high mechanical strength, and low dust.</p>
+
+<h3 class="sub">Axis 2 — Activation process</h3>
+<div class="grid2">
+<div class="card">
+<div class="k">Physical / thermal activation</div>
+<div class="v" style="font-size:14px;">Steam or CO₂, 800–1000°C</div>
+<div class="d">Char is reheated in presence of steam/CO₂ which reacts with carbon to etch out micropores. No chemical residue, easier environmental compliance, considered the "cleaner" route. This is the dominant route for water/food-grade carbon.</div>
+</div>
+<div class="card">
+<div class="k">Chemical activation</div>
+<div class="v" style="font-size:14px;">H₃PO₄, ZnCl₂, or KOH, 400–700°C</div>
+<div class="d">Chemical agent impregnated into raw material before/during carbonization, opens pores at lower temperature, often gives higher surface area but requires acid recovery/washing — generates wastewater, more relevant for speciality/gas-adsorption carbons (e.g., CO₂ capture grades).</div>
+</div>
+</div>
+<p class="note">In physical activation, biochar or carbonized material is reheated to roughly 800–1000°C in the presence of steam or CO₂, an energy-intensive but lower-environmental-impact method that avoids chemical residues or toxic wastewater and produces a consistent product suited to water and air filtration.</p>
+
+<h3 class="sub">Quality benchmarks buyers actually test for</h3>
+<table>
+<tr><th>Metric</th><th>What it measures</th><th>Typical range</th></tr>
+<tr><td>Iodine number (mg/g)</td><td>Micropore adsorption capacity — fast field test</td><td>400–1200+ depending on grade; general commercial range runs 800–1200 mg/g</td></tr>
+<tr><td>BET surface area (m²/g)</td><td>Total internal surface via N₂ gas adsorption — gold-standard lab test</td><td>Coconut shell GAC 900–1200, coal-based GAC 700–1100, wood-based PAC 1200–1800, extruded pellets 800–1100 m²/g</td></tr>
+<tr><td>Methylene blue number</td><td>Mesopore adsorption capacity (larger molecules, decolorization)</td><td>Wood-based carbons rank highest, followed by peach shell, apricot shell, coal, then coconut shell</td></tr>
+<tr><td>Hardness number</td><td>Mechanical durability — critical for fixed-bed reuse</td><td>Coconut shell typically scores 97–99+</td></tr>
+<tr><td>Ash content</td><td>Inorganic residue — lower is better for purity-sensitive uses</td><td>Typically 2–8% depending on feedstock</td></tr>
+<tr><td>pH</td><td>Surface chemistry — affects what it adsorbs best</td><td>Coal-based tends alkaline/high pH; coconut shell typically pH 8–10, closer to neutral</td></tr>
+</table>
+<div class="callout warn"><b>Important nuance:</b> Two carbons with identical iodine numbers can perform very differently in real applications because pore size distribution, surface chemistry, and adsorption kinetics differ — iodine number alone should never be the sole basis for selecting a carbon. Wood-based carbon often shows a higher BET surface area than coconut shell, yet coconut shell outperforms it on small-molecule adsorption, because wood's surface area concentrates in mesopores while coconut shell's concentrates in micropores. Bamboo, being a grass with a lignocellulosic structure closer to wood than to a dense shell, should be benchmarked against wood-based carbon specs — not coconut shell specs.</div>
+
+<h3 class="sub">Raw material comparison — where bamboo sits</h3>
+<div class="chartwrap" style="height:320px;"><canvas id="materialChart"></canvas></div>
+<p class="note">BET surface area ranges by precursor material. Coconut shell GAC: 900–1200 m²/g. Coal-based GAC: 700–1100 m²/g. Wood-based PAC: 1200–1800 m²/g. Extruded pellets: 800–1100 m²/g. Bamboo (lignocellulosic, wood-like) is positioned in research literature in the wood-based bracket, sometimes higher due to natural micro-channel structure, but commercial-scale bamboo AC plants in India are not yet hitting top-end wood-based numbers consistently — this is a process-maturity gap, not a feedstock ceiling.</p>
+
+<h3 class="sub">Which form/process suits which bamboo route</h3>
+<div class="grid3">
+<div class="card"><div class="k">Bamboo waste → PAC</div><div class="v" style="font-size:13px;">Sawdust, chips, offcuts</div><div class="d">Lowest capex entry point. Steam activation. Targets sugar refining, small water treatment, agro-input blending.</div></div>
+<div class="card"><div class="k">Bamboo culm → GAC</div><div class="v" style="font-size:13px;">Whole culm, selectively harvested</div><div class="d">Needs consistent feedstock, better process control. Targets municipal water treatment, gas masks — higher value, higher quality bar.</div></div>
+<div class="card"><div class="k">Bamboo char → EAC</div><div class="v" style="font-size:13px;">Requires binder + extrusion line</div><div class="d">Highest capex, niche. Gas-phase/VOC. Limited current Indian bamboo-EAC production — likely a white space.</div></div>
+</div>
+
+</div>
+
+<!-- ============ PANEL 3: DEMAND DEEP-DIVE ============ -->
+<div class="panel" id="t3">
+
+<h2 class="sect">Demand side — who buys this, and how big is the pie</h2>
+
+<div class="grid3">
+<div class="card"><div class="k">India AC market 2024</div><div class="v">$254.3M</div><div class="d">Revenue generated in 2024, growing at 4.5% CAGR to 2033</div></div>
+<div class="card"><div class="k">India AC market 2033 (est.)</div><div class="v">$376M</div><div class="d">Projected revenue by 2033 at 4.6% CAGR from 2026</div></div>
+<div class="card"><div class="k">Global bamboo GAC market</div><div class="v">$114.7M → $149.7M</div><div class="d">2025 to 2030 at 5.45% CAGR — this is the niche bamboo-specific segment globally</div></div>
+</div>
+
+<div class="grid3">
+<div class="card"><div class="k">India global share — consumption</div><div class="v">~11%</div><div class="d">India accounts for roughly 11% of worldwide AC consumption</div></div>
+<div class="card"><div class="k">India global share — production</div><div class="v">~16%</div><div class="d">And roughly 16% of global production — India is a net exporter</div></div>
+<div class="card"><div class="k">India rank globally</div><div class="v">3rd / 2nd</div><div class="d">World's 3rd-largest consumer and 2nd-largest producer of activated carbon</div></div>
+</div>
+
+<h3 class="sub">Demand by application — India</h3>
+<div class="chartwrap"><canvas id="demandChart"></canvas></div>
+<p class="note">Water treatment dominates application share in India due to rising demand for clean, safe drinking water across both commercial and residential needs tied to urban development policy, while air purification is the fastest-growing segment driven by air quality concerns. Globally, powdered activated carbon dominates with roughly 49.7% share due to versatility and ease of use in liquid-phase treatment.</p>
+
+<h3 class="sub">Customer segments in depth</h3>
+<table>
+<tr><th>Segment</th><th>What they need</th><th>Form/grade</th><th>Demand driver</th></tr>
+<tr><td>Municipal water utilities</td><td>Dechlorination, taste/odor removal, organics removal</td><td>GAC primarily, some PAC for emergency events</td><td>India's National Minimum Standard (MINAS) regulations and rising population driving water filtration needs</td></tr>
+<tr><td>Sugar refining</td><td>Decolorization of raw sugar liquor</td><td>PAC, GAC</td><td>Sugar mills in India and other major producing countries maintain consistent demand as a structural, non-cyclical buyer base</td></tr>
+<tr><td>Pharma & medical</td><td>Drug purification, dialysis, poison treatment</td><td>Ultra-pure PAC/GAC, sterile grades</td><td>High-value segment — dialysis purification and drug manufacturing require ultra-pure grades commanding premium pricing</td></tr>
+<tr><td>Gold mining / recovery</td><td>Cyanide-leach circuit adsorption — needs high hardness</td><td>GAC, coconut-shell-grade hardness preferred</td><td>A resurgence in gold mining in Africa and Australia is intensifying demand for high-hardness coconut-shell-type carbon, a segment where India holds a dominant market share</td></tr>
+<tr><td>Air purification / industrial gas</td><td>VOC, odor, mercury, dioxin capture</td><td>GAC, EAC</td><td>Activated Carbon Injection (ACI) technology adoption for mercury control at industrial and power generation plants is a key growth enabler</td></tr>
+<tr><td>Export buyers (US, Turkey, Chile, EU)</td><td>Coconut-shell-based, certified ESG-compliant sourcing</td><td>GAC mainly</td><td>India exported activated carbon 231 times to 55 buyers in a recent 12-month period — a 112% increase year-on-year, with the US, Turkey, and Chile as the largest destinations</td></tr>
+</table>
+
+<h3 class="sub">Pricing reality (2026)</h3>
+<div class="grid2">
+<div class="card"><div class="k">Retail / small-lot India (PAC/GAC, general grade)</div><div class="v">₹20–140/kg</div><div class="d">IndiaMART and supplier listings show retail starting prices from roughly ₹20–35/kg for basic grades up to ₹80–140/kg for higher-purity coconut-shell carbon</div></div>
+<div class="card"><div class="k">Bulk export GAC (coconut shell)</div><div class="v">$1,500–4,000/MT</div><div class="d">As of early 2026, bulk industrial-grade coconut shell GAC ranges roughly $1,500–4,000/MT depending on iodine number, hardness, and mesh size specs</div></div>
+</div>
+<div class="callout warn"><b>Price volatility risk for bamboo entrants:</b> Activated carbon prices reached USD 2,204/MT in the US and USD 1,651/MT in China by Q1 2026, with the underlying coconut shell charcoal feedstock seeing India's price nearly double from USD 551/MT to USD 983/MT between December 2024 and July 2025 due to coconut harvest disruptions and tightening environmental compliance shutting smaller factories. India's industrial emission norms are also projected to triple domestic activated carbon consumption, tightening export surplus and pushing up global prices for Indian-origin product. This volatility is exactly the opening for bamboo-based carbon as a feedstock hedge — bamboo doesn't compete for tropical coconut acreage or coal mining output, and India's bamboo base is undersupplied relative to potential.</div>
+
+<h3 class="sub">Export economics — India's structural advantage</h3>
+<div class="kv"><span>India AC export value (recent FY)</span><span>$242.2 million</span></div>
+<div class="kv"><span>India AC export volume</span><span>141.9 million kg</span></div>
+<div class="kv"><span>Top export destinations</span><span>United States, Turkey, Chile</span></div>
+<div class="kv"><span>Global AC export leader (value)</span><span>China &gt;$700M; India strong third at &gt;$330M, primarily coconut-shell based</span></div>
+<p class="note">India's export book is overwhelmingly coconut-shell-based today. Bamboo-based AC export is essentially a greenfield category — there's no entrenched competitor moat to dislodge, but also no established buyer trust/spec history to lean on. You'd be selling on cost + sustainability story, not on an incumbent track record.</p>
+
+<h3 class="sub">Why demand keeps climbing — structural tailwinds</h3>
+<div class="badge-row">
+<span class="pill g">Water regulation tightening (MINAS)</span>
+<span class="pill g">Mercury/air emission norms (ACI uptake)</span>
+<span class="pill b">ESG/CBAM sourcing pressure from EU buyers</span>
+<span class="pill o">Coconut feedstock volatility → diversification need</span>
+<span class="pill b">Pharma/dialysis grade premiumization</span>
+<span class="pill g">National Bamboo Mission Phase II cluster push</span>
+</div>
+<p class="note">EU CBAM accounting and traceability requirements are pushing producers toward registration with state bamboo development agencies for documented sourcing chains — this is a real near-term lever for a structured player like Bombay Bioenergy versus informal kiln operators.</p>
+
+</div>
+
+<!-- ============ PANEL 4: PRODUCTION DEEP-DIVE ============ -->
+<div class="panel" id="t4">
+
+<h2 class="sect">Production side — how it's actually made, at what cost</h2>
+
+<h3 class="sub">The three-stage process</h3>
+<div class="flow">
+  <div class="flowbox hi">1. Carbonization<br><span style="color:var(--textdim)">kiln, 450–800°C</span></div>
+  <div class="arrow">→</div>
+  <div class="flowbox hi">2. Size reduction<br><span style="color:var(--textdim)">hammer mill + classifier</span></div>
+  <div class="arrow">→</div>
+  <div class="flowbox hi">3. Activation<br><span style="color:var(--textdim)">steam/chemical</span></div>
+</div>
+<p>Bamboo charcoal/activated carbon production relies on three core stages: carbonization, size reduction, and activation.</p>
+
+<h3 class="sub">Stage 1: Carbonization — kiln choice is the central capex/quality decision</h3>
+<table>
+<tr><th>Kiln type</th><th>Capex (India)</th><th>Yield / efficiency</th><th>Notes</th></tr>
+<tr><td>Traditional brick kiln</td><td>₹15–40 lakh per unit</td><td>Lower yield, higher wood/energy use per tonne output</td><td>Common in informal NE India sector; low quality consistency</td></tr>
+<tr><td>Modern retort kiln (with waste-heat recovery)</td><td>₹1.5–5 crore</td><td>25–30% higher charcoal yield; reduces wood/energy consumption from 4–5 tonnes per tonne of output down to 2–3 tonnes</td><td>Chinese suppliers (Fushun, Jinxi) dominate retort kiln technology globally; Indian fabricators in Ahmedabad and Ludhiana offer cost-competitive alternatives for traditional kiln construction</td></tr>
+</table>
+<div class="callout">Charcoal yield from bamboo is highly variable by method and species: reported yields range from 24.60% to 74.27% across studies — this spread reflects differences in moisture content at input, kiln type, and target carbonization temperature, not a fixed conversion ratio. Don't quote a single "20% yield" number to anyone — it depends entirely on process parameters.</div>
+
+<h3 class="sub">Stage 2: Size reduction</h3>
+<p>Hammer mills (around ₹3–8 lakh for 500 kg/hr throughput) and air classifiers are needed to produce 100–400 mesh activated carbon powder. German (Hosokawa Alpine) or Japanese (Kawasaki) classifiers command premium pricing and ensure consistent particle size distribution critical for pharmaceutical-grade applications, while Indian classifiers from Chennai and Pune offer roughly 80% of German performance at 50% of the cost — a reasonable starting point for non-pharma grades.</p>
+
+<h3 class="sub">Stage 3: Activation</h3>
+<div class="grid2">
+<div class="card"><div class="k">Steam/physical activation</div><div class="d">Higher temp (800–1000°C), cleaner, no chemical wastewater, preferred for water/food-grade carbon destined for India's main demand segment (water treatment).</div></div>
+<div class="card"><div class="k">Chemical activation</div><div class="d">Lower temp, can yield higher surface area for niche specs, but requires acid recovery infrastructure and wastewater handling — higher regulatory burden under SPCB consent norms.</div></div>
+</div>
+
+<h3 class="sub">Regulatory and compliance stack (India)</h3>
+<table>
+<tr><th>Requirement</th><th>Trigger / threshold</th></tr>
+<tr><td>Fire Department NOC</td><td>Carbonization involves 500–800°C; NOC required before factory licence issuance, with annual inspection mandatory for plants above 200 TPD capacity</td></tr>
+<tr><td>Forest/transit permits</td><td>Bamboo harvested from forest areas requires transit permits under State Forest Act</td></tr>
+<tr><td>State Bamboo Agency registration</td><td>Registration with agencies like Assam Bamboo Development Agency or Meghalaya Bamboo Mission provides documented sourcing chain — increasingly required for EU CBAM-compliant export</td></tr>
+<tr><td>EIA Notification</td><td>Projects with production capacity above 5 tonnes/day require Environmental Impact Assessment compliance</td></tr>
+<tr><td>SPCB consent + BIS testing</td><td>Standard route via state pollution control board; BIS testing coordination typically managed through specialist consultants</td></tr>
+</table>
+
+<h3 class="sub">Where current Indian bamboo charcoal/AC capacity sits geographically</h3>
+<div class="badge-row">
+<span class="pill g">Assam</span><span class="pill g">Tripura</span><span class="pill g">Meghalaya</span><span class="pill b">Karnataka</span><span class="pill o">Chhattisgarh</span>
+</div>
+<p>India's abundant bamboo cultivation in states like Assam, Tripura, and Chhattisgarh gives it strong underlying potential for this business, and National Bamboo Mission Phase II is actively building momentum through clusters specifically in Assam, Tripura, Meghalaya, and Karnataka. Most existing bamboo charcoal trade listings cluster in Assam (Guwahati), Tripura (Agartala), and West Bengal (Siliguri) — geographically logical given NE India's bamboo density, but these are largely small/informal units, not integrated activated-carbon-grade producers.</p>
+
+<div class="callout warn"><b>The supply-side gap, stated plainly:</b> India has abundant raw bamboo and a long tail of small charcoal kilns (the Tripura/Assam ecosystem), but very few of these are vertically integrated into activated-carbon-grade output. The activation step — the highest value-add stage — is dominated by coconut-shell and coal-based players (Suneeta Carbons, Raj Carbon, Active Char Products, Kalpaka Chemicals) who are not bamboo-focused. India's activated carbon industry strongly leans on coconut shell charcoal as its dominant domestic feedstock. This is the structural white space: someone who controls bamboo feedstock AND builds activation capacity captures margin currently left on the table between NE India's raw kilns and the AC manufacturers in Gujarat/Tamil Nadu/Delhi.</div>
+
+<h3 class="sub">Capex snapshot — full bamboo charcoal/AC plant</h3>
+<div class="grid2">
+<div class="card"><div class="k">Medium-scale plant total capex</div><div class="v">$1.5–3M</div><div class="d">Varies with kiln technology, local construction rates, and scale of activation capacity added</div></div>
+<div class="card"><div class="k">Indicative segment economics</div><div class="v">Carbonization-only ≠ AC-grade</div><div class="d">A retort kiln alone (₹1.5–5 cr) gets you charcoal/biochar grade only. Activation + classification adds substantially to capex and is the actual value-add step buyers pay premium for.</div></div>
+</div>
+
+<h3 class="sub">Major Indian AC manufacturers (mostly non-bamboo today — your competitive set or potential JV partners)</h3>
+<table>
+<tr><th>Company</th><th>Feedstock focus</th><th>Notes</th></tr>
+<tr><td>Suneeta Carbons</td><td>Coconut shell</td><td>One of India's largest exporters</td></tr>
+<tr><td>Raj Carbon</td><td>Coconut shell</td><td>High-quality, sustainable positioning</td></tr>
+<tr><td>Active Char Products</td><td>Coconut shell</td><td>Export-oriented</td></tr>
+<tr><td>Kalpaka Chemicals</td><td>Coconut shell</td><td>18,600 MT/year manufacturing capacity</td></tr>
+<tr><td>Indo German Carbons, Genuine Shell Carb</td><td>Coconut/coal</td><td>Listed among key Indian players in global industry reports</td></tr>
+</table>
+
+</div>
+
+<!-- ============ PANEL 5: BOMBAY BIOENERGY LENS ============ -->
+<div class="panel" id="t5">
+
+<h2 class="sect">What this means for Bombay Bioenergy specifically</h2>
+
+<h3 class="sub">Strategic positioning options</h3>
+<div class="grid3">
+<div class="card">
+<div class="k">Option A — Feedstock supplier</div>
+<div class="v" style="font-size:14px;">Sell bamboo charcoal/biochar upstream</div>
+<div class="d">Lowest capex, fastest to revenue. Sell carbonized bamboo to existing AC manufacturers (coconut-shell players diversifying feedstock) or to biochar/soil-amendment buyers. No activation capex needed. Margin is thin but de-risked.</div>
+</div>
+<div class="card">
+<div class="k">Option B — Integrated to GAC</div>
+<div class="v" style="font-size:14px;">Carbonize + activate, target water treatment</div>
+<div class="d">Highest alignment with India's largest demand segment (water treatment). Requires retort kiln + steam activation + classifier. Capex in the $1.5–3M range for medium scale. Best margin capture but needs quality consistency to win municipal/industrial tenders.</div>
+</div>
+<div class="card">
+<div class="k">Option C — Biochar for ag/carbon credits</div>
+<div class="v" style="font-size:14px;">Soil amendment, carbon sequestration</div>
+<div class="d">Lower technical bar than activated carbon (no activation step needed). Plays into carbon credit/regenerative agriculture trend. Smaller addressable market in India today than water treatment, but lower capex and faster path to a sellable product.</div>
+</div>
+</div>
+
+<h3 class="sub">Fit against your existing pellet-plant economics</h3>
+<div class="callout good">
+Your bamboo sourcing chain (already being built for pellets — Bharat Bamboo Association links, Maharashtra district scouting) is the same upstream chain a charcoal/AC line would need. The over-mature culms you flagged as suboptimal for pellet grinding (Images 3/5 from your field samples — higher lignin, tougher on hammer mills) may actually be <i>better</i> suited to carbonization, where higher lignin content is not a penalty. This is a genuine synergy: a two-stream sourcing strategy where younger/3-year culms go to pellets and older/over-mature culms go to a future charcoal line, rather than a single-grade harvest that compromises both.
+</div>
+<div class="callout warn">
+This is a clearly separate business line from pellets — different equipment, different buyers, different regulatory stack (EIA threshold differs, fire NOC differs). Don't let this become a distraction from the NTPC GeM bid timeline (pre-bid conference 26 June, bid closing 9 July) currently in motion. Worth scoping as a Phase 2 initiative once pellet plant execution is locked in, not a parallel build-now item.
+</div>
+
+<h3 class="sub">Suggested next research steps if you want to pursue this</h3>
+<table>
+<tr><th>Question</th><th>Why it matters</th></tr>
+<tr><td>What iodine number / BET can your actual bamboo species (B. bambos, D. strictus) achieve at lab scale?</td><td>No public Indian data found specific to these two species for AC grade — this needs a lab trial, not a literature search</td></tr>
+<tr><td>Who are the 2–3 nearest coconut-shell AC manufacturers willing to trial bamboo char as blended feedstock?</td><td>De-risked Option A entry — sell into existing activation capacity before building your own</td></tr>
+<tr><td>What's the real landed cost of a retort kiln from Ahmedabad/Ludhiana fabricators vs. Chinese (Fushun/Jinxi) imports?</td><td>Capex is the single biggest variable separating Option A from Option B</td></tr>
+<tr><td>Does NMBA Phase II have any capex subsidy or cluster scheme Solapur/Maharashtra bamboo could plug into?</td><td>Could materially de-risk capex if Maharashtra is an active NBM cluster state</td></tr>
+</table>
+
+<p class="note">Want me to pull NMBA Phase II Maharashtra-specific scheme details, or model the capex/payback for Option A vs B vs C against your actual projected bamboo volumes? Happy to build that out next.</p>
+
+</div>
+
+<div class="src">
+Sources: IndexBox India AC Market Report 2026 · Grand View Research / Horizon Databook · Market Research Future · StellarMR · MarketsandMarkets · Market.us Global AC Market Report · InkWood Research · Eximpedia trade data · ResearchAndMarkets Bamboo GAC Market 2025–2030 · Springer Nature Biomass Conversion & Biorefinery journal · KAMRIT Bamboo Charcoal Project Report · ExpertMarketResearch · Western Carbon & Chemicals technical guides · Heycarb/Hojee technical guides · Yanshan Carbon price trends · GTAIC market reports · IndiaMART/TradeIndia/ExportersIndia pricing listings · Qizhong Carbon · Kingdotech · Wikipedia (Activated carbon). All figures are as found in cited sources as of June 2026; verify before external use in investor or government-facing documents.
+</div>
+
+</div>
+
+<script>
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById(t.dataset.p).classList.add('active');
+  });
+});
+
+const gridColor='#2a322d', textColor='#9aa69e';
+
+new Chart(document.getElementById('tempChart'),{
+  type:'line',
+  data:{
+    labels:['300','400','500','600','700','800','900','1000'],
+    datasets:[
+      {label:'Tar/oil content (relative)',data:[90,70,45,25,10,4,1,0],borderColor:'#f0997b',backgroundColor:'transparent',tension:.35},
+      {label:'Pore openness / surface area (relative)',data:[5,15,30,50,68,85,95,100],borderColor:'#5dcaa5',backgroundColor:'transparent',tension:.35}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:textColor,font:{size:11}}}},
+    scales:{
+      x:{title:{display:true,text:'Process temperature (°C)',color:textColor,font:{size:11}},ticks:{color:textColor},grid:{color:gridColor}},
+      y:{title:{display:true,text:'Relative level',color:textColor,font:{size:11}},ticks:{color:textColor},grid:{color:gridColor}}
+    }
+  }
+});
+
+new Chart(document.getElementById('materialChart'),{
+  type:'bar',
+  data:{
+    labels:['Coal-based GAC','Coconut shell GAC','Extruded pellets','Wood-based PAC (bamboo bracket)'],
+    datasets:[{
+      label:'BET surface area range (m²/g)',
+      data:[[700,1100],[900,1200],[800,1100],[1200,1800]],
+      backgroundColor:['#85b7eb','#5dcaa5','#7f77dd','#f0997b']
+    }]
+  },
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{title:{display:true,text:'BET surface area (m²/g)',color:textColor,font:{size:11}},ticks:{color:textColor},grid:{color:gridColor}},
+      y:{ticks:{color:textColor,font:{size:11}},grid:{display:false}}
+    }
+  }
+});
+
+new Chart(document.getElementById('demandChart'),{
+  type:'doughnut',
+  data:{
+    labels:['Water treatment','Air purification','Food & beverage / sugar','Pharma / medical','Gold recovery / industrial gas','Other'],
+    datasets:[{data:[38,22,16,12,8,4],backgroundColor:['#5dcaa5','#85b7eb','#f0997b','#d4537e','#fac775','#888780']}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'right',labels:{color:textColor,font:{size:11},boxWidth:12}}}
+  }
+});
+</script>
+</body>
+</html>

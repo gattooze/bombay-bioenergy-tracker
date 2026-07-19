@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bamboo Pelletisation Guide — India</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --ink: #0e0e0e;
+  --paper: #f5f0e8;
+  --bamboo: #4a7c3f;
+  --bamboo-light: #7aad6a;
+  --bamboo-pale: #d4e8cf;
+  --amber: #c8780a;
+  --amber-pale: #fdf0d5;
+  --red: #b83232;
+  --red-pale: #fde8e8;
+  --teal: #1a6b6b;
+  --teal-pale: #d5eded;
+  --gold: #d4a017;
+  --mid: #5a5a4a;
+  --light: #e8e3d8;
+  --border: #c8c3b3;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  background: var(--ink);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  overflow: hidden;
+}
+.hero-left {
+  padding: 80px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 2;
+}
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--bamboo-light);
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(72px, 8vw, 120px);
+  line-height: 0.9;
+  color: var(--paper);
+  letter-spacing: 2px;
+  margin-bottom: 32px;
+}
+.hero-title span { color: var(--bamboo-light); }
+.hero-subtitle {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #a0a090;
+  max-width: 380px;
+  margin-bottom: 40px;
+}
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  max-width: 400px;
+}
+.hero-stat {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 16px;
+}
+.hero-stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  color: var(--bamboo-light);
+  line-height: 1;
+}
+.hero-stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+.hero-right {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bamboo-visual {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  height: 500px;
+}
+.bamboo-culm {
+  width: 42px;
+  border-radius: 21px 21px 8px 8px;
+  position: relative;
+  animation: grow 1.2s ease-out forwards;
+  transform-origin: bottom;
+  opacity: 0;
+}
+.bamboo-culm::after {
+  content: '';
+  position: absolute;
+  height: 3px;
+  background: rgba(0,0,0,0.25);
+  left: 8px; right: 8px;
+  border-radius: 2px;
+}
+@keyframes grow {
+  from { transform: scaleY(0); opacity: 0; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+.c1 { background: #2d4a28; height: 220px; animation-delay: 0.1s; }
+.c1::after { bottom: 55px; }
+.c2 { background: #3a6032; height: 300px; animation-delay: 0.2s; }
+.c2::after { bottom: 80px; }
+.c3 { background: #4a7c3f; height: 420px; animation-delay: 0.3s; }
+.c3::after { bottom: 110px; }
+.c4 { background: #5e9950; height: 480px; animation-delay: 0.4s; }
+.c4::after { bottom: 130px; }
+.c5 { background: #4a7c3f; height: 380px; animation-delay: 0.5s; }
+.c5::after { bottom: 100px; }
+.c6 { background: #3a6032; height: 260px; animation-delay: 0.6s; }
+.c6::after { bottom: 70px; }
+.c7 { background: #2d4a28; height: 180px; animation-delay: 0.7s; }
+.c7::after { bottom: 45px; }
+
+.culm-label {
+  position: absolute;
+  bottom: -30px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: #666;
+  text-align: center;
+  width: 100%;
+  left: 0;
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(74,124,63,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky;
+  top: 0;
+  background: var(--ink);
+  z-index: 100;
+  padding: 0 60px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.nav-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #666;
+  padding: 16px 14px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s;
+  border-bottom: 2px solid transparent;
+}
+.nav-link:hover { color: var(--bamboo-light); border-bottom-color: var(--bamboo-light); }
+.nav-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  color: var(--bamboo-light);
+  margin-right: auto;
+  padding: 14px 0;
+}
+
+/* ── SECTIONS ── */
+section { padding: 80px 60px; }
+section:nth-child(even) { background: var(--light); }
+
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--bamboo);
+  margin-bottom: 12px;
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(42px, 5vw, 64px);
+  line-height: 0.95;
+  letter-spacing: 1px;
+  margin-bottom: 48px;
+}
+
+/* ── SPECIES TABLE ── */
+.species-grid {
+  display: grid;
+  gap: 2px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.species-header {
+  display: grid;
+  grid-template-columns: 200px 1fr 1fr 1fr 1fr 1fr 80px;
+  background: var(--ink);
+  gap: 1px;
+}
+.species-header-cell {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #888;
+  padding: 12px 14px;
+  background: var(--ink);
+}
+.species-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 1fr 1fr 1fr 1fr 80px;
+  gap: 1px;
+  background: var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.species-row:hover .spec-cell { background: #fffff0; }
+.spec-cell {
+  padding: 14px;
+  background: var(--paper);
+  font-size: 12px;
+  line-height: 1.4;
+  transition: background 0.15s;
+}
+.spec-name { font-weight: 700; color: var(--bamboo); font-size: 13px; }
+.spec-sciname { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--mid); font-style: italic; }
+.bar-wrap { display: flex; align-items: center; gap: 8px; }
+.mini-bar { height: 6px; border-radius: 3px; }
+.bar-val { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--mid); white-space: nowrap; }
+.rank-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+}
+.rank-1 { background: var(--bamboo-pale); color: var(--bamboo); }
+.rank-2 { background: var(--teal-pale); color: var(--teal); }
+.rank-3 { background: var(--amber-pale); color: var(--amber); }
+.rank-4 { background: var(--light); color: var(--mid); }
+
+/* ── CHART GRID ── */
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.chart-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+.chart-card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  padding: 24px;
+  position: relative;
+}
+.chart-card h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 20px;
+}
+.chart-card canvas { max-height: 260px; }
+
+/* ── AGE TIMELINE ── */
+.age-timeline {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2px;
+  background: var(--border);
+  margin-bottom: 32px;
+}
+.age-col {
+  background: var(--paper);
+  padding: 20px 16px;
+  text-align: center;
+  position: relative;
+}
+.age-col.optimal { background: var(--bamboo-pale); }
+.age-col.avoid { background: var(--red-pale); }
+.age-col.caution { background: var(--amber-pale); }
+.age-year {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  color: var(--bamboo);
+  line-height: 1;
+}
+.age-col.avoid .age-year { color: var(--red); }
+.age-col.caution .age-year { color: var(--amber); }
+.age-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: var(--mid); margin-bottom: 16px; }
+.age-prop { font-size: 11px; line-height: 1.6; color: var(--ink); }
+.age-prop strong { font-weight: 700; }
+.age-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  border-radius: 2px;
+}
+.badge-optimal { background: var(--bamboo); color: white; }
+.badge-avoid { background: var(--red); color: white; }
+.badge-caution { background: var(--amber); color: white; }
+.badge-ok { background: var(--teal); color: white; }
+
+/* ── DOS DONTS ── */
+.dos-donts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  background: var(--border);
+}
+.dos, .donts {
+  padding: 40px;
+  background: var(--paper);
+}
+.dos { border-left: 6px solid var(--bamboo); }
+.donts { border-left: 6px solid var(--red); }
+.dd-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  margin-bottom: 24px;
+  letter-spacing: 1px;
+}
+.dos .dd-title { color: var(--bamboo); }
+.donts .dd-title { color: var(--red); }
+.dd-item {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 18px;
+  align-items: flex-start;
+}
+.dd-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-weight: 700;
+}
+.do-icon { background: var(--bamboo-pale); color: var(--bamboo); }
+.dont-icon { background: var(--red-pale); color: var(--red); }
+.dd-text { font-size: 13px; line-height: 1.6; }
+.dd-text strong { font-weight: 700; }
+
+/* ── PROCESS FLOW ── */
+.process-flow {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 2px;
+  background: var(--border);
+  margin-bottom: 40px;
+}
+.process-step {
+  background: var(--paper);
+  padding: 20px 12px;
+  text-align: center;
+  position: relative;
+}
+.process-step.highlight { background: var(--bamboo-pale); }
+.process-step.warning { background: var(--amber-pale); }
+.process-step.critical { background: var(--red-pale); }
+.step-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: var(--bamboo);
+  line-height: 1;
+}
+.process-step.warning .step-num { color: var(--amber); }
+.process-step.critical .step-num { color: var(--red); }
+.step-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin: 6px 0;
+}
+.step-note { font-size: 10px; line-height: 1.4; color: var(--ink); }
+
+/* ── PROBLEMS GRID ── */
+.problems-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.problem-card {
+  border: 1px solid var(--border);
+  padding: 20px;
+  background: var(--paper);
+  position: relative;
+  overflow: hidden;
+}
+.problem-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.problem-card.high::before { background: var(--red); }
+.problem-card.medium::before { background: var(--amber); }
+.problem-card.low::before { background: var(--bamboo); }
+.problem-severity {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.problem-card.high .problem-severity { color: var(--red); }
+.problem-card.medium .problem-severity { color: var(--amber); }
+.problem-card.low .problem-severity { color: var(--bamboo); }
+.problem-title { font-weight: 700; font-size: 13px; margin-bottom: 8px; }
+.problem-text { font-size: 11px; line-height: 1.5; color: var(--mid); }
+
+/* ── SPEC TABLE ── */
+.spec-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.spec-table th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 12px 16px;
+  background: var(--ink);
+  color: #888;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.spec-table td {
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  background: var(--paper);
+  vertical-align: top;
+}
+.spec-table tr:hover td { background: #fffff0; }
+.spec-table td:first-child { font-weight: 600; }
+.pass { color: var(--bamboo); font-weight: 600; }
+.fail { color: var(--red); font-weight: 600; }
+.maybe { color: var(--amber); font-weight: 600; }
+
+/* ── INSIGHT BOXES ── */
+.insight-box {
+  border-left: 4px solid var(--bamboo);
+  background: var(--bamboo-pale);
+  padding: 20px 24px;
+  margin: 24px 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.insight-box.warning { border-color: var(--amber); background: var(--amber-pale); }
+.insight-box.danger { border-color: var(--red); background: var(--red-pale); }
+.insight-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--bamboo);
+  margin-bottom: 6px;
+}
+.insight-box.warning .insight-label { color: var(--amber); }
+.insight-box.danger .insight-label { color: var(--red); }
+
+/* ── HARVEST WINDOWS ── */
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 2px;
+  background: var(--border);
+  margin-bottom: 16px;
+}
+.month-cell {
+  padding: 14px 8px;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.month-cell.harvest { background: var(--bamboo-pale); color: var(--bamboo); }
+.month-cell.avoid-m { background: var(--red-pale); color: var(--red); }
+.month-cell.peak { background: var(--bamboo); color: white; }
+.month-icon { font-size: 14px; margin-bottom: 4px; }
+.month-name { font-weight: 600; }
+.month-status { font-size: 8px; margin-top: 2px; opacity: 0.8; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--ink);
+  padding: 40px 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+footer p {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #555;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  section { padding: 60px 24px; }
+  nav { padding: 0 24px; overflow-x: auto; }
+  .chart-grid, .chart-grid-3, .dos-donts { grid-template-columns: 1fr; }
+  .species-header, .species-row { grid-template-columns: 1fr; }
+  .process-flow { grid-template-columns: repeat(5, 1fr); }
+  .problems-grid { grid-template-columns: 1fr 1fr; }
+  .age-timeline { grid-template-columns: repeat(3, 1fr); }
+  .month-grid { grid-template-columns: repeat(6, 1fr); }
+  footer { flex-direction: column; gap: 12px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Amtik Biofuels · Operational Intelligence Report</div>
+    <h1 class="hero-title">BAMBOO<br><span>PELLETISA-<br>TION</span><br>GUIDE</h1>
+    <p class="hero-subtitle">Everything you need to know about processing bamboo into export-grade and SAMARTH-compliant biomass pellets — from species selection to die operations. India-specific.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">4,560+</div>
+        <div class="hero-stat-label">kcal/kg GCV</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">≤0.4%</div>
+        <div class="hero-stat-label">Ash (best)</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">3 Yrs</div>
+        <div class="hero-stat-label">Optimal age</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">81%</div>
+        <div class="hero-stat-label">Combustion eff.</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">10</div>
+        <div class="hero-stat-label">Key species</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">2:1</div>
+        <div class="hero-stat-label">Fresh → pellet</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-overlay"></div>
+    <div class="bamboo-visual">
+      <div class="bamboo-culm c1"><div class="culm-label">1yr</div></div>
+      <div class="bamboo-culm c2"><div class="culm-label">2yr</div></div>
+      <div class="bamboo-culm c3"><div class="culm-label">3yr</div></div>
+      <div class="bamboo-culm c4" style="border:3px solid #7aad6a;box-shadow:0 0 30px rgba(122,173,106,0.4)"><div class="culm-label" style="color:#7aad6a;font-weight:bold">★ BEST</div></div>
+      <div class="bamboo-culm c5"><div class="culm-label">4yr</div></div>
+      <div class="bamboo-culm c6"><div class="culm-label">5yr</div></div>
+      <div class="bamboo-culm c7" style="opacity:0.4"><div class="culm-label">6yr+</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">BAMBOO PELLET</div>
+  <a class="nav-link" href="#species">Species</a>
+  <a class="nav-link" href="#age">Age Effect</a>
+  <a class="nav-link" href="#process">Process</a>
+  <a class="nav-link" href="#specs">Specifications</a>
+  <a class="nav-link" href="#harvesting">Harvesting</a>
+  <a class="nav-link" href="#dosdont">Dos & Don'ts</a>
+</nav>
+
+<!-- SECTION 1: SPECIES -->
+<section id="species">
+  <div class="section-label">01 / Species Intelligence</div>
+  <h2 class="section-title">10 SPECIES FOR<br>MAHARASHTRA</h2>
+
+  <div class="species-grid">
+    <div class="species-header">
+      <div class="species-header-cell">Species</div>
+      <div class="species-header-cell">GCV (kcal/kg)</div>
+      <div class="species-header-cell">Ash %</div>
+      <div class="species-header-cell">Lignin %</div>
+      <div class="species-header-cell">Silica Risk</div>
+      <div class="species-header-cell">MH Availability</div>
+      <div class="species-header-cell">Rank</div>
+    </div>
+
+    <!-- Species rows -->
+    <div class="species-row">
+      <div class="spec-cell"><div class="spec-name">Beema Bamboo</div><div class="spec-sciname">B. balcooa</div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:90%;background:var(--bamboo)"></div><span class="bar-val">4,685</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:22%;background:var(--bamboo)"></div><span class="bar-val">1.4–2.2%</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:88%;background:var(--teal)"></div><span class="bar-val">24–28%</span></div></div>
+      <div class="spec-cell"><span class="rank-badge rank-1">LOW</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-1">VERY HIGH</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-1">★ #1</span></div>
+    </div>
+    <div class="species-row">
+      <div class="spec-cell"><div class="spec-name">Nutan</div><div class="spec-sciname">B. nutans</div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:88%;background:var(--bamboo)"></div><span class="bar-val">4,590</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:12%;background:var(--bamboo)"></div><span class="bar-val">1.28%</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:100%;background:var(--teal)"></div><span class="bar-val">29.66%</span></div></div>
+      <div class="spec-cell"><span class="rank-badge rank-1">LOWEST</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-2">MED-HIGH</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-1">★ #1</span></div>
+    </div>
+    <div class="species-row">
+      <div class="spec-cell"><div class="spec-name">Male Bamboo</div><div class="spec-sciname">D. strictus</div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:86%;background:var(--bamboo)"></div><span class="bar-val">4,530</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:25%;background:var(--amber)"></div><span class="bar-val">1.5–3.0%</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:85%;background:var(--teal)"></div><span class="bar-val">24–26%</span></div></div>
+      <div class="spec-cell"><span class="rank-badge rank-2">MEDIUM</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-1">HIGHEST</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-2">#2</span></div>
+    </div>
+    <div class="species-row">
+      <div class="spec-cell"><div class="spec-name">God Bamboo</div><div class="spec-sciname">D. asper</div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:84%;background:var(--bamboo)"></div><span class="bar-val">4,445</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:20%;background:var(--bamboo)"></div><span class="bar-val">1.5–2.5%</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:80%;background:var(--teal)"></div><span class="bar-val">22–26%</span></div></div>
+      <div class="spec-cell"><span class="rank-badge rank-2">MEDIUM</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-2">MEDIUM</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-2">#3</span></div>
+    </div>
+    <div class="species-row">
+      <div class="spec-cell"><div class="spec-name">Giant Thorny</div><div class="spec-sciname">B. bambos</div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:85%;background:var(--bamboo)"></div><span class="bar-val">4,530</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:28%;background:var(--amber)"></div><span class="bar-val">1.8–3.0%</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:72%;background:var(--teal)"></div><span class="bar-val">22–26%</span></div></div>
+      <div class="spec-cell"><span class="rank-badge rank-3">MED-HIGH</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-1">VERY HIGH</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-3">#4</span></div>
+    </div>
+    <div class="species-row">
+      <div class="spec-cell"><div class="spec-name">Bulka Bamboo</div><div class="spec-sciname">D. brandisii</div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:84%;background:var(--bamboo)"></div><span class="bar-val">4,480</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:26%;background:var(--amber)"></div><span class="bar-val">1.8–2.8%</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:78%;background:var(--teal)"></div><span class="bar-val">24–28%</span></div></div>
+      <div class="spec-cell"><span class="rank-badge rank-2">MEDIUM</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-2">MEDIUM</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-3">#5</span></div>
+    </div>
+    <div class="species-row">
+      <div class="spec-cell"><div class="spec-name">Stocks Bamboo</div><div class="spec-sciname">D. stocksii</div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:86%;background:var(--bamboo)"></div><span class="bar-val">4,530</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:22%;background:var(--bamboo)"></div><span class="bar-val">1.5–2.5%</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:82%;background:var(--teal)"></div><span class="bar-val">24–28%</span></div></div>
+      <div class="spec-cell"><span class="rank-badge rank-2">MEDIUM</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-3">W.GHATS ONLY</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-3">#6</span></div>
+    </div>
+    <div class="species-row">
+      <div class="spec-cell"><div class="spec-name">Indian Timber</div><div class="spec-sciname">B. tulda</div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:85%;background:var(--bamboo)"></div><span class="bar-val">4,490</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:35%;background:var(--amber)"></div><span class="bar-val">1.8–4.3%</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:72%;background:var(--teal)"></div><span class="bar-val">22–25%</span></div></div>
+      <div class="spec-cell"><span class="rank-badge rank-2">MEDIUM</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-4">ASSAM ONLY</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-4">#7</span></div>
+    </div>
+    <div class="species-row">
+      <div class="spec-cell"><div class="spec-name">Muli Bamboo</div><div class="spec-sciname">M. baccifera</div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:75%;background:var(--amber)"></div><span class="bar-val">4,300</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:30%;background:var(--amber)"></div><span class="bar-val">1.8–3.5%</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:65%;background:var(--teal)"></div><span class="bar-val">25–28%</span></div></div>
+      <div class="spec-cell"><span class="rank-badge rank-2">MEDIUM</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-4">ASSAM ONLY</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-4">#9</span></div>
+    </div>
+    <div class="species-row">
+      <div class="spec-cell"><div class="spec-name">Pecha Bamboo</div><div class="spec-sciname">D. hamiltonii</div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:78%;background:var(--amber)"></div><span class="bar-val">4,460</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:32%;background:var(--red)"></div><span class="bar-val">2.0–3.5%</span></div></div>
+      <div class="spec-cell"><div class="bar-wrap"><div class="mini-bar" style="width:68%;background:var(--teal)"></div><span class="bar-val">22–26%</span></div></div>
+      <div class="spec-cell"><span class="rank-badge rank-3">MED-HIGH</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-4">ASSAM ONLY</span></div>
+      <div class="spec-cell"><span class="rank-badge rank-4">#10</span></div>
+    </div>
+  </div>
+
+  <div class="insight-box" style="margin-top:24px">
+    <div class="insight-label">Key Insight</div>
+    <strong>B. nutans (Nutan) has the HIGHEST lignin at 29.66%</strong> — meaning best self-binding without additives and lowest die wear. <strong>B. balcooa (Beema clone)</strong> wins on yield (100–125 t/ha/yr) and GCV. Test both as your primary species. <strong>D. strictus (Manvel)</strong> is your cheapest and most abundant Maharashtra option — use as blending feedstock.
+  </div>
+
+  <div class="chart-grid" style="margin-top:32px">
+    <div class="chart-card">
+      <h3>GCV Comparison — kcal/kg (dry basis)</h3>
+      <canvas id="gcvChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Ash Content % — lower is better</h3>
+      <canvas id="ashChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Lignin % — higher = better self-binding</h3>
+      <canvas id="ligninChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Maharashtra Availability Score (0–10)</h3>
+      <canvas id="availChart"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: AGE -->
+<section id="age">
+  <div class="section-label">02 / Age Intelligence</div>
+  <h2 class="section-title">AGE vs<br>PELLET QUALITY</h2>
+
+  <div class="age-timeline">
+    <div class="age-col caution">
+      <div class="age-year">1</div>
+      <div class="age-label">Year Old</div>
+      <span class="age-badge badge-avoid">Reject</span>
+      <div class="age-prop">
+        <strong>Lignin:</strong> 14–19% — immature<br>
+        <strong>Carbs:</strong> Very high — jams die<br>
+        <strong>Ash:</strong> 1.5–3.5% — high<br>
+        <strong>MC fresh:</strong> 50–60%<br>
+        <strong>Durability:</strong> &lt;95% — fails spec<br>
+        <strong>Die risk:</strong> JAMS WITHIN 30 MIN
+      </div>
+    </div>
+    <div class="age-col caution">
+      <div class="age-year">2</div>
+      <div class="age-label">Years Old</div>
+      <span class="age-badge badge-caution">Caution</span>
+      <div class="age-prop">
+        <strong>Lignin:</strong> 20–24% — developing<br>
+        <strong>Carbs:</strong> Still high<br>
+        <strong>Ash:</strong> 1.3–2.5%<br>
+        <strong>MC fresh:</strong> 48–58%<br>
+        <strong>Durability:</strong> 95–96%<br>
+        <strong>Die risk:</strong> Moderate jams
+      </div>
+    </div>
+    <div class="age-col optimal">
+      <div class="age-year">3</div>
+      <div class="age-label">Years Old</div>
+      <span class="age-badge badge-optimal">★ OPTIMAL</span>
+      <div class="age-prop">
+        <strong>Lignin:</strong> 24–30% — PEAK<br>
+        <strong>Cellulose:</strong> 49–55% — PEAK<br>
+        <strong>Ash:</strong> 1.2–2.2% — LOWEST<br>
+        <strong>Silica:</strong> LOWEST<br>
+        <strong>Durability:</strong> 96–98%<br>
+        <strong>Die risk:</strong> LOW — optimal flow
+      </div>
+    </div>
+    <div class="age-col optimal">
+      <div class="age-year">4</div>
+      <div class="age-label">Years Old</div>
+      <span class="age-badge badge-ok">Good</span>
+      <div class="age-prop">
+        <strong>Lignin:</strong> 24–28% — plateau<br>
+        <strong>Cellulose:</strong> 47–52%<br>
+        <strong>Ash:</strong> 1.3–2.8%<br>
+        <strong>MC fresh:</strong> 45–52%<br>
+        <strong>Durability:</strong> 95–97%<br>
+        <strong>Die risk:</strong> LOW-MED
+      </div>
+    </div>
+    <div class="age-col caution">
+      <div class="age-year">5</div>
+      <div class="age-label">Years Old</div>
+      <span class="age-badge badge-caution">Inspect</span>
+      <div class="age-prop">
+        <strong>Lignin:</strong> 22–26% — declining<br>
+        <strong>Silica:</strong> Rising<br>
+        <strong>Ash:</strong> 1.5–3.0%<br>
+        <strong>Fungal risk:</strong> Growing<br>
+        <strong>Durability:</strong> 94–96%<br>
+        <strong>Die risk:</strong> MEDIUM
+      </div>
+    </div>
+    <div class="age-col avoid">
+      <div class="age-year">6+</div>
+      <div class="age-label">Years Old</div>
+      <span class="age-badge badge-avoid">REJECT</span>
+      <div class="age-prop">
+        <strong>Lignin:</strong> Degraded structure<br>
+        <strong>Silica:</strong> HIGH accumulation<br>
+        <strong>Biological:</strong> Fungal attack<br>
+        <strong>Hollow sections:</strong> Common<br>
+        <strong>Die risk:</strong> RAPID WEAR<br>
+        <strong>β-O-4 bonds:</strong> Degraded
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>How properties change with age (normalised)</h3>
+      <canvas id="ageChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Pellet durability vs age (%)</h3>
+      <canvas id="durabilityChart"></canvas>
+    </div>
+  </div>
+
+  <div class="insight-box warning" style="margin-top:24px">
+    <div class="insight-label">Why 1-year bamboo jams your die</div>
+    Young bamboo has high free carbohydrates (starch, sugars). Under the heat and pressure of the pellet die (130–160°C), these carbohydrates caramelise and harden — the opposite of what you want. Lignin plasticises and binds at this temperature; carbohydrates block and jam. This is what destroyed machines in the 2016 CBRC China study. Solution: <strong>Never accept bamboo below 3 years old. Visual check: culm sheath must be absent; full branching must be present.</strong>
+  </div>
+
+  <div class="insight-box danger">
+    <div class="insight-label">The β-O-4 lignin bond problem in old bamboo</div>
+    After ~4 years, the β-O-4 ether bonds in bamboo lignin begin to degrade — these are the specific bonds that soften under die heat and re-polymerise to bind the pellet. By year 6+, enough degradation has occurred that pellet durability drops and binder additives become necessary. Combined with silica accumulation, old bamboo is both harder to pelletise and harder on your equipment.
+  </div>
+</section>
+
+<!-- SECTION 3: PROCESS -->
+<section id="process">
+  <div class="section-label">03 / Process Flow</div>
+  <h2 class="section-title">PLANT PROCESS<br>BAMBOO → PELLET</h2>
+
+  <div class="process-flow">
+    <div class="process-step">
+      <div class="step-num">01</div>
+      <div class="step-name">Harvest</div>
+      <div class="step-note">3–4 yr culms only. Oct–May. 15–30 kg/culm fresh.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">02</div>
+      <div class="step-name">Field Cure</div>
+      <div class="step-note">Stand cut culm 2–4 wks. Reduces starch & MC slightly.</div>
+    </div>
+    <div class="process-step highlight">
+      <div class="step-num">03</div>
+      <div class="step-name">Chipping</div>
+      <div class="step-note">Drum chipper. Bruks DH 365. 50–100mm chips. Horizontal infeed for culms.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">04</div>
+      <div class="step-name">Coarse Screen</div>
+      <div class="step-note">Remove soil, stones, sand before dryer. Protect drum.</div>
+    </div>
+    <div class="process-step warning">
+      <div class="step-num">05</div>
+      <div class="step-name">Drying</div>
+      <div class="step-note">Fresh 45–55% → 10–14% MC. Büttner drum. ~47 t water/100t bamboo.</div>
+    </div>
+    <div class="process-step highlight">
+      <div class="step-num">06</div>
+      <div class="step-name">Grinding</div>
+      <div class="step-note">Hammer mill. 3–5mm screen. ANDRITZ Multimill B. 80–120 kWh/t.</div>
+    </div>
+    <div class="process-step warning">
+      <div class="step-num">07</div>
+      <div class="step-name">Steam Cond.</div>
+      <div class="step-note">3–6 bar, 60–90°C, 30–60s. CRITICAL for bamboo lignin activation.</div>
+    </div>
+    <div class="process-step critical">
+      <div class="step-num">08</div>
+      <div class="step-name">Pelleting</div>
+      <div class="step-note">Inlet MC 14–16%. 130–160°C die. 42CrMo die. Flat-die preferred (KAHL).</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">09</div>
+      <div class="step-name">Cooling</div>
+      <div class="step-note">Counter-flow. Outlet ≤ ambient + 5°C. MC ≤ 1%. ANDRITZ.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">10</div>
+      <div class="step-name">Screen & Store</div>
+      <div class="step-note">Fines &lt;1% (ENplus). Covered storage. Bamboo pellets are hygroscopic.</div>
+    </div>
+  </div>
+
+  <div class="chart-grid-3">
+    <div class="chart-card">
+      <h3>Mass balance — 100t fresh bamboo</h3>
+      <canvas id="massChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Energy consumption by process step (kWh/t)</h3>
+      <canvas id="energyChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Die temperature vs pellet quality</h3>
+      <canvas id="tempChart"></canvas>
+    </div>
+  </div>
+
+  <div class="insight-box" style="margin-top:24px">
+    <div class="insight-label">Steam Conditioning — Do Not Skip</div>
+    Bamboo's lignin activation temperature is higher than wood due to different polymer structure. Without steam conditioning (3–6 bar, 60–90°C for at least 30 seconds), the lignin does not plasticise adequately in the die, binding is poor, and durability drops below 95%. <strong>Every commercial bamboo pellet producer runs a steam conditioner. This is non-negotiable for export-grade product.</strong>
+  </div>
+</section>
+
+<!-- SECTION 4: SPECIFICATIONS -->
+<section id="specs">
+  <div class="section-label">04 / Quality Specifications</div>
+  <h2 class="section-title">SPEC TARGETS<br>BY MARKET</h2>
+
+  <table class="spec-table">
+    <thead>
+      <tr>
+        <th>Parameter</th>
+        <th>SAMARTH / NTPC Domestic</th>
+        <th>ISO 17225-6 Class A (Export)</th>
+        <th>Japan FIT Grade</th>
+        <th>ENplus A2 (EU Residential)</th>
+        <th>India Bamboo Typical (3yr)</th>
+        <th>Match?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Gross Calorific Value</td>
+        <td>≥3,400 kcal/kg (14.2 MJ/kg)</td>
+        <td>≥14.5 MJ/kg</td>
+        <td>≥15.0 GJ/ton</td>
+        <td>≥16.5 MJ/kg</td>
+        <td>18.5–19.6 MJ/kg</td>
+        <td><span class="pass">✓ All markets</span></td>
+      </tr>
+      <tr>
+        <td>Ash Content</td>
+        <td>≤10%</td>
+        <td>≤6.0%</td>
+        <td>&lt;3.0% typical</td>
+        <td>≤1.2%</td>
+        <td>1.2–2.2% (3yr, B.nutans)</td>
+        <td><span class="pass">✓ Domestic / ISO / Japan</span><br><span class="maybe">⚠ ENplus borderline</span></td>
+      </tr>
+      <tr>
+        <td>Moisture (as delivered)</td>
+        <td>≤12%</td>
+        <td>≤12%</td>
+        <td>≤10%</td>
+        <td>≤10%</td>
+        <td>8–10% (post-cooling)</td>
+        <td><span class="pass">✓ All markets</span></td>
+      </tr>
+      <tr>
+        <td>Mechanical Durability</td>
+        <td>≥90%</td>
+        <td>≥96%</td>
+        <td>≥95%</td>
+        <td>≥97.5%</td>
+        <td>96–98% (3yr, steam-conditioned)</td>
+        <td><span class="pass">✓ Most markets</span><br><span class="maybe">⚠ ENplus A1: check</span></td>
+      </tr>
+      <tr>
+        <td>Bulk Density</td>
+        <td>≥500 kg/m³</td>
+        <td>Not specified</td>
+        <td>≥550 kg/m³</td>
+        <td>≥600 kg/m³</td>
+        <td>620–680 (pure); 600–650 (blend)</td>
+        <td><span class="pass">✓ All if blend managed</span></td>
+      </tr>
+      <tr>
+        <td>Fines (&lt;3.15mm)</td>
+        <td>≤3%</td>
+        <td>N/A</td>
+        <td>≤2%</td>
+        <td>≤1%</td>
+        <td>1.5–2.5% (screened)</td>
+        <td><span class="pass">✓ Domestic / Japan</span><br><span class="maybe">⚠ ENplus A1: marginal</span></td>
+      </tr>
+      <tr>
+        <td>Nitrogen (N%)</td>
+        <td>≤2%</td>
+        <td>≤1.5%</td>
+        <td>&lt;1.0%</td>
+        <td>≤0.5%</td>
+        <td>0.3–0.7%</td>
+        <td><span class="pass">✓ All markets</span></td>
+      </tr>
+      <tr>
+        <td>Chlorine (Cl%)</td>
+        <td>≤0.1%</td>
+        <td>≤0.3%</td>
+        <td>≤0.1%</td>
+        <td>≤0.02%</td>
+        <td>0.01–0.03%</td>
+        <td><span class="pass">✓ All markets</span></td>
+      </tr>
+      <tr>
+        <td>Sulphur (S%)</td>
+        <td>≤0.2%</td>
+        <td>≤0.3%</td>
+        <td>≤0.1%</td>
+        <td>≤0.05%</td>
+        <td>0.02–0.05%</td>
+        <td><span class="pass">✓ All markets</span></td>
+      </tr>
+      <tr>
+        <td>Pellet Diameter</td>
+        <td>6–12mm</td>
+        <td>6–10mm</td>
+        <td>6–10mm</td>
+        <td>6–8mm</td>
+        <td>6mm standard</td>
+        <td><span class="pass">✓ All markets</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="insight-box" style="margin-top:24px">
+    <div class="insight-label">Bottom line</div>
+    3-year bamboo from <em>B. nutans</em> or <em>B. balcooa</em>, properly dried and steam-conditioned, comfortably meets SAMARTH domestic spec, ISO 17225-6 Class A export spec, and Japan FIT grade. It falls just short of ENplus A1/A2 (EU residential) on ash — but <strong>you don't need ENplus for co-firing power plants</strong>, which is the actual export opportunity. GCV is the real strength: 18.5–19.6 MJ/kg exceeds Japan's 15 GJ/t threshold by 30%.
+  </div>
+</section>
+
+<!-- SECTION 5: HARVESTING PROBLEMS -->
+<section id="harvesting">
+  <div class="section-label">05 / Harvesting Intelligence</div>
+  <h2 class="section-title">HARVESTING<br>PROBLEMS & FIXES</h2>
+
+  <div style="margin-bottom:32px">
+    <div class="section-label" style="margin-bottom:8px">Harvest Window — Maharashtra</div>
+    <div class="month-grid">
+      <div class="month-cell avoid-m"><div class="month-icon">🌧</div><div class="month-name">JUN</div><div class="month-status">AVOID</div></div>
+      <div class="month-cell avoid-m"><div class="month-icon">🌧</div><div class="month-name">JUL</div><div class="month-status">AVOID</div></div>
+      <div class="month-cell avoid-m"><div class="month-icon">🌧</div><div class="month-name">AUG</div><div class="month-status">AVOID</div></div>
+      <div class="month-cell avoid-m"><div class="month-icon">🌧</div><div class="month-name">SEP</div><div class="month-status">AVOID</div></div>
+      <div class="month-cell peak"><div class="month-icon">✓</div><div class="month-name">OCT</div><div class="month-status">PEAK START</div></div>
+      <div class="month-cell peak"><div class="month-icon">✓</div><div class="month-name">NOV</div><div class="month-status">PEAK</div></div>
+      <div class="month-cell peak"><div class="month-icon">✓</div><div class="month-name">DEC</div><div class="month-status">PEAK</div></div>
+      <div class="month-cell peak"><div class="month-icon">✓</div><div class="month-name">JAN</div><div class="month-status">PEAK</div></div>
+      <div class="month-cell peak"><div class="month-icon">✓</div><div class="month-name">FEB</div><div class="month-status">PEAK</div></div>
+      <div class="month-cell harvest"><div class="month-icon">✓</div><div class="month-name">MAR</div><div class="month-status">GOOD</div></div>
+      <div class="month-cell harvest"><div class="month-icon">✓</div><div class="month-name">APR</div><div class="month-status">GOOD</div></div>
+      <div class="month-cell harvest"><div class="month-icon">◑</div><div class="month-name">MAY</div><div class="month-status">TAPER</div></div>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mid)">
+      <span style="background:var(--bamboo);color:white;padding:2px 8px;margin-right:8px">PEAK HARVEST</span>
+      <span style="background:var(--bamboo-pale);color:var(--bamboo);padding:2px 8px;margin-right:8px">GOOD</span>
+      <span style="background:var(--red-pale);color:var(--red);padding:2px 8px">AVOID — new shoot season</span>
+    </div>
+  </div>
+
+  <div class="problems-grid">
+    <div class="problem-card high">
+      <div class="problem-severity">HIGH SEVERITY</div>
+      <div class="problem-title">Dense Clump Access</div>
+      <div class="problem-text">Mature (3yr) culms are at clump centre. Outer ring is always young/unusable. Manual extraction from 3–6m wide thorny clump is expensive and slow. No mechanised solution in India.</div>
+    </div>
+    <div class="problem-card high">
+      <div class="problem-severity">HIGH SEVERITY</div>
+      <div class="problem-title">Monsoon Blackout</div>
+      <div class="problem-text">Jun–Sep completely off-limits. Damages new shoots, infects stumps. 4-month supply gap forces pre-season stockpiling. Plan 4–5 months of covered storage at plant.</div>
+    </div>
+    <div class="problem-card high">
+      <div class="problem-severity">HIGH SEVERITY</div>
+      <div class="problem-title">Clump Productivity Collapse</div>
+      <div class="problem-text">Random harvesting by contractors → young culms removed, old blocked. Over 3–5 seasons a clump drops from 8–10 harvestable culms/year to 3–4. Build clump management obligations into your MOU.</div>
+    </div>
+    <div class="problem-card medium">
+      <div class="problem-severity">MEDIUM SEVERITY</div>
+      <div class="problem-title">Age Identification Failure</div>
+      <div class="problem-text">Contractors cannot reliably distinguish 3yr from 2yr or 4yr culms. Paint-tagging at emergence is the solution — but requires you to manage it proactively from year 1 of plantation.</div>
+    </div>
+    <div class="problem-card medium">
+      <div class="problem-severity">MEDIUM SEVERITY</div>
+      <div class="problem-title">State Transit Rules</div>
+      <div class="problem-text">2017 Amendment exempts non-forest bamboo from permits. But state transit rules (Rajasthan, Odisha) still cause friction. MH is relatively better. Ensure Form 8 / land records with every lot.</div>
+    </div>
+    <div class="problem-card medium">
+      <div class="problem-severity">MEDIUM SEVERITY</div>
+      <div class="problem-title">Post-Harvest Starch Fermentation</div>
+      <div class="problem-text">Fresh-cut bamboo starts fermenting within days. High starch feeds borers and fungi. Field-cure for 2–4 weeks (culm standing) or deliver to dryer within 48 hours of cutting.</div>
+    </div>
+    <div class="problem-card medium">
+      <div class="problem-severity">MEDIUM SEVERITY</div>
+      <div class="problem-title">Long Culm Transport</div>
+      <div class="problem-text">8–25m culms require oversized load permits on highways. Either chip at source (adds field equipment cost) or cut to 3–4m lengths before loading (reduces bulk density, increases trips).</div>
+    </div>
+    <div class="problem-card low">
+      <div class="problem-severity">LOW SEVERITY</div>
+      <div class="problem-title">Forest Bamboo Locked</div>
+      <div class="problem-text">Forest bamboo (majority of Gadchiroli/Chandrapur stock) requires forest dept auction. Delays and paperwork. Source from private plantations first — simpler, faster, more predictable.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: DOS AND DON'TS -->
+<section id="dosdont">
+  <div class="section-label">06 / Operational Rules</div>
+  <h2 class="section-title">DOS &<br>DON'TS</h2>
+
+  <div class="dos-donts">
+    <div class="dos">
+      <div class="dd-title">DO</div>
+
+      <div class="dd-item">
+        <div class="dd-icon do-icon">✓</div>
+        <div class="dd-text"><strong>Harvest only 3–4 year culms.</strong> Visual check: no culm sheaths, full branching, olive-green to dark colour, waxy bloom absent. Reject anything that looks young or grey/powdery.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon do-icon">✓</div>
+        <div class="dd-text"><strong>Run steam conditioning always.</strong> 3–6 bar, 60–90°C, minimum 30 seconds retention. Bamboo lignin will not plasticise properly without it. Durability drops to &lt;95% without steam.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon do-icon">✓</div>
+        <div class="dd-text"><strong>Use hardened 42CrMo alloy die.</strong> Standard carbon steel dies fail within 300 hours on bamboo silica. 42CrMo extends die life to 800–1,200 hours. Non-negotiable.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon do-icon">✓</div>
+        <div class="dd-text"><strong>Set inlet MC at 14–16%.</strong> Not 10% (too dry — die friction rises), not 18%+ (too wet — binding fails). Use moisture sensor on hammer mill outlet. Bamboo is less forgiving than agro-residue on MC window.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon do-icon">✓</div>
+        <div class="dd-text"><strong>Prefer flat-die mill for bamboo.</strong> Bamboo's low bulk density (80–130 kg/m³ as chips) suits flat-die's gravity-feed large chamber. KAHL 65-1500 is the proven choice. Ring-die works but requires finer grinding to 3mm.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon do-icon">✓</div>
+        <div class="dd-text"><strong>Blend 30–40% pine or D. strictus fines</strong> if bulk density falls below 600 kg/m³. Bamboo-only pellets sometimes hit 540–580 kg/m³ — below ENplus and Japan FIT minimum. A 30% dense-wood blend fixes this.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon do-icon">✓</div>
+        <div class="dd-text"><strong>Build 4–5 months covered storage capacity.</strong> Jun–Sep monsoon = zero harvest. You need Oct–May surplus to run year-round. Bamboo pellets are hygroscopic — covered, dry storage is mandatory.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon do-icon">✓</div>
+        <div class="dd-text"><strong>Mandate clump management in supply MOUs.</strong> Supplier must harvest only 3–4yr culms, not remove &lt;2yr culms, and thin congested clumps annually. Without this, clump yield collapses in 3–4 seasons.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon do-icon">✓</div>
+        <div class="dd-text"><strong>Monitor die face temperature with thermocouple.</strong> Optimal: 130–160°C. Above 180°C = jam risk and pellet scorching. Reduce feed rate or add moisture if temperature climbs.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon do-icon">✓</div>
+        <div class="dd-text"><strong>Use 3-year-old bamboo as the age standard.</strong> This is when lignin (binder), cellulose (energy), and ash (fouling) are all simultaneously optimal. No other age matches this combination.</div>
+      </div>
+    </div>
+
+    <div class="donts">
+      <div class="dd-title">DON'T</div>
+
+      <div class="dd-item">
+        <div class="dd-icon dont-icon">✗</div>
+        <div class="dd-text"><strong>Never use bamboo below 2 years old.</strong> High free carbohydrates caramelise in the die at 130°C+, creating a cement-like blockage. This caused catastrophic machine failures (shaft fracture: ₹4L; bearing failure: ₹13L) in documented trials.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon dont-icon">✗</div>
+        <div class="dd-text"><strong>Never run standard carbon steel dies on bamboo.</strong> Bamboo silica (SiO₂) is abrasive at 8–20% of ash. Carbon steel dies fail within 200–300 hours. You need 42CrMo minimum — ask die supplier to confirm grade before ordering.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon dont-icon">✗</div>
+        <div class="dd-text"><strong>Don't skip the coarse screen before the dryer.</strong> Bamboo from forest or farm carries soil, stones, and gravel. Even small stones destroy drum dryer flights and enter the hammer mill. Pre-screen to 5mm minimum before the dryer.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon dont-icon">✗</div>
+        <div class="dd-text"><strong>Don't harvest during monsoon (Jun–Sep).</strong> Damages emerging shoots = destroys next year's culm production in the clump. Also, wet bamboo at 55–60% MC is extremely expensive to dry and prone to fungal infection in stockpile.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon dont-icon">✗</div>
+        <div class="dd-text"><strong>Don't accept bamboo with grey powder on surface.</strong> Grey powdery surface = advanced silica migration + likely fungal colonisation. This visual sign is free and immediate. Train your yard staff to reject on sight. No XRF test needed.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon dont-icon">✗</div>
+        <div class="dd-text"><strong>Don't store pellets in open or humid conditions.</strong> Bamboo pellets are more hygroscopic than wood pellets. Humidity above 70% causes surface degradation, fines generation, and moisture re-absorption — destroying the durability you worked to achieve.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon dont-icon">✗</div>
+        <div class="dd-text"><strong>Don't grind bamboo too coarse (&gt;6mm screen).</strong> Bamboo fibres are long. Particles &gt;6mm cause inconsistent die filling, density variation, and durability drops. Use 3–5mm hammer mill screen for export-grade. SAMARTH tolerates 5–6mm.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon dont-icon">✗</div>
+        <div class="dd-text"><strong>Don't over-dry below 8% MC at pellet mill inlet.</strong> Too-dry bamboo particles don't flow uniformly and generate more fines. The 14–16% window is wider than you might expect — wetter than wood pellet practice. Trust the number.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon dont-icon">✗</div>
+        <div class="dd-text"><strong>Don't source bamboo from unmanaged natural clumps without age verification.</strong> Natural forest clumps in India have severely mixed-age culms. Without visual sorting or colour-tagging, you will receive 20–40% unusable young culms in every lot, paying for material you cannot use.</div>
+      </div>
+      <div class="dd-item">
+        <div class="dd-icon dont-icon">✗</div>
+        <div class="dd-text"><strong>Don't run bamboo above 8% silica in ash through standard equipment.</strong> Above 8% SiO₂ in ash: consider this a threshold. Get XRF done on first lot from any new supplier. If silica exceeds 8%, you need dedicated bamboo-spec dies and accelerated die inspection schedule (every 300hrs instead of 500hrs).</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>AMTIK BIOFUELS · BAMBOO PELLETISATION GUIDE · MAHARASHTRA, INDIA</p>
+  <p>DATA SOURCES: ISO 17225-6, INBAR, CBRC, TAPPI T222 · COMPILED 2025</p>
+</footer>
+
+<script>
+const BAMBOO = '#4a7c3f';
+const BAMBOO_L = '#7aad6a';
+const AMBER = '#c8780a';
+const RED = '#b83232';
+const TEAL = '#1a6b6b';
+const MID = '#5a5a4a';
+
+const species = ['B. balcooa','B. nutans','D. strictus','D. asper','B. bambos','D. brandisii','D. stocksii','B. tulda','M. baccifera','D. hamiltonii'];
+const colors10 = [BAMBOO,'#1a6b6b','#5e9950','#3a8c6b','#2d6b2d',AMBER,'#6b8c3a','#3a5e8c','#8c5e3a','#6b3a5e'];
+
+// GCV chart
+new Chart(document.getElementById('gcvChart'), {
+  type: 'bar',
+  data: {
+    labels: species,
+    datasets: [{ data: [4685,4590,4530,4445,4530,4480,4530,4490,4300,4460], backgroundColor: colors10, borderWidth: 0 }]
+  },
+  options: {
+    indexAxis: 'y', plugins: { legend: { display: false } },
+    scales: { x: { min: 4200, ticks: { font: { size: 9 } } }, y: { ticks: { font: { size: 9 } } } }
+  }
+});
+
+// Ash chart
+new Chart(document.getElementById('ashChart'), {
+  type: 'bar',
+  data: {
+    labels: species,
+    datasets: [{ data: [1.8,1.28,2.25,2.0,2.4,2.3,2.0,3.05,2.65,2.75],
+      backgroundColor: [BAMBOO,'#1a6b6b',AMBER,BAMBOO_L,AMBER,AMBER,BAMBOO_L,RED,AMBER,RED], borderWidth: 0 }]
+  },
+  options: {
+    indexAxis: 'y', plugins: { legend: { display: false } },
+    scales: { x: { ticks: { font: { size: 9 } } }, y: { ticks: { font: { size: 9 } } } }
+  }
+});
+
+// Lignin chart
+new Chart(document.getElementById('ligninChart'), {
+  type: 'bar',
+  data: {
+    labels: species,
+    datasets: [{ data: [26, 29.66, 25, 24, 24, 26, 26, 23.5, 26.5, 24],
+      backgroundColor: colors10, borderWidth: 0 }]
+  },
+  options: {
+    indexAxis: 'y', plugins: { legend: { display: false } },
+    scales: { x: { min: 20, ticks: { font: { size: 9 } } }, y: { ticks: { font: { size: 9 } } } }
+  }
+});
+
+// Availability chart
+new Chart(document.getElementById('availChart'), {
+  type: 'bar',
+  data: {
+    labels: species,
+    datasets: [{ data: [9, 7, 10, 6, 10, 6, 5, 3, 0, 0],
+      backgroundColor: [BAMBOO,TEAL,BAMBOO,BAMBOO_L,BAMBOO,BAMBOO_L,AMBER,RED,MID,MID], borderWidth: 0 }]
+  },
+  options: {
+    indexAxis: 'y', plugins: { legend: { display: false } },
+    scales: { x: { max: 10, ticks: { font: { size: 9 } } }, y: { ticks: { font: { size: 9 } } } }
+  }
+});
+
+// Age chart
+new Chart(document.getElementById('ageChart'), {
+  type: 'line',
+  data: {
+    labels: ['1yr','2yr','3yr','4yr','5yr','6yr'],
+    datasets: [
+      { label: 'Lignin %', data: [16, 22, 27, 26, 24, 21], borderColor: BAMBOO, backgroundColor: 'transparent', tension: 0.4, borderWidth: 2.5 },
+      { label: 'Cellulose %', data: [44, 48, 52, 50, 47, 44], borderColor: TEAL, backgroundColor: 'transparent', tension: 0.4, borderWidth: 2.5 },
+      { label: 'Ash %', data: [2.8, 2.2, 1.7, 2.0, 2.4, 3.2], borderColor: RED, backgroundColor: 'transparent', tension: 0.4, borderWidth: 2.5 },
+      { label: 'Silica in ash %', data: [20, 16, 12, 14, 18, 25], borderColor: AMBER, backgroundColor: 'transparent', tension: 0.4, borderWidth: 2, borderDash: [5,3] },
+    ]
+  },
+  options: {
+    plugins: { legend: { labels: { font: { size: 9 }, boxWidth: 12 } } },
+    scales: {
+      x: { ticks: { font: { size: 9 } } },
+      y: { ticks: { font: { size: 9 } } }
+    }
+  }
+});
+
+// Durability chart
+new Chart(document.getElementById('durabilityChart'), {
+  type: 'bar',
+  data: {
+    labels: ['1yr','2yr','3yr','4yr','5yr','6yr+'],
+    datasets: [{
+      label: 'Pellet durability %',
+      data: [92, 95.5, 97.5, 96.5, 95, 93],
+      backgroundColor: [RED, AMBER, BAMBOO, BAMBOO_L, AMBER, RED],
+      borderWidth: 0
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { min: 88, max: 100,
+        ticks: { font: { size: 9 } },
+        grid: { color: (ctx) => ctx.tick.value === 97.5 ? 'rgba(74,124,63,0.5)' : 'rgba(0,0,0,0.05)' }
+      },
+      x: { ticks: { font: { size: 9 } } }
+    }
+  }
+});
+
+// Mass balance
+new Chart(document.getElementById('massChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Pellet output', 'Water evaporated', 'Process losses'],
+    datasets: [{ data: [50, 47, 3], backgroundColor: [BAMBOO, '#ddd', RED], borderWidth: 0 }]
+  },
+  options: {
+    plugins: {
+      legend: { position: 'bottom', labels: { font: { size: 9 }, boxWidth: 10 } },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw}t per 100t fresh bamboo` } }
+    }
+  }
+});
+
+// Energy by step
+new Chart(document.getElementById('energyChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Chipping','Drying (thermal)','Grinding','Steam cond.','Pelleting','Cooling'],
+    datasets: [{ data: [8, 320, 95, 15, 110, 12],
+      backgroundColor: [BAMBOO_L, RED, TEAL, AMBER, BAMBOO, BAMBOO_L], borderWidth: 0 }]
+  },
+  options: {
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { title: { display: true, text: 'kWh/tonne pellet', font: { size: 9 } }, ticks: { font: { size: 9 } } },
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } }
+    }
+  }
+});
+
+// Temperature vs quality
+new Chart(document.getElementById('tempChart'), {
+  type: 'line',
+  data: {
+    labels: ['100°C','110°C','120°C','130°C','140°C','150°C','160°C','170°C','180°C','190°C'],
+    datasets: [
+      { label: 'Durability %', data: [88, 91, 93, 96, 97.5, 97.8, 97, 95, 91, 85],
+        borderColor: BAMBOO, backgroundColor: 'rgba(74,124,63,0.1)', fill: true, tension: 0.4, borderWidth: 2.5 },
+      { label: 'Jam risk (0–100)', data: [5, 5, 8, 10, 10, 12, 20, 45, 75, 95],
+        borderColor: RED, backgroundColor: 'transparent', tension: 0.4, borderWidth: 2, borderDash: [5,3] }
+    ]
+  },
+  options: {
+    plugins: { legend: { labels: { font: { size: 9 }, boxWidth: 10 } } },
+    scales: {
+      y: { ticks: { font: { size: 9 } } },
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } }
+    }
+  }
+});
+</script>
+</body>
+</html>

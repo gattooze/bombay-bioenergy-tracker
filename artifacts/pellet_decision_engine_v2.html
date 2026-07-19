@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pellet Mill — Machine Decision Engine v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0a0a;--bg1:#111111;--bg2:#181818;--bg3:#222222;--bg4:#2a2a2a;
+  --border:#2e2e2e;--border2:#3a3a3a;
+  --text:#e8e8e0;--text2:#8a8a80;--text3:#555550;
+  --green:#4ade80;--green-bg:#0d2414;--green-border:#1a4a2a;
+  --amber:#f59e0b;--amber-bg:#1a1200;--amber-border:#3a2800;
+  --red:#f87171;--red-bg:#1a0808;--red-border:#3a1010;
+  --blue:#60a5fa;--blue-bg:#080f1a;--blue-border:#102030;
+  --purple:#a78bfa;--purple-bg:#0d0a1a;--purple-border:#2a1a4a;
+  --accent:#4ade80;
+  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh}
+
+/* HEADER */
+.header{border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;background:var(--bg);z-index:100}
+.logo{font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.08em;display:flex;align-items:center;gap:10px}
+.logo-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.header-nav{display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.hnav-btn{padding:6px 16px;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.06em;background:transparent;border:none;border-right:1px solid var(--border);color:var(--text2);cursor:pointer;transition:background .15s,color .15s}
+.hnav-btn:last-child{border-right:none}
+.hnav-btn:hover{background:var(--bg2);color:var(--text)}
+.hnav-btn.active{background:var(--bg3);color:var(--accent)}
+.sl-badge{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:var(--accent);color:var(--bg);border-radius:50%;font-size:10px;font-weight:600;margin-left:6px;font-family:var(--mono);transition:background .3s,color .3s}
+
+/* LAYOUT */
+.main{max-width:1440px;margin:0 auto;padding:2rem}
+.tab-content{display:none}.tab-content.active{display:block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem}
+.gcols-val{display:grid;grid-template-columns:400px 1fr;gap:1.5rem;align-items:start}
+@media(max-width:1100px){.gcols-val{grid-template-columns:1fr}}
+@media(max-width:768px){.g2,.g3,.g4,.g5,.gcols-val{grid-template-columns:1fr}.main{padding:1rem}}
+
+/* PANEL */
+.panel{background:var(--bg1);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:1.25rem}
+.panel-header{padding:.625rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;background:var(--bg2)}
+.panel-step{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--accent);min-width:20px}
+.panel-title{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text2)}
+.panel-body{padding:1.25rem}
+
+/* FIELDS */
+.field{margin-bottom:.875rem}
+.field:last-child{margin-bottom:0}
+.field-label{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.tip{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1px solid var(--border2);border-radius:50%;font-size:9px;color:var(--text3);cursor:help;flex-shrink:0;position:relative}
+.tip:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border2);border-radius:4px;padding:6px 10px;font-size:11px;font-family:var(--sans);color:var(--text2);white-space:normal;width:220px;text-align:left;pointer-events:none;z-index:20;line-height:1.5}
+.field-row{display:flex;align-items:center;gap:10px}
+.field-inline{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+
+input[type="text"],input[type="number"],select{width:100%;padding:7px 10px;background:var(--bg2);border:1px solid var(--border2);border-radius:5px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;transition:border-color .15s}
+input[type="text"]:focus,input[type="number"]:focus,select:focus{border-color:var(--accent)}
+select option{background:var(--bg2)}
+input[type="range"]{-webkit-appearance:none;appearance:none;flex:1;height:2px;background:var(--bg4);border-radius:2px;outline:none;cursor:pointer}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:var(--accent);border-radius:50%;cursor:pointer;transition:transform .1s}
+input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.2)}
+.range-val{font-family:var(--mono);font-size:12px;font-weight:500;min-width:68px;text-align:right}
+.toggle-row{display:flex;gap:.5rem;flex-wrap:wrap}
+.toggle-btn{padding:5px 12px;font-family:var(--mono);font-size:11px;background:var(--bg2);border:1px solid var(--border2);border-radius:4px;color:var(--text2);cursor:pointer;transition:all .15s}
+.toggle-btn.active{background:var(--green-bg);border-color:var(--green-border);color:var(--green)}
+
+/* BUTTONS */
+.btn{padding:8px 16px;border-radius:5px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.05em;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--bg3);color:var(--text);border-color:var(--border2)}
+.btn-primary{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:600}
+.btn-primary:hover{background:#22c55e;border-color:#22c55e;color:var(--bg)}
+.btn-danger{border-color:var(--red-border);color:var(--red)}
+.btn-danger:hover{background:var(--red-bg)}
+
+/* METRICS */
+.metric{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:.75rem 1rem}
+.metric-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+.metric-value{font-family:var(--mono);font-size:22px;font-weight:500;line-height:1.2}
+.metric-sub{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:3px}
+.metric-green .metric-value{color:var(--green)}
+.metric-amber .metric-value{color:var(--amber)}
+.metric-red .metric-value{color:var(--red)}
+.metric-blue .metric-value{color:var(--blue)}
+.metric-purple .metric-value{color:var(--purple)}
+
+/* SCORE */
+.score-block{display:flex;align-items:center;gap:1.5rem;padding:1.25rem;background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:1rem}
+.score-circle{width:80px;height:80px;border-radius:50%;border:3px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.score-number{font-family:var(--mono);font-size:26px;font-weight:600;line-height:1}
+.score-info{flex:1;min-width:0}
+.score-verdict{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.08em;margin-bottom:4px}
+.score-sub{font-size:12px;color:var(--text2);line-height:1.5}
+
+/* VERDICT */
+.verdict{border-radius:6px;padding:.875rem 1rem;margin-bottom:.75rem;border-left:3px solid}
+.verdict-ok{background:var(--green-bg);border-color:var(--green)}
+.verdict-warn{background:var(--amber-bg);border-color:var(--amber)}
+.verdict-bad{background:var(--red-bg);border-color:var(--red)}
+.verdict-info{background:var(--blue-bg);border-color:var(--blue)}
+.verdict-purple{background:var(--purple-bg);border-color:var(--purple)}
+.verdict-title{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.verdict-ok .verdict-title{color:var(--green)}
+.verdict-warn .verdict-title{color:var(--amber)}
+.verdict-bad .verdict-title{color:var(--red)}
+.verdict-info .verdict-title{color:var(--blue)}
+.verdict-purple .verdict-title{color:var(--purple)}
+.verdict p{font-size:12px;color:var(--text2);line-height:1.55}
+
+/* TORQUE BLOCK */
+.torque-readout{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.75rem}
+.tq-cell{background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:.625rem .75rem;text-align:center}
+.tq-label{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:3px}
+.tq-val{font-family:var(--mono);font-size:15px;font-weight:500}
+
+/* FLAGS */
+.flag-list{margin-top:.75rem}
+.flag-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)}
+.flag-item:last-child{border-bottom:none}
+.flag-dot{width:6px;height:6px;border-radius:50%;margin-top:6px;flex-shrink:0}
+.flag-dot-bad{background:var(--red)}.flag-dot-warn{background:var(--amber)}
+.flag-text{font-size:12px;color:var(--text2);line-height:1.45}
+
+/* BADGES */
+.badge{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:3px;margin-right:4px}
+.badge-ok{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.badge-warn{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.badge-bad{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.badge-info{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+.badge-gray{background:var(--bg3);color:var(--text2);border:1px solid var(--border)}
+.badge-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
+
+/* BAR */
+.bar-wrap{background:var(--bg4);border-radius:2px;height:4px;margin-top:4px;overflow:hidden}
+.bar{height:4px;border-radius:2px;transition:width .4s ease}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;font-size:12px}
+.data-table th{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);background:var(--bg2)}
+.data-table td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text2)}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--bg2)}
+
+/* SHORTLIST */
+.sl-card{background:var(--bg1);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:6px;padding:1rem 1.25rem;margin-bottom:.75rem;display:flex;align-items:flex-start;gap:1rem;transition:border-color .15s}
+.sl-card:hover{border-color:var(--border2)}
+.sl-card.ok{border-left-color:var(--green)}
+.sl-card.warn{border-left-color:var(--amber)}
+.sl-card.bad{border-left-color:var(--red)}
+.sl-score-num{font-family:var(--mono);font-size:28px;font-weight:600;min-width:48px;text-align:center;line-height:1;padding-top:2px}
+.sl-body{flex:1;min-width:0}
+.sl-name{font-family:var(--mono);font-size:13px;font-weight:500;margin-bottom:3px}
+.sl-sub{font-size:11px;color:var(--text2);line-height:1.5}
+.sl-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.sl-remove{background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;padding:0;line-height:1;transition:color .15s;align-self:flex-start}
+.sl-remove:hover{color:var(--red)}
+
+/* HANDBOOK */
+.hb-section{margin-bottom:2.5rem}
+.hb-section-title{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);padding-bottom:.75rem;border-bottom:1px solid var(--border);margin-bottom:1.25rem;display:flex;align-items:center;gap:10px}
+.hb-section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1rem}
+.concept-card{background:var(--bg1);border:1px solid var(--border);border-radius:6px;padding:1rem}
+.concept-icon{font-size:20px;margin-bottom:8px;color:var(--accent)}
+.concept-title{font-family:var(--mono);font-size:12px;font-weight:500;margin-bottom:6px}
+.concept-body{font-size:12px;color:var(--text2);line-height:1.6}
+.formula-block{background:var(--bg2);border-left:3px solid var(--accent);border-radius:0 5px 5px 0;padding:.75rem 1rem;font-family:var(--mono);font-size:12px;color:var(--text);margin:.75rem 0;line-height:1.7}
+.formula-comment{color:var(--text3)}
+
+/* MISC */
+.sep{height:1px;background:var(--border);margin:1.25rem 0}
+.empty-state{text-align:center;padding:3rem 2rem;color:var(--text3);font-family:var(--mono);font-size:12px;line-height:2}
+.compare-banner{background:var(--bg2);border:1px solid var(--accent);border-radius:8px;padding:1.25rem;margin-top:1.5rem}
+.page-hero{padding:2rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+.page-hero-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:.5rem}
+.page-hero-title{font-family:var(--mono);font-size:22px;font-weight:300;margin-bottom:.5rem;letter-spacing:-.01em}
+.page-hero-title span{color:var(--accent);font-weight:500}
+.page-hero-sub{font-size:13px;color:var(--text2);max-width:620px}
+.section-divider{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin:.75rem 0 .5rem;padding-bottom:.375rem;border-bottom:1px solid var(--border)}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--border2)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.anim{animation:fadeIn .25s ease}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo"><div class="logo-dot"></div>PELLET.ENGINE — PHASE 01 · v2</div>
+  <nav class="header-nav">
+    <button class="hnav-btn active" onclick="showTab('validator',this)">VALIDATOR</button>
+    <button class="hnav-btn" onclick="showTab('shortlist',this)">SHORTLIST<span class="sl-badge" id="sl-badge">0</span></button>
+    <button class="hnav-btn" onclick="showTab('handbook',this)">HANDBOOK</button>
+  </nav>
+</header>
+
+<main class="main">
+
+<!-- ══════════════════ VALIDATOR ══════════════════ -->
+<div id="tab-validator" class="tab-content active">
+<div class="page-hero">
+  <div class="page-hero-label">Phase 01 · Machine Decision Engine</div>
+  <div class="page-hero-title">Validate any pellet mill quote<br>against <span>real physics</span></div>
+  <div class="page-hero-sub">Select make and model — specs pre-fill automatically. Override anything. Engine calculates real TPH, torque at die shaft, and maintenance cost preview for your feedstock.</div>
+</div>
+
+<div class="gcols-val">
+<div>
+
+  <!-- PANEL 01: MAKE & MODEL -->
+  <div class="panel">
+    <div class="panel-header"><span class="panel-step">01</span><span class="panel-title">Make & model</span></div>
+    <div class="panel-body">
+      <div class="field">
+        <label class="field-label">Manufacturer</label>
+        <select id="v-make" onchange="onMakeChange()">
+          <option value="">— select or type custom below —</option>
+          <optgroup label="European">
+            <option value="andritz">Andritz (Austria)</option>
+            <option value="cpm">CPM (USA/Europe)</option>
+            <option value="salmatec">Salmatec (Germany)</option>
+            <option value="buhler">Bühler (Switzerland)</option>
+            <option value="amandus_kahl">Amandus Kahl (Germany)</option>
+            <option value="eu_other">Europe — other</option>
+          </optgroup>
+          <optgroup label="Chinese — mid tier">
+            <option value="muyang">Muyang (China)</option>
+            <option value="richi">Richi Machinery (China)</option>
+            <option value="zhengchang">Zhengchang (China)</option>
+          </optgroup>
+          <optgroup label="Chinese — budget / Indian-branded">
+            <option value="yulong">Yulong (China)</option>
+            <option value="rotex">Rotexmaster (China)</option>
+            <option value="hitech">Hitech Agro (India/China)</option>
+            <option value="trio">Trio (India/China)</option>
+            <option value="guru_nanak">Guru Nanak Agro (India)</option>
+            <option value="radhe">Radhe (India)</option>
+            <option value="cn_other">China — other</option>
+            <option value="in_other">India — other local</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Model / series</label>
+        <select id="v-model-select" onchange="onModelChange()" style="margin-bottom:6px">
+          <option value="">— select make first —</option>
+        </select>
+        <input type="text" id="v-model-custom" placeholder="Or type custom model name" oninput="validate()">
+      </div>
+      <div class="field">
+        <label class="field-label">Custom vendor name (if not in list)</label>
+        <input type="text" id="v-vendor-custom" placeholder="e.g. ABC Agro Machinery Pvt Ltd" oninput="validate()">
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 02: MECHANICAL SPECS -->
+  <div class="panel">
+    <div class="panel-header"><span class="panel-step">02</span><span class="panel-title">Mechanical specifications</span></div>
+    <div class="panel-body">
+
+      <div class="section-divider">Motor</div>
+      <div class="field">
+        <label class="field-label">Main motor (kW) <span class="tip" data-tip="Nameplate power of pellet mill motor only. Do not include conditioner or feeder motors.">?</span></label>
+        <div class="field-row">
+          <input type="range" min="22" max="600" value="132" step="1" id="v-kw" oninput="syncRangeVal('v-kw','v-kw-v',v=>v+' kW');validate()">
+          <span class="range-val" id="v-kw-v">132 kW</span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Motor rated RPM <span class="tip" data-tip="Speed of the motor output shaft — NOT die RPM. Standard 4-pole motors run at 1450–1480 RPM. 6-pole at 960 RPM.">?</span></label>
+        <div class="field-row">
+          <input type="range" min="480" max="3000" value="1450" step="10" id="v-motor-rpm" oninput="syncRangeVal('v-motor-rpm','v-motor-rpm-v',v=>v+' RPM');validate()">
+          <span class="range-val" id="v-motor-rpm-v">1450 RPM</span>
+        </div>
+      </div>
+
+      <div class="section-divider">Transmission</div>
+      <div class="field">
+        <label class="field-label">Transmission type <span class="tip" data-tip="Defines how motor power reaches the die shaft. Belt acts as mechanical fuse — protects against die blocks. Gearbox is more efficient but catastrophic failure when it occurs.">?</span></label>
+        <select id="v-trans-type" onchange="onTransChange()">
+          <option value="belt_polyv">Poly-V belt (Andritz LM series, CPM) — 90% eff.</option>
+          <option value="belt_v" selected>V-belt (most Chinese, Indian) — 87% eff.</option>
+          <option value="gearbox_quality">Quality gearbox — SEW / Flender / Siemens — 94% eff.</option>
+          <option value="gearbox_local">Local cast gearbox (unknown brand) — 81% eff.</option>
+          <option value="direct">Direct drive / integrated motor — 97% eff.</option>
+        </select>
+      </div>
+      <div id="gearbox-brand-field" class="field" style="display:none">
+        <label class="field-label">Gearbox brand <span class="tip" data-tip="Ask vendor for gearbox nameplate. SEW, Flender, Siemens = reliable. Unknown/local = flag.">?</span></label>
+        <input type="text" id="v-gbx-brand" placeholder="e.g. SEW Eurodrive, Flender, local" oninput="validate()">
+      </div>
+      <div class="field">
+        <label class="field-label">Gearbox / pulley ratio <span class="tip" data-tip="The speed reduction ratio. Motor RPM ÷ ratio = die RPM. E.g. 1450 RPM motor ÷ 10:1 = 145 die RPM. Belt pulley diameter ratio achieves same effect.">?</span></label>
+        <div class="field-row">
+          <input type="range" min="4" max="16" value="9" step="0.5" id="v-gbx-ratio" oninput="syncRangeVal('v-gbx-ratio','v-gbx-ratio-v',v=>parseFloat(v).toFixed(1)+':1');validate()">
+          <span class="range-val" id="v-gbx-ratio-v">9.0:1</span>
+        </div>
+      </div>
+
+      <div class="section-divider">Die</div>
+      <div class="field">
+        <label class="field-label">Die type <span class="tip" data-tip="Ring die: cylinder rotates, rollers fixed inside — industrial standard. Flat die: horizontal plate, rollers press down — budget, max ~1.5 t/h.">?</span></label>
+        <select id="v-dietype" onchange="validate()">
+          <option value="ring">Ring die — rotating cylinder (industrial standard)</option>
+          <option value="flat">Flat die — horizontal plate (budget, ≤1.5 t/h)</option>
+        </select>
+      </div>
+      <div class="field-inline">
+        <div class="field">
+          <label class="field-label">Die diameter (mm)</label>
+          <div class="field-row">
+            <input type="range" min="200" max="1000" value="420" step="10" id="v-died" oninput="syncRangeVal('v-died','v-died-v',v=>v+'mm');validate()">
+            <span class="range-val" id="v-died-v">420mm</span>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Hole diameter (mm) <span class="tip" data-tip="6mm = ENplus residential. 8mm = industrial. 10mm = NTPC co-firing spec.">?</span></label>
+          <div class="field-row">
+            <input type="range" min="4" max="12" value="8" step="0.5" id="v-hole" oninput="syncRangeVal('v-hole','v-hole-v',v=>parseFloat(v).toFixed(1)+'mm');validate()">
+            <span class="range-val" id="v-hole-v">8.0mm</span>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">L/D ratio (compression ratio) <span class="tip" data-tip="Hole depth ÷ hole diameter. Higher = stronger pellet, more kWh/t. Straw 5–7:1. Bamboo/wood 7–10:1. Wrong ratio = crumble or blocked die.">?</span></label>
+        <div class="field-row">
+          <input type="range" min="3" max="12" value="6" step="0.5" id="v-ld" oninput="syncRangeVal('v-ld','v-ld-v',v=>parseFloat(v).toFixed(1)+':1');validate()">
+          <span class="range-val" id="v-ld-v">6.0:1</span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Die steel grade <span class="tip" data-tip="Determines die lifespan and replacement cost. D2/M2 tool steel = 2,500–4,000 hr life. X46Cr13 basic stainless = 800–1,500 hr life.">?</span></label>
+        <select id="v-die-steel" onchange="validate()">
+          <option value="d2">D2 tool steel — top grade (Andritz, CPM, Bühler)</option>
+          <option value="m2">M2 high-speed steel — equivalent to D2</option>
+          <option value="4cr13">4Cr13 stainless — mid grade (Muyang, Richi)</option>
+          <option value="x46cr13" selected>X46Cr13 basic stainless — budget (most CN/IN)</option>
+          <option value="unknown">Unknown / not specified</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Number of rollers <span class="tip" data-tip="3-roller designs distribute load more evenly, reduce vibration, extend die life. 2-roller is cheaper to manufacture. For fibrous agri-residue, 3-roller preferred.">?</span></label>
+        <div class="toggle-row">
+          <button class="toggle-btn" id="roller-2" onclick="setRollers(2)">2 rollers</button>
+          <button class="toggle-btn active" id="roller-3" onclick="setRollers(3)">3 rollers</button>
+        </div>
+      </div>
+
+      <div class="section-divider">Conditioner</div>
+      <div class="field">
+        <label class="field-label">Steam conditioner <span class="tip" data-tip="Pre-wets and heats biomass before die entry using steam injection. Reduces SEC by 15–25% for hard materials. Standard on European machines, optional on Chinese.">?</span></label>
+        <div class="toggle-row">
+          <button class="toggle-btn active" id="cond-no" onclick="setConditioner(false)">No conditioner</button>
+          <button class="toggle-btn" id="cond-yes" onclick="setConditioner(true)">Steam conditioner fitted</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PANEL 03: COMMERCIAL -->
+  <div class="panel">
+    <div class="panel-header"><span class="panel-step">03</span><span class="panel-title">Commercial terms</span></div>
+    <div class="panel-body">
+      <div class="field">
+        <label class="field-label">Claimed TPH (manufacturer) <span class="tip" data-tip="What vendor claims in quotation. If range given, use lower number.">?</span></label>
+        <div class="field-row">
+          <input type="range" min="0.5" max="20" value="3" step="0.5" id="v-tph" oninput="syncRangeVal('v-tph','v-tph-v',v=>parseFloat(v).toFixed(1)+' t/h');validate()">
+          <span class="range-val" id="v-tph-v">3.0 t/h</span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Quoted price (₹ Lakh) <span class="tip" data-tip="Ex-works price including basic commissioning. Exclude freight, civil works, electrical connections.">?</span></label>
+        <div class="field-row">
+          <input type="range" min="5" max="800" value="45" step="5" id="v-price" oninput="syncRangeVal('v-price','v-price-v',v=>'₹'+v+'L');validate()">
+          <span class="range-val" id="v-price-v">₹45L</span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Warranty period (months)</label>
+        <div class="field-row">
+          <input type="range" min="3" max="36" value="12" step="3" id="v-warranty" oninput="syncRangeVal('v-warranty','v-warranty-v',v=>v+' months');validate()">
+          <span class="range-val" id="v-warranty-v">12 months</span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Die + roller replacement cost (₹ Lakh)</label>
+        <div class="field-row">
+          <input type="range" min="0.5" max="25" value="3" step="0.5" id="v-die-cost" oninput="syncRangeVal('v-die-cost','v-die-cost-v',v=>'₹'+parseFloat(v).toFixed(1)+'L');validate()">
+          <span class="range-val" id="v-die-cost-v">₹3.0L</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 04: FEEDSTOCK -->
+  <div class="panel">
+    <div class="panel-header"><span class="panel-step">04</span><span class="panel-title">Feedstock conditions</span></div>
+    <div class="panel-body">
+      <div class="field">
+        <label class="field-label">Primary material</label>
+        <select id="v-mat" onchange="validate()">
+          <option value="rice_straw">Rice straw</option>
+          <option value="wheat_straw">Wheat straw</option>
+          <option value="bamboo">Bamboo (green / fresh)</option>
+          <option value="bamboo_dry">Bamboo (seasoned / dried)</option>
+          <option value="bagasse">Sugarcane bagasse</option>
+          <option value="cotton_stalk">Cotton stalk</option>
+          <option value="mustard">Mustard stalk</option>
+          <option value="maize">Maize stover</option>
+          <option value="sawdust_soft">Sawdust — softwood</option>
+          <option value="sawdust_hard">Sawdust — hardwood</option>
+          <option value="mixed_agri">Mixed agri-residue (Indian)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Inlet moisture at mill (%) <span class="tip" data-tip="After drying, at pellet mill inlet. Target 10–14%. Manufacturers test at exactly 12%. Every 1% off optimal costs 5–8% throughput.">?</span></label>
+        <div class="field-row">
+          <input type="range" min="6" max="22" value="12" step="1" id="v-mc" oninput="syncRangeVal('v-mc','v-mc-v',v=>v+'%');validate()">
+          <span class="range-val" id="v-mc-v">12%</span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Particle size at mill inlet (mm) <span class="tip" data-tip="Should be ≤6mm for smooth operation. Hammer mill output. Coarser = blockages and power spikes.">?</span></label>
+        <div class="field-row">
+          <input type="range" min="1" max="15" value="5" step="0.5" id="v-ps" oninput="syncRangeVal('v-ps','v-ps-v',v=>parseFloat(v).toFixed(1)+'mm');validate()">
+          <span class="range-val" id="v-ps-v">5.0mm</span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Operating hours per day</label>
+        <div class="field-row">
+          <input type="range" min="8" max="22" value="16" step="1" id="v-hrs" oninput="syncRangeVal('v-hrs','v-hrs-v',v=>v+' hrs/day');validate()">
+          <span class="range-val" id="v-hrs-v">16 hrs/day</span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Pellet selling price (₹/tonne)</label>
+        <div class="field-row">
+          <input type="range" min="4000" max="14000" value="8500" step="100" id="v-sell" oninput="syncRangeVal('v-sell','v-sell-v',v=>'₹'+parseInt(v).toLocaleString('en-IN'));validate()">
+          <span class="range-val" id="v-sell-v">₹8,500</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end left col -->
+
+<!-- RIGHT: RESULTS -->
+<div id="results-panel" class="anim">
+  <div class="empty-state">
+    <div style="font-size:32px;color:var(--border2);margin-bottom:1rem">⟳</div>
+    Select a make and model<br>or adjust inputs to run validation
+  </div>
+</div>
+
+</div><!-- end gcols-val -->
+</div><!-- end validator tab -->
+
+<!-- ══════════════════ SHORTLIST ══════════════════ -->
+<div id="tab-shortlist" class="tab-content">
+<div class="page-hero">
+  <div class="page-hero-label">Phase 01 · Shortlist</div>
+  <div class="page-hero-title">Validated machine <span>shortlist</span></div>
+  <div class="page-hero-sub">Machines saved from validator. Persists in browser localStorage. Phase 02 will use this list to compose production lines and calculate conversion cost.</div>
+</div>
+<div style="display:flex;justify-content:flex-end;gap:.75rem;margin-bottom:1rem">
+  <button class="btn" onclick="exportShortlist()">↓ Export CSV</button>
+  <button class="btn btn-danger" onclick="clearShortlist()">✕ Clear all</button>
+</div>
+<div id="sl-list"></div>
+<div id="sl-compare"></div>
+</div>
+
+<!-- ══════════════════ HANDBOOK ══════════════════ -->
+<div id="tab-handbook" class="tab-content">
+<div class="page-hero">
+  <div class="page-hero-label">Physics handbook</div>
+  <div class="page-hero-title">The <span>physics</span> of densification</div>
+  <div class="page-hero-sub">What every buyer must understand before talking to a vendor. Read once — never be fooled by a TPH claim again.</div>
+</div>
+
+<div class="hb-section">
+  <div class="hb-section-title">01 — Power · torque · RPM — the locked trinity</div>
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="concept-icon">⊛</div>
+      <div class="concept-title">The equation that governs everything</div>
+      <div class="concept-body">Power (kW) = Torque (Nm) × RPM ÷ 9,550. This is exact — not an estimate. If a vendor gives you all three numbers and they don't satisfy this equation, one of them is wrong. Use this to verify every datasheet.</div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">⟳</div>
+      <div class="concept-title">Pellet mills need torque, not speed</div>
+      <div class="concept-body">The die must rotate at 100–180 RPM to give biomass adequate dwell time in the hole for lignin activation. What pushes material through is force — torque. Two 132 kW machines with different gearbox ratios have completely different force at the die face and completely different real throughput.</div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">↓</div>
+      <div class="concept-title">Speed reduction multiplies torque</div>
+      <div class="concept-body">A 10:1 gearbox reduces motor RPM by 10× and multiplies torque by 10× (minus friction losses). So a motor producing 869 Nm at 1450 RPM becomes 8,180 Nm at 145 RPM at the die shaft (at 94% gearbox efficiency). That 8,180 Nm is what makes pellets.</div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-icon">≋</div>
+      <div class="concept-title">Why fast die speed kills quality</div>
+      <div class="concept-body">Peripheral die speed should be 5–7 m/s for most agri-biomass. Above 7 m/s, biomass passes through the hole before lignin activates — pellets look fine hot but crumble on cooling. Budget machines run higher RPM to inflate TPH numbers on sawdust. On your biomass it means failed PDI.</div>
+    </div>
+  </div>
+  <div class="formula-block">
+    Motor torque (Nm) = kW × 9,550 ÷ motor RPM<br>
+    Die shaft torque (Nm) = Motor torque × gearbox ratio × transmission efficiency<br>
+    Die RPM = Motor RPM ÷ gearbox ratio<br>
+    Peripheral speed (m/s) = π × die diameter (m) × die RPM ÷ 60<br>
+    <span class="formula-comment">
+    Target: die shaft torque ≥ 8,000 Nm for 132 kW on agri-residue · peripheral speed 5–7 m/s · die RPM 100–180
+    </span>
+  </div>
+</div>
+
+<div class="hb-section">
+  <div class="hb-section-title">02 — Transmission types compared</div>
+  <div class="g2" style="gap:1rem;margin-bottom:1rem">
+    <div class="verdict verdict-info">
+      <div class="verdict-title">Belt drive (Poly-V / V-belt) — Andritz, CPM standard</div>
+      <p>Motor drives die shaft via belt and pulley. Speed reduction achieved by pulley diameter ratio, not gears. Efficiency: Poly-V 88–91%, V-belt 85–88%. Lower than gearbox — but this is intentional design philosophy.<br><br>The belt is a mechanical fuse. When a stone, wire or die block causes a force spike, the belt slips or snaps first. Replacement belt: ₹2,000–8,000, 30 minutes. Replacement gearbox: ₹3–15 lakh, several days. For Indian agri-residue with contaminated feedstock, this is a significant practical advantage.<br><br>Also provides slight elastic compliance — momentary load spikes from uneven fibrous feed are absorbed by belt stretch before reaching the motor. Fewer trips, smoother operation on difficult material.</p>
+    </div>
+    <div class="verdict verdict-purple">
+      <div class="verdict-title">Quality gearbox — SEW, Flender, Siemens</div>
+      <p>Helical or planetary gears in sealed oil bath. Efficiency 92–94%. Rigid torque delivery — what the ratio gives, it gives consistently. Higher efficiency means more of your motor kW reaches the die.<br><br>Failure mode is catastrophic — a gear tooth failure or bearing seizure destroys the gearbox housing. Replacement is expensive and has long lead times, especially for imported units in India.<br><br>Best suited when feedstock is very clean and consistent (e.g. dedicated sawdust plant) and when maximum kW-to-TPH efficiency matters.</p>
+    </div>
+  </div>
+  <div class="verdict verdict-bad">
+    <div class="verdict-title">Local cast gearbox (unknown brand) — the hidden risk</div>
+    <p>Many budget Chinese and Indian-branded machines use locally manufactured gearboxes with no published specifications. Actual efficiency 78–85%, often lower due to manufacturing tolerances. No published torque rating means you cannot verify the die shaft torque calculation. Bearing quality is highly variable. In practice, these fail at 3,000–6,000 operating hours on hard biomass. Ask for the gearbox manufacturer's nameplate. If the vendor cannot name it, walk away or price in a gearbox replacement at year 2–3.</p>
+  </div>
+  <div class="verdict verdict-warn">
+    <div class="verdict-title">Direct drive — rare, high-end only</div>
+    <p>Motor shaft IS the die shaft. No intermediate transmission — 97–99% efficiency. Requires a purpose-built low-RPM, high-torque motor (not a standard induction motor). These motors cost 3–5× a standard motor and have 6–12 month lead times for replacement in India. Only found on large-format European machines above 400 kW. Do not confuse with a vendor claiming "direct drive" on a gearbox machine — verify by asking for the motor nameplate RPM and confirming it matches die RPM.</p>
+  </div>
+</div>
+
+<div class="hb-section">
+  <div class="hb-section-title">03 — Die steel grades & maintenance cost impact</div>
+  <div style="overflow-x:auto">
+    <table class="data-table">
+      <thead><tr><th>Steel grade</th><th>Typical vendors</th><th>Hardness (HRC)</th><th>Die life (agri-residue)</th><th>Die life (bamboo/wood)</th><th>Replacement cost</th><th>₹/tonne wear cost</th></tr></thead>
+      <tbody>
+        <tr><td><strong style="color:var(--text)">D2 tool steel</strong></td><td>Andritz, CPM, Bühler</td><td>58–62</td><td>2,500–4,000 hrs</td><td>2,000–3,500 hrs</td><td>₹4–8L</td><td style="color:var(--green)">₹8–18/t</td></tr>
+        <tr><td><strong style="color:var(--text)">M2 high-speed steel</strong></td><td>CPM, Salmatec</td><td>60–65</td><td>2,500–4,000 hrs</td><td>2,000–3,200 hrs</td><td>₹4–8L</td><td style="color:var(--green)">₹8–18/t</td></tr>
+        <tr><td><strong style="color:var(--text)">4Cr13 stainless</strong></td><td>Muyang, Richi</td><td>48–54</td><td>1,200–2,000 hrs</td><td>800–1,400 hrs</td><td>₹2–5L</td><td style="color:var(--amber)">₹15–35/t</td></tr>
+        <tr><td><strong style="color:var(--text)">X46Cr13 basic</strong></td><td>Yulong, Hitech, Trio</td><td>40–48</td><td>600–1,200 hrs</td><td>400–800 hrs</td><td>₹1–3L</td><td style="color:var(--red)">₹20–60/t</td></tr>
+        <tr><td><strong style="color:var(--text)">Unknown</strong></td><td>Budget Indian</td><td>Unknown</td><td>300–800 hrs</td><td>200–500 hrs</td><td>₹0.8–2L</td><td style="color:var(--red)">₹30–80/t</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="verdict verdict-warn" style="margin-top:1rem">
+    <div class="verdict-title">The die cost trap</div>
+    <p>A cheap machine with basic X46Cr13 dies running on rice straw will replace dies every 800–1,000 hours. At 16 hrs/day that's every 50–62 days. At ₹1.5L per replacement, that's ₹9–12L/year in die costs alone — more than the annual maintenance budget of a European machine with D2 dies lasting 2,500+ hours. Calculate total cost of ownership, not just purchase price.</p>
+  </div>
+</div>
+
+<div class="hb-section">
+  <div class="hb-section-title">04 — Vendor profiles</div>
+  <div style="overflow-x:auto">
+    <table class="data-table">
+      <thead><tr><th>Vendor</th><th>Die</th><th>Transmission</th><th>TPH reliability</th><th>Gearbox</th><th>Die steel</th><th>Price (132kW)</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td><strong style="color:var(--text)">Andritz</strong></td><td><span class="badge badge-info">Ring</span></td><td>Poly-V belt</td><td><span style="color:var(--green);font-family:var(--mono)">90–95%</span></td><td>N/A (belt)</td><td>D2 / M2</td><td>₹2.5–4Cr</td><td><span class="badge badge-ok">Best</span></td></tr>
+        <tr><td><strong style="color:var(--text)">CPM</strong></td><td><span class="badge badge-info">Ring</span></td><td>Belt / gearbox</td><td><span style="color:var(--green);font-family:var(--mono)">88–95%</span></td><td>Own / Dodge</td><td>D2</td><td>₹2.5–4Cr</td><td><span class="badge badge-ok">Best</span></td></tr>
+        <tr><td><strong style="color:var(--text)">Salmatec</strong></td><td><span class="badge badge-info">Ring</span></td><td>Gearbox</td><td><span style="color:var(--green);font-family:var(--mono)">85–92%</span></td><td>SEW / Flender</td><td>X46Cr13+</td><td>₹1.5–3Cr</td><td><span class="badge badge-ok">Good</span></td></tr>
+        <tr><td><strong style="color:var(--text)">Bühler</strong></td><td><span class="badge badge-info">Ring</span></td><td>Gearbox</td><td><span style="color:var(--green);font-family:var(--mono)">88–93%</span></td><td>Own</td><td>D2</td><td>₹2–4Cr</td><td><span class="badge badge-ok">Best</span></td></tr>
+        <tr><td><strong style="color:var(--text)">Amandus Kahl</strong></td><td><span class="badge badge-info">Ring</span></td><td>Gearbox</td><td><span style="color:var(--green);font-family:var(--mono)">85–92%</span></td><td>Flender</td><td>D2</td><td>₹2–3.5Cr</td><td><span class="badge badge-ok">Good</span></td></tr>
+        <tr><td><strong style="color:var(--text)">Muyang</strong></td><td><span class="badge badge-info">Ring</span></td><td>Gearbox</td><td><span style="color:var(--amber);font-family:var(--mono)">72–80%</span></td><td>SEW options</td><td>4Cr13</td><td>₹60–110L</td><td><span class="badge badge-warn">Best Chinese</span></td></tr>
+        <tr><td><strong style="color:var(--text)">Richi</strong></td><td><span class="badge badge-warn">Flat/Ring</span></td><td>Gearbox</td><td><span style="color:var(--amber);font-family:var(--mono)">62–72%</span></td><td>Local + SEW opt</td><td>4Cr13</td><td>₹30–60L</td><td><span class="badge badge-warn">Verify die</span></td></tr>
+        <tr><td><strong style="color:var(--text)">Yulong</strong></td><td><span class="badge badge-warn">Flat</span></td><td>Gearbox</td><td><span style="color:var(--red);font-family:var(--mono)">50–65%</span></td><td>Local</td><td>X46Cr13</td><td>₹18–35L</td><td><span class="badge badge-bad">Trial only</span></td></tr>
+        <tr><td><strong style="color:var(--text)">Hitech Agro</strong></td><td><span class="badge badge-warn">Flat</span></td><td>V-belt/Gbx</td><td><span style="color:var(--red);font-family:var(--mono)">50–65%</span></td><td>Local Indian</td><td>X46Cr13</td><td>₹15–30L</td><td><span class="badge badge-bad">Low CapEx</span></td></tr>
+        <tr><td><strong style="color:var(--text)">Trio</strong></td><td><span class="badge badge-warn">Flat</span></td><td>V-belt</td><td><span style="color:var(--red);font-family:var(--mono)">50–63%</span></td><td>Local</td><td>Basic</td><td>₹15–28L</td><td><span class="badge badge-bad">Low CapEx</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="hb-section">
+  <div class="hb-section-title">05 — Questions that cannot be faked</div>
+  <div class="g2" style="gap:1rem">
+    <div class="verdict verdict-bad">
+      <div class="verdict-title">Technical demands</div>
+      <p>1. TPH tested on which material, moisture %, particle size?<br>2. Gearbox output shaft torque in Nm at rated motor RPM?<br>3. Die RPM at full rated load?<br>4. L/D ratio of dies supplied for MY feedstock?<br>5. PDI (Pellet Durability Index) at claimed TPH?<br>6. Motor amp draw log at full load — not nameplate amps.<br>7. Ring die claim: show cross-section engineering drawing of die assembly.<br>8. Gearbox: nameplate photo showing manufacturer and ratio.</p>
+    </div>
+    <div class="verdict verdict-ok">
+      <div class="verdict-title">Commercial demands (in contract)</div>
+      <p>1. Performance guarantee: minimum TPH on YOUR feedstock at YOUR moisture, with penalty clause.<br>2. Die + roller warranty: minimum 2,000 operating hours or 12 months.<br>3. Commissioning: named engineer on-site, minimum 7 days, vendor cost.<br>4. Spare parts: rollers + die shell available in India ≤72 hours.<br>5. Reference visit: operating plant in India on same feedstock before deposit.<br>6. Payment terms: max 30% advance, 60% FAT, 10% after 30 days commissioning.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- end handbook -->
+</main>
+
+<script>
+// ══════ DATA ══════
+
+const MAT = {
+  rice_straw:   {sec:[38,50],  label:'Rice straw',        fibre:'long',   hard:'soft',   ldMin:5,  ldMax:7,  mcOpt:12, condBoost:0.12},
+  wheat_straw:  {sec:[45,60],  label:'Wheat straw',       fibre:'long',   hard:'soft',   ldMin:5,  ldMax:7,  mcOpt:12, condBoost:0.10},
+  bamboo:       {sec:[90,130], label:'Bamboo (green)',     fibre:'short',  hard:'hard',   ldMin:7,  ldMax:10, mcOpt:11, condBoost:0.22},
+  bamboo_dry:   {sec:[70,100], label:'Bamboo (seasoned)',  fibre:'short',  hard:'hard',   ldMin:7,  ldMax:10, mcOpt:11, condBoost:0.18},
+  bagasse:      {sec:[50,70],  label:'Sugarcane bagasse',  fibre:'mixed',  hard:'soft',   ldMin:5,  ldMax:7,  mcOpt:13, condBoost:0.10},
+  cotton_stalk: {sec:[65,90],  label:'Cotton stalk',       fibre:'long',   hard:'medium', ldMin:6,  ldMax:8,  mcOpt:12, condBoost:0.15},
+  mustard:      {sec:[50,65],  label:'Mustard stalk',      fibre:'medium', hard:'soft',   ldMin:5,  ldMax:7,  mcOpt:12, condBoost:0.10},
+  maize:        {sec:[45,60],  label:'Maize stover',       fibre:'medium', hard:'soft',   ldMin:5,  ldMax:7,  mcOpt:12, condBoost:0.08},
+  sawdust_soft: {sec:[35,50],  label:'Sawdust (softwood)', fibre:'short',  hard:'soft',   ldMin:4,  ldMax:7,  mcOpt:12, condBoost:0.08},
+  sawdust_hard: {sec:[65,95],  label:'Sawdust (hardwood)', fibre:'short',  hard:'hard',   ldMin:7,  ldMax:10, mcOpt:11, condBoost:0.18},
+  mixed_agri:   {sec:[55,75],  label:'Mixed agri-residue', fibre:'mixed',  hard:'medium', ldMin:5,  ldMax:8,  mcOpt:12, condBoost:0.12}
+};
+
+const TRANS = {
+  belt_polyv:    {eff:0.90, label:'Poly-V belt',       maintMult:0.8,  fuse:true},
+  belt_v:        {eff:0.87, label:'V-belt',            maintMult:0.9,  fuse:true},
+  gearbox_quality:{eff:0.94,label:'Quality gearbox',   maintMult:1.0,  fuse:false},
+  gearbox_local: {eff:0.81, label:'Local gearbox',     maintMult:1.8,  fuse:false},
+  direct:        {eff:0.97, label:'Direct drive',      maintMult:0.6,  fuse:false}
+};
+
+const DIE_STEEL = {
+  d2:       {life:[2500,4000], label:'D2 tool steel',    wearRs:[8,18]},
+  m2:       {life:[2500,4000], label:'M2 HSS',           wearRs:[8,18]},
+  '4cr13':  {life:[1200,2000], label:'4Cr13 stainless',  wearRs:[15,35]},
+  x46cr13:  {life:[600,1200],  label:'X46Cr13',          wearRs:[20,60]},
+  unknown:  {life:[300,800],   label:'Unknown',           wearRs:[30,80]}
+};
+
+// Make → models database
+const MODELS = {
+  andritz: [
+    {id:'lm_14',  label:'LM 14 — 90 kW ring die',     kw:90,  tph:2.0, die:'ring', died:350, hole:8, ld:6, trans:'belt_polyv', ratio:9,   motorRpm:1450, dieSteel:'d2',  rollers:3, price:150},
+    {id:'lm_15',  label:'LM 15 — 132 kW ring die',    kw:132, tph:3.0, die:'ring', died:420, hole:8, ld:6, trans:'belt_polyv', ratio:9.5, motorRpm:1450, dieSteel:'d2',  rollers:3, price:200},
+    {id:'lm_16',  label:'LM 16 — 160 kW ring die',    kw:160, tph:4.0, die:'ring', died:460, hole:8, ld:6, trans:'belt_polyv', ratio:9.5, motorRpm:1450, dieSteel:'d2',  rollers:3, price:250},
+    {id:'lm_17',  label:'LM 17 — 200 kW ring die',    kw:200, tph:5.0, die:'ring', died:508, hole:8, ld:7, trans:'belt_polyv', ratio:10,  motorRpm:1450, dieSteel:'d2',  rollers:3, price:320},
+    {id:'lm_26',  label:'LM 26 — 260 kW ring die',    kw:260, tph:6.5, die:'ring', died:560, hole:8, ld:7, trans:'belt_polyv', ratio:10,  motorRpm:1450, dieSteel:'d2',  rollers:3, price:420},
+    {id:'lm_520', label:'LM 520 — 520 kW ring die',   kw:520, tph:13,  die:'ring', died:800, hole:8, ld:7, trans:'belt_polyv', ratio:10,  motorRpm:980,  dieSteel:'d2',  rollers:3, price:700},
+  ],
+  cpm: [
+    {id:'cpm_7900', label:'CPM 7900 — 132 kW ring die', kw:132, tph:3.2, die:'ring', died:420, hole:8, ld:6.5, trans:'belt_polyv', ratio:9, motorRpm:1450, dieSteel:'d2', rollers:3, price:200},
+    {id:'cpm_7700', label:'CPM 7700 — 185 kW ring die', kw:185, tph:4.5, die:'ring', died:508, hole:8, ld:7,   trans:'belt_polyv', ratio:9, motorRpm:1450, dieSteel:'d2', rollers:3, price:280},
+    {id:'cpm_3020', label:'CPM 3020 — 260 kW ring die', kw:260, tph:6.5, die:'ring', died:610, hole:8, ld:7,   trans:'gearbox_quality', ratio:9, motorRpm:1450, dieSteel:'d2', rollers:3, price:400},
+  ],
+  salmatec: [
+    {id:'sal_pm200', label:'Salmatec PM 200 — 132 kW',  kw:132, tph:2.8, die:'ring', died:400, hole:8, ld:6, trans:'gearbox_quality', ratio:9,  motorRpm:1450, dieSteel:'x46cr13', rollers:3, price:120},
+    {id:'sal_pm250', label:'Salmatec PM 250 — 200 kW',  kw:200, tph:4.2, die:'ring', died:500, hole:8, ld:6, trans:'gearbox_quality', ratio:10, motorRpm:1450, dieSteel:'x46cr13', rollers:3, price:180},
+  ],
+  buhler: [
+    {id:'buh_mpos', label:'Bühler MPOS — 132 kW ring',  kw:132, tph:3.0, die:'ring', died:420, hole:8, ld:6, trans:'gearbox_quality', ratio:9, motorRpm:1450, dieSteel:'d2', rollers:3, price:220},
+    {id:'buh_mpoh', label:'Bühler MPOH — 250 kW ring',  kw:250, tph:6.0, die:'ring', died:600, hole:8, ld:7, trans:'gearbox_quality', ratio:9, motorRpm:1450, dieSteel:'d2', rollers:3, price:380},
+  ],
+  amandus_kahl: [
+    {id:'kahl_39', label:'Kahl 39-390 — 90 kW ring',   kw:90,  tph:1.8, die:'ring', died:390, hole:8, ld:6, trans:'gearbox_quality', ratio:8.5, motorRpm:1450, dieSteel:'d2', rollers:2, price:130},
+    {id:'kahl_51', label:'Kahl 39-510 — 160 kW ring',  kw:160, tph:3.5, die:'ring', died:510, hole:8, ld:6, trans:'gearbox_quality', ratio:9,   motorRpm:1450, dieSteel:'d2', rollers:3, price:220},
+  ],
+  muyang: [
+    {id:'muy_szlh350', label:'Muyang SZLH-350 — 90 kW ring', kw:90,  tph:1.8, die:'ring', died:350, hole:8, ld:6, trans:'gearbox_quality', ratio:8.5, motorRpm:1450, dieSteel:'4cr13', rollers:2, price:55},
+    {id:'muy_szlh420', label:'Muyang SZLH-420 — 132 kW ring',kw:132, tph:2.8, die:'ring', died:420, hole:8, ld:6, trans:'gearbox_quality', ratio:9,   motorRpm:1450, dieSteel:'4cr13', rollers:3, price:75},
+    {id:'muy_szlh508', label:'Muyang SZLH-508 — 200 kW ring',kw:200, tph:4.0, die:'ring', died:508, hole:8, ld:7, trans:'gearbox_quality', ratio:9,   motorRpm:1450, dieSteel:'4cr13', rollers:3, price:100},
+  ],
+  richi: [
+    {id:'richi_mzlh350',label:'Richi MZLH-350 — 37 kW flat', kw:37,  tph:0.8, die:'flat', died:350, hole:8, ld:5, trans:'belt_v', ratio:5, motorRpm:1450, dieSteel:'4cr13', rollers:2, price:18},
+    {id:'richi_mzlh420',label:'Richi MZLH-420 — 90 kW flat', kw:90,  tph:2.0, die:'flat', died:420, hole:8, ld:5, trans:'belt_v', ratio:5, motorRpm:1450, dieSteel:'4cr13', rollers:2, price:30},
+    {id:'richi_ring132',label:'Richi ring — 132 kW ring',     kw:132, tph:2.5, die:'ring', died:420, hole:8, ld:6, trans:'gearbox_local', ratio:9, motorRpm:1450, dieSteel:'4cr13', rollers:2, price:45},
+  ],
+  yulong: [
+    {id:'yl_560', label:'Yulong 560 — 55 kW flat',  kw:55,  tph:1.2, die:'flat', died:300, hole:8, ld:5, trans:'belt_v', ratio:4.5, motorRpm:1450, dieSteel:'x46cr13', rollers:2, price:12},
+    {id:'yl_800', label:'Yulong 800 — 90 kW flat',  kw:90,  tph:2.0, die:'flat', died:420, hole:8, ld:5, trans:'belt_v', ratio:5,   motorRpm:1450, dieSteel:'x46cr13', rollers:2, price:18},
+    {id:'yl_1000',label:'Yulong 1000 — 132 kW flat',kw:132, tph:3.0, die:'flat', died:500, hole:8, ld:5, trans:'belt_v', ratio:5.5, motorRpm:1450, dieSteel:'x46cr13', rollers:2, price:25},
+  ],
+  rotex: [
+    {id:'rtx_450', label:'Rotexmaster 450 — 90 kW flat', kw:90,  tph:2.0, die:'flat', died:420, hole:8, ld:5, trans:'belt_v', ratio:5, motorRpm:1450, dieSteel:'x46cr13', rollers:2, price:20},
+    {id:'rtx_550', label:'Rotexmaster 550 — 132 kW flat',kw:132, tph:3.0, die:'flat', died:500, hole:8, ld:5, trans:'belt_v', ratio:5, motorRpm:1450, dieSteel:'x46cr13', rollers:2, price:28},
+  ],
+  hitech: [
+    {id:'ht_90',  label:'Hitech Agro 90 kW flat',  kw:90,  tph:2.0, die:'flat', died:350, hole:8, ld:5, trans:'belt_v', ratio:5, motorRpm:1450, dieSteel:'x46cr13', rollers:2, price:16},
+    {id:'ht_132', label:'Hitech Agro 132 kW flat',  kw:132, tph:3.0, die:'flat', died:420, hole:8, ld:5, trans:'belt_v', ratio:5, motorRpm:1450, dieSteel:'x46cr13', rollers:2, price:22},
+  ],
+  trio: [
+    {id:'trio_90', label:'Trio 90 kW flat',  kw:90,  tph:1.8, die:'flat', died:350, hole:8, ld:5, trans:'belt_v', ratio:4.5, motorRpm:1450, dieSteel:'x46cr13', rollers:2, price:14},
+    {id:'trio_132',label:'Trio 132 kW flat', kw:132, tph:3.0, die:'flat', died:420, hole:8, ld:5, trans:'belt_v', ratio:5,   motorRpm:1450, dieSteel:'x46cr13', rollers:2, price:20},
+  ],
+  guru_nanak:[{id:'gn_custom', label:'Guru Nanak — custom spec', kw:90, tph:1.8, die:'flat', died:350, hole:8, ld:5, trans:'belt_v', ratio:5, motorRpm:1450, dieSteel:'x46cr13', rollers:2, price:15}],
+  radhe:     [{id:'ra_custom', label:'Radhe — custom spec',       kw:90, tph:1.8, die:'flat', died:350, hole:8, ld:5, trans:'belt_v', ratio:5, motorRpm:1450, dieSteel:'x46cr13', rollers:2, price:14}],
+  zhengchang:[{id:'zc_custom', label:'Zhengchang SZLH-420',       kw:132,tph:2.8, die:'ring', died:420, hole:8, ld:6, trans:'gearbox_local', ratio:8.5, motorRpm:1450, dieSteel:'4cr13', rollers:2, price:55}],
+  eu_other:  [{id:'eu_custom', label:'European — custom spec',     kw:132,tph:3.0, die:'ring', died:420, hole:8, ld:6, trans:'gearbox_quality', ratio:9, motorRpm:1450, dieSteel:'d2', rollers:3, price:180}],
+  cn_other:  [{id:'cn_custom', label:'China — custom spec',        kw:132,tph:3.0, die:'flat', died:420, hole:8, ld:5, trans:'belt_v', ratio:5, motorRpm:1450, dieSteel:'x46cr13', rollers:2, price:30}],
+  in_other:  [{id:'in_custom', label:'India local — custom spec',  kw:90, tph:2.0, die:'flat', died:350, hole:8, ld:5, trans:'belt_v', ratio:5, motorRpm:1450, dieSteel:'x46cr13', rollers:2, price:15}]
+};
+
+// State
+let numRollers = 3;
+let hasConditioner = false;
+
+// ══════ UI HELPERS ══════
+function syncRangeVal(id, outId, fmt) {
+  document.getElementById(outId).textContent = fmt(document.getElementById(id).value);
+}
+
+function setRollers(n) {
+  numRollers = n;
+  document.getElementById('roller-2').classList.toggle('active', n === 2);
+  document.getElementById('roller-3').classList.toggle('active', n === 3);
+  validate();
+}
+
+function setConditioner(v) {
+  hasConditioner = v;
+  document.getElementById('cond-no').classList.toggle('active', !v);
+  document.getElementById('cond-yes').classList.toggle('active', v);
+  validate();
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.hnav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'shortlist') renderShortlist();
+}
+
+function onTransChange() {
+  const t = document.getElementById('v-trans-type').value;
+  const showGbx = t.startsWith('gearbox');
+  document.getElementById('gearbox-brand-field').style.display = showGbx ? '' : 'none';
+  validate();
+}
+
+function onMakeChange() {
+  const make = document.getElementById('v-make').value;
+  const modelSel = document.getElementById('v-model-select');
+  modelSel.innerHTML = '<option value="">— select model —</option>';
+  if (!make || !MODELS[make]) { validate(); return; }
+  MODELS[make].forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m.id;
+    opt.textContent = m.label;
+    modelSel.appendChild(opt);
+  });
+  validate();
+}
+
+function onModelChange() {
+  const make = document.getElementById('v-make').value;
+  const modelId = document.getElementById('v-model-select').value;
+  if (!make || !modelId || !MODELS[make]) { validate(); return; }
+  const m = MODELS[make].find(x => x.id === modelId);
+  if (!m) { validate(); return; }
+  // Pre-fill all fields
+  setSlider('v-kw', 'v-kw-v', m.kw, v => v + ' kW');
+  setSlider('v-motor-rpm', 'v-motor-rpm-v', m.motorRpm, v => v + ' RPM');
+  setSlider('v-tph', 'v-tph-v', m.tph, v => parseFloat(v).toFixed(1) + ' t/h');
+  setSlider('v-died', 'v-died-v', m.died, v => v + 'mm');
+  setSlider('v-hole', 'v-hole-v', m.hole, v => parseFloat(v).toFixed(1) + 'mm');
+  setSlider('v-ld', 'v-ld-v', m.ld, v => parseFloat(v).toFixed(1) + ':1');
+  setSlider('v-gbx-ratio', 'v-gbx-ratio-v', m.ratio, v => parseFloat(v).toFixed(1) + ':1');
+  setSlider('v-price', 'v-price-v', m.price, v => '₹' + v + 'L');
+  document.getElementById('v-dietype').value = m.die;
+  document.getElementById('v-trans-type').value = m.trans;
+  document.getElementById('v-die-steel').value = m.dieSteel;
+  numRollers = m.rollers;
+  document.getElementById('roller-2').classList.toggle('active', m.rollers === 2);
+  document.getElementById('roller-3').classList.toggle('active', m.rollers === 3);
+  onTransChange();
+  validate();
+}
+
+function setSlider(id, outId, val, fmt) {
+  const el = document.getElementById(id);
+  el.value = val;
+  document.getElementById(outId).textContent = fmt(val);
+}
+
+// ══════ CORE VALIDATION ══════
+function validate() {
+  const kw         = parseInt(document.getElementById('v-kw').value);
+  const motorRpm   = parseInt(document.getElementById('v-motor-rpm').value);
+  const claimedTph = parseFloat(document.getElementById('v-tph').value);
+  const price      = parseInt(document.getElementById('v-price').value);
+  const matKey     = document.getElementById('v-mat').value;
+  const mc         = parseInt(document.getElementById('v-mc').value);
+  const ps         = parseFloat(document.getElementById('v-ps').value);
+  const ld         = parseFloat(document.getElementById('v-ld').value);
+  const dieD       = parseInt(document.getElementById('v-died').value);
+  const hole       = parseFloat(document.getElementById('v-hole').value);
+  const transKey   = document.getElementById('v-trans-type').value;
+  const dieType    = document.getElementById('v-dietype').value;
+  const dieSteel   = document.getElementById('v-die-steel').value;
+  const ratio      = parseFloat(document.getElementById('v-gbx-ratio').value);
+  const hrs        = parseInt(document.getElementById('v-hrs').value);
+  const sellPrice  = parseInt(document.getElementById('v-sell').value);
+  const warranty   = parseInt(document.getElementById('v-warranty').value);
+  const dieCost    = parseFloat(document.getElementById('v-die-cost').value);
+  const gbxBrand   = document.getElementById('v-gbx-brand').value.trim();
+
+  const makeKey    = document.getElementById('v-make').value;
+  const modelId    = document.getElementById('v-model-select').value;
+  const customVendor = document.getElementById('v-vendor-custom').value.trim();
+  const customModel  = document.getElementById('v-model-custom').value.trim();
+
+  // Resolve display names
+  const makeNames = {andritz:'Andritz',cpm:'CPM',salmatec:'Salmatec',buhler:'Bühler',amandus_kahl:'Amandus Kahl',muyang:'Muyang',richi:'Richi',zhengchang:'Zhengchang',yulong:'Yulong',rotex:'Rotexmaster',hitech:'Hitech Agro',trio:'Trio',guru_nanak:'Guru Nanak Agro',radhe:'Radhe',eu_other:'Europe other',cn_other:'China other',in_other:'India local'};
+  const vendorDisplay = customVendor || makeNames[makeKey] || makeKey || 'Unknown vendor';
+  let modelDisplay = customModel;
+  if (!modelDisplay && makeKey && modelId && MODELS[makeKey]) {
+    const m = MODELS[makeKey].find(x => x.id === modelId);
+    if (m) modelDisplay = m.label;
+  }
+  modelDisplay = modelDisplay || '—';
+
+  const mat   = MAT[matKey];
+  const trans = TRANS[transKey];
+  const steel = DIE_STEEL[dieSteel] || DIE_STEEL['unknown'];
+
+  // ── TORQUE CALCULATIONS ──
+  const motorTorque = Math.round(kw * 9550 / motorRpm);
+  const dieRpm = Math.round(motorRpm / ratio);
+  const dieShaftTorque = Math.round(motorTorque * ratio * trans.eff);
+  const peripheralSpeed = parseFloat((Math.PI * (dieD / 1000) * dieRpm / 60).toFixed(2));
+  const minTorque = Math.round(kw * 9550 / motorRpm * ratio * 0.85); // min acceptable
+
+  // ── SEC + THROUGHPUT ──
+  const secLow = mat.sec[0];
+  const secHigh = mat.sec[1];
+  const secMid = (secLow + secHigh) / 2;
+
+  let condBoost = hasConditioner ? mat.condBoost : 0;
+  let effSecLow = secLow * (1 - condBoost);
+  let effSecHigh = secHigh * (1 - condBoost);
+  let effSecMid = secMid * (1 - condBoost);
+
+  let mcPenalty = 0;
+  if (mc < 10) mcPenalty = (10 - mc) * 0.07;
+  else if (mc > 14) mcPenalty = (mc - 14) * 0.055;
+
+  let psPenalty = 0;
+  if (ps > 8) psPenalty = (ps - 8) * 0.04;
+  else if (ps < 3) psPenalty = (3 - ps) * 0.03;
+
+  let rollerBonus = numRollers === 3 ? 0.05 : 0;
+
+  const usablePower = kw * trans.eff * (1 - mcPenalty - psPenalty) * (1 + rollerBonus);
+  let rawTphLow = usablePower / effSecHigh;
+  let rawTphHigh = usablePower / effSecLow;
+  let rawTphMid = usablePower / effSecMid;
+
+  // Flat die cap
+  const flatCap = 1.5;
+  const adjLow  = parseFloat((dieType === 'flat' ? Math.min(rawTphLow, flatCap * 0.8) : rawTphLow).toFixed(3));
+  const adjHigh = parseFloat((dieType === 'flat' ? Math.min(rawTphHigh, flatCap * 1.1) : rawTphHigh).toFixed(3));
+  const adjMid  = parseFloat((dieType === 'flat' ? Math.min(rawTphMid, flatCap) : rawTphMid).toFixed(3));
+
+  const overstate = Math.max(0, Math.round((1 - adjMid / claimedTph) * 100));
+
+  // ── MAINTENANCE COST PREVIEW ──
+  const dieLifeMid = (steel.life[0] + steel.life[1]) / 2;
+  const dieWearPerTonne = ((dieCost * 100000) / (dieLifeMid * adjMid)).toFixed(1); // ₹/tonne
+  const transBaseMaint = transKey === 'gearbox_quality' ? 200 : transKey === 'gearbox_local' ? 450 : transKey === 'belt_polyv' ? 80 : transKey === 'belt_v' ? 120 : 150;
+  const totalMaintPerTonne = (parseFloat(dieWearPerTonne) + transBaseMaint * trans.maintMult / (adjMid * hrs * 300)).toFixed(1);
+
+  // ── FLAGS ──
+  const flags = [];
+  const ldLow = ld < mat.ldMin, ldHigh = ld > mat.ldMax + 2;
+  if (dieType === 'flat' && rawTphMid > 1.5)
+    flags.push({sev:'bad', text:`Flat die mechanical ceiling ~1.5 t/h — physics gives ${rawTphMid.toFixed(2)} t/h but flat die cannot reach it`});
+  if (dieType === 'flat' && mat.fibre === 'long')
+    flags.push({sev:'bad', text:`Flat die + long-fibre biomass (${mat.label}) = high blockage risk — ring die strongly preferred`});
+  if (overstate > 40)
+    flags.push({sev:'bad', text:`Claimed ${claimedTph} t/h overstated by ~${overstate}% — physics allows ${adjMid.toFixed(2)} t/h on ${mat.label}`});
+  else if (overstate > 20)
+    flags.push({sev:'warn', text:`Claimed ${claimedTph} t/h overstated by ~${overstate}% — negotiate or demand feedstock trial`});
+  if (ldLow)
+    flags.push({sev:'bad', text:`L/D ${ld}:1 below minimum ${mat.ldMin}:1 for ${mat.label} — pellets will crumble in transit`});
+  if (ldHigh)
+    flags.push({sev:'warn', text:`L/D ${ld}:1 very high — excess kWh/t and elevated die-block risk`});
+  if (mc < 8 || mc > 18)
+    flags.push({sev:'bad', text:`Moisture ${mc}% outside safe operating window (8–18%)`});
+  else if (mc < 10 || mc > 14)
+    flags.push({sev:'warn', text:`Moisture ${mc}% sub-optimal — ${Math.round(mcPenalty * 100)}% throughput penalty applied`});
+  if (ps > 8)
+    flags.push({sev:'bad', text:`Particle size ${ps}mm too coarse — hammer mill must reduce to <6mm before pellet mill`});
+  if (peripheralSpeed > 7.5)
+    flags.push({sev:'bad', text:`Peripheral speed ${peripheralSpeed} m/s too high — lignin won't activate, poor PDI expected`});
+  else if (peripheralSpeed > 6.5)
+    flags.push({sev:'warn', text:`Peripheral speed ${peripheralSpeed} m/s borderline — monitor PDI closely on your feedstock`});
+  if (dieShaftTorque < kw * 50)
+    flags.push({sev:'bad', text:`Die shaft torque ${dieShaftTorque.toLocaleString()} Nm is low for ${kw}kW — gearbox ratio likely undersized`});
+  if (transKey === 'gearbox_local')
+    flags.push({sev:'warn', text:`Local cast gearbox — no published torque spec, typically 78–85% efficiency, elevated failure risk`});
+  if (transKey === 'gearbox_local' && !trans.fuse && mat.fibre !== 'short')
+    flags.push({sev:'warn', text:`No belt fuse with fibrous feedstock and unknown gearbox — catastrophic failure risk from die blocks`});
+  if (transKey.startsWith('gearbox') && gbxBrand && gbxBrand.toLowerCase().includes('local'))
+    flags.push({sev:'bad', text:`Gearbox brand flagged as local — demand Siemens/SEW/Flender nameplate or reject`});
+  if (warranty < 12)
+    flags.push({sev:'warn', text:`Warranty ${warranty} months is below standard 12 months — negotiate longer`});
+  if (dieSteel === 'unknown')
+    flags.push({sev:'bad', text:`Die steel grade not specified — demand material certificate before purchase`});
+
+  // ── SCORE ──
+  let score = 100;
+  if (overstate > 40) score -= 35;
+  else if (overstate > 25) score -= 20;
+  else if (overstate > 10) score -= 10;
+  if (dieType === 'flat' && rawTphMid > 1.5) score -= 20;
+  if (ldLow) score -= 15;
+  if (ldHigh) score -= 8;
+  if (mcPenalty > 0.10) score -= 10;
+  if (psPenalty > 0.05) score -= 8;
+  if (peripheralSpeed > 7.5) score -= 12;
+  if (dieShaftTorque < kw * 50) score -= 10;
+  if (transKey === 'gearbox_local') score -= 8;
+  if (dieSteel === 'unknown') score -= 8;
+  if (flags.filter(f => f.sev === 'bad').length >= 3) score = Math.min(score, 35);
+  score = Math.max(0, Math.min(100, score));
+
+  const scoreColor = score >= 75 ? 'var(--green)' : score >= 50 ? 'var(--amber)' : 'var(--red)';
+  const vClass = score >= 75 ? 'verdict-ok' : score >= 50 ? 'verdict-warn' : 'verdict-bad';
+  const vLabel = score >= 75 ? 'PASS' : score >= 50 ? 'CAUTION' : 'FAIL';
+  let verdictText = score >= 75
+    ? `Physics supports this machine for ${mat.label}. Real output ${adjLow.toFixed(2)}–${adjHigh.toFixed(2)} t/h. Die shaft torque ${dieShaftTorque.toLocaleString()} Nm is adequate. Proceed with contract performance guarantee clause.`
+    : score >= 50
+    ? `Moderate concerns. Real output ${adjLow.toFixed(2)}–${adjHigh.toFixed(2)} t/h on ${mat.label}, not claimed ${claimedTph} t/h. Demand 4-hour feedstock trial before deposit. Negotiate price.`
+    : `Significant red flags. Physics allows at most ${adjLow.toFixed(2)}–${adjHigh.toFixed(2)} t/h on ${mat.label}. Push back on claim, price, or die type — or walk away.`;
+
+  // ── ECONOMICS PREVIEW ──
+  const daily = adjMid * hrs * 0.78;
+  const annual = daily * 280;
+  const revenue = annual * sellPrice;
+  const pricePerRealTph = adjMid > 0 ? (price / adjMid).toFixed(1) : '—';
+  const capexPerTonneYear = annual > 0 ? Math.round((price * 100000) / (annual * 7)) : 0;
+
+  document.getElementById('results-panel').innerHTML = `
+<div class="anim">
+
+  <div class="score-block">
+    <div class="score-circle" style="border-color:${scoreColor}">
+      <span class="score-number" style="color:${scoreColor}">${score}</span>
+    </div>
+    <div class="score-info">
+      <div class="score-verdict" style="color:${scoreColor}">${vLabel} — ${vendorDisplay}</div>
+      <div class="score-sub">${modelDisplay}</div>
+      <div class="score-sub" style="margin-top:3px">${kw}kW · ${dieType} die · ${trans.label} · ${mat.label}</div>
+      <div style="margin-top:8px">
+        <div class="bar-wrap" style="width:180px"><div class="bar" style="width:${score}%;background:${scoreColor}"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin:.75rem 0 .375rem">Torque analysis</div>
+  <div class="torque-readout">
+    <div class="tq-cell">
+      <div class="tq-label">Motor torque</div>
+      <div class="tq-val" style="color:var(--text)">${motorTorque.toLocaleString()} Nm</div>
+    </div>
+    <div class="tq-cell">
+      <div class="tq-label">Die shaft torque</div>
+      <div class="tq-val" style="color:${dieShaftTorque>=kw*60?'var(--green)':dieShaftTorque>=kw*45?'var(--amber)':'var(--red)'}">${dieShaftTorque.toLocaleString()} Nm</div>
+    </div>
+    <div class="tq-cell">
+      <div class="tq-label">Die RPM</div>
+      <div class="tq-val" style="color:${dieRpm>=100&&dieRpm<=180?'var(--green)':'var(--amber)'}">${dieRpm} RPM</div>
+    </div>
+    <div class="tq-cell">
+      <div class="tq-label">Peripheral speed</div>
+      <div class="tq-val" style="color:${peripheralSpeed<=7?'var(--green)':peripheralSpeed<=7.5?'var(--amber)':'var(--red)'}">${peripheralSpeed} m/s</div>
+    </div>
+    <div class="tq-cell">
+      <div class="tq-label">Gearbox ratio</div>
+      <div class="tq-val" style="color:var(--text)">${parseFloat(ratio).toFixed(1)}:1</div>
+    </div>
+    <div class="tq-cell">
+      <div class="tq-label">Trans. efficiency</div>
+      <div class="tq-val" style="color:var(--text)">${Math.round(trans.eff*100)}%</div>
+    </div>
+  </div>
+
+  <div style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin:.875rem 0 .375rem">Throughput on ${mat.label}${hasConditioner?' + conditioner':''}</div>
+  <div class="g4" style="margin-bottom:.875rem">
+    <div class="metric ${score>=75?'metric-green':score>=50?'metric-amber':'metric-red'}">
+      <div class="metric-label">Real TPH (mid)</div>
+      <div class="metric-value">${adjMid.toFixed(2)}</div>
+      <div class="metric-sub">t/h${dieType==='flat'&&rawTphMid>1.5?' (flat die capped)':''}</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">TPH range</div>
+      <div class="metric-value" style="color:var(--text)">${adjLow.toFixed(2)}–${adjHigh.toFixed(2)}</div>
+      <div class="metric-sub">t/h (SEC band)</div>
+    </div>
+    <div class="metric ${overstate>30?'metric-red':overstate>15?'metric-amber':'metric-green'}">
+      <div class="metric-label">Overstatement</div>
+      <div class="metric-value">${overstate>0?'-'+overstate+'%':'±0%'}</div>
+      <div class="metric-sub">vs claimed ${claimedTph.toFixed(1)} t/h</div>
+    </div>
+    <div class="metric metric-blue">
+      <div class="metric-label">₹ per real t/h</div>
+      <div class="metric-value">₹${pricePerRealTph}L</div>
+      <div class="metric-sub">CapEx efficiency</div>
+    </div>
+  </div>
+
+  <div style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin:.875rem 0 .375rem">Maintenance cost preview (Phase 02 input)</div>
+  <div class="g3" style="margin-bottom:.875rem">
+    <div class="metric ${parseFloat(dieWearPerTonne)<20?'metric-green':parseFloat(dieWearPerTonne)<45?'metric-amber':'metric-red'}">
+      <div class="metric-label">Die wear cost</div>
+      <div class="metric-value">₹${dieWearPerTonne}</div>
+      <div class="metric-sub">per tonne pelleted</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Die life (estimate)</div>
+      <div class="metric-value" style="color:var(--text)">${steel.life[0].toLocaleString()}–${steel.life[1].toLocaleString()}</div>
+      <div class="metric-sub">operating hours</div>
+    </div>
+    <div class="metric ${trans.fuse?'metric-green':'metric-amber'}">
+      <div class="metric-label">Fuse protection</div>
+      <div class="metric-value">${trans.fuse?'Yes':'No'}</div>
+      <div class="metric-sub">${trans.fuse?'Belt acts as fuse':'No die-block fuse'}</div>
+    </div>
+  </div>
+
+  <div style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin:.875rem 0 .375rem">Annual economics (${hrs}h/day · 280 days · 78% util)</div>
+  <div class="g3" style="margin-bottom:1rem">
+    <div class="metric">
+      <div class="metric-label">Annual output</div>
+      <div class="metric-value" style="color:var(--text)">${(annual/1000).toFixed(1)}k</div>
+      <div class="metric-sub">tonnes/year</div>
+    </div>
+    <div class="metric metric-green">
+      <div class="metric-label">Annual revenue</div>
+      <div class="metric-value">₹${(revenue/10000000).toFixed(2)}Cr</div>
+      <div class="metric-sub">@ ₹${parseInt(sellPrice).toLocaleString('en-IN')}/t</div>
+    </div>
+    <div class="metric metric-blue">
+      <div class="metric-label">CapEx amort/t (7yr)</div>
+      <div class="metric-value">₹${capexPerTonneYear}</div>
+      <div class="metric-sub">per tonne (machine only)</div>
+    </div>
+  </div>
+
+  <div class="verdict ${vClass}">
+    <div class="verdict-title">Verdict</div>
+    <p>${verdictText}</p>
+  </div>
+
+  ${flags.length > 0 ? `
+  <div class="panel" style="margin-bottom:1rem">
+    <div class="panel-header"><span class="panel-title">Flags (${flags.length})</span></div>
+    <div class="panel-body" style="padding:.75rem 1.25rem">
+      <div class="flag-list">
+        ${flags.map(f => `<div class="flag-item"><div class="flag-dot flag-dot-${f.sev}"></div><div class="flag-text">${f.text}</div></div>`).join('')}
+      </div>
+    </div>
+  </div>` : ''}
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn btn-primary" onclick="addToShortlist()">+ Add to shortlist</button>
+    <button class="btn" onclick="exportCurrentReport()">↓ Export report</button>
+  </div>
+
+</div>`;
+
+  // Store current state for shortlist
+  window._currentValidation = {
+    score, vendorDisplay, modelDisplay, kw, motorRpm, claimedTph, adjMid, adjLow, adjHigh,
+    price, makeKey, matKey, dieType, transKey, dieSteel, ratio, overstate, flags,
+    dieShaftTorque, dieRpm, peripheralSpeed, motorTorque, hasConditioner, numRollers,
+    dieWearPerTonne, annual, revenue, trans, steel, hrs, sellPrice
+  };
+}
+
+// ══════ SHORTLIST ══════
+function loadShortlist() {
+  try { return JSON.parse(localStorage.getItem('pellet_shortlist_v2') || '[]'); }
+  catch(e) { return []; }
+}
+
+function saveShortlist(items) {
+  localStorage.setItem('pellet_shortlist_v2', JSON.stringify(items));
+  document.getElementById('sl-badge').textContent = items.length;
+}
+
+function addToShortlist() {
+  const v = window._currentValidation;
+  if (!v) return;
+  const items = loadShortlist();
+  items.push({...v, id: 'M' + Date.now(), ts: Date.now()});
+  saveShortlist(items);
+  const badge = document.getElementById('sl-badge');
+  badge.style.background = 'var(--green)'; badge.style.color = 'var(--bg)';
+  setTimeout(() => { badge.style.background = ''; badge.style.color = ''; }, 1200);
+}
+
+function removeFromShortlist(id) {
+  saveShortlist(loadShortlist().filter(i => i.id !== id));
+  renderShortlist();
+}
+
+function clearShortlist() {
+  if (!confirm('Clear all shortlisted machines?')) return;
+  saveShortlist([]); renderShortlist();
+}
+
+function renderShortlist() {
+  const items = loadShortlist();
+  document.getElementById('sl-badge').textContent = items.length;
+  if (!items.length) {
+    document.getElementById('sl-list').innerHTML = '<div class="empty-state">No machines shortlisted yet.<br>Validate a machine and click "+ Add to shortlist".</div>';
+    document.getElementById('sl-compare').innerHTML = '';
+    return;
+  }
+  document.getElementById('sl-list').innerHTML = items.map(m => {
+    const matL = MAT[m.matKey] ? MAT[m.matKey].label : m.matKey;
+    const cls = m.score >= 75 ? 'ok' : m.score >= 50 ? 'warn' : 'bad';
+    const scoreColor = m.score >= 75 ? 'var(--green)' : m.score >= 50 ? 'var(--amber)' : 'var(--red)';
+    const badgeCls = m.score >= 75 ? 'badge-ok' : m.score >= 50 ? 'badge-warn' : 'badge-bad';
+    const bf = (m.flags||[]).filter(f=>f.sev==='bad').length;
+    const wf = (m.flags||[]).filter(f=>f.sev==='warn').length;
+    const ppt = m.adjMid > 0 ? (m.price / m.adjMid).toFixed(1) : '—';
+    const transLabel = TRANS[m.transKey] ? TRANS[m.transKey].label : m.transKey;
+    return `<div class="sl-card ${cls}">
+      <div class="sl-score-num" style="color:${scoreColor}">${m.score}</div>
+      <div class="sl-body">
+        <div class="sl-name">${m.vendorDisplay} — ${m.modelDisplay}</div>
+        <div class="sl-sub">${m.kw}kW · ${m.dieType} die · ${transLabel} · ${matL} · ₹${m.price}L</div>
+        <div class="sl-sub" style="margin-top:3px">
+          Real: <strong style="color:var(--text)">${m.adjMid.toFixed(2)} t/h</strong>
+          (${m.adjLow.toFixed(2)}–${m.adjHigh.toFixed(2)}) vs claimed ${m.claimedTph.toFixed(1)} t/h
+          &nbsp;·&nbsp;<span style="color:${m.overstate>25?'var(--red)':'var(--amber)'}">-${m.overstate}% overstated</span>
+          &nbsp;·&nbsp;<span style="color:var(--blue)">₹${ppt}L/t/h</span>
+          &nbsp;·&nbsp;Die shaft: <span style="color:var(--purple)">${m.dieShaftTorque ? m.dieShaftTorque.toLocaleString() : '—'} Nm</span>
+        </div>
+        <div class="sl-tags">
+          <span class="badge ${badgeCls}">${m.score>=75?'PASS':m.score>=50?'CAUTION':'FAIL'}</span>
+          <span class="badge badge-gray">${m.dieType} die</span>
+          <span class="badge badge-gray">${transLabel}</span>
+          ${bf>0?`<span class="badge badge-bad">${bf} critical</span>`:''}
+          ${wf>0?`<span class="badge badge-warn">${wf} warning${wf>1?'s':''}</span>`:''}
+        </div>
+      </div>
+      <button class="sl-remove" onclick="removeFromShortlist('${m.id}')" title="Remove">×</button>
+    </div>`;
+  }).join('');
+
+  if (items.length > 1) {
+    const best = items.reduce((a,b) => a.score > b.score ? a : b);
+    const bestVal = items.reduce((a,b) => (a.price/a.adjMid) < (b.price/b.adjMid) ? a : b);
+    const bestTorque = items.reduce((a,b) => (a.dieShaftTorque||0) > (b.dieShaftTorque||0) ? a : b);
+    document.getElementById('sl-compare').innerHTML = `<div class="compare-banner">
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.875rem">Shortlist summary — ${items.length} machines</div>
+      <div class="g4" style="margin-bottom:1rem">
+        <div class="metric metric-green"><div class="metric-label">Highest score</div><div class="metric-value">${best.score}</div><div class="metric-sub">${best.vendorDisplay}</div></div>
+        <div class="metric metric-blue"><div class="metric-label">Best ₹/real t/h</div><div class="metric-value">₹${(bestVal.price/bestVal.adjMid).toFixed(1)}L</div><div class="metric-sub">${bestVal.vendorDisplay}</div></div>
+        <div class="metric metric-purple"><div class="metric-label">Best die torque</div><div class="metric-value">${bestTorque.dieShaftTorque?bestTorque.dieShaftTorque.toLocaleString():'—'} Nm</div><div class="metric-sub">${bestTorque.vendorDisplay}</div></div>
+        <div class="metric"><div class="metric-label">Combined real TPH</div><div class="metric-value" style="color:var(--text)">${items.reduce((s,m)=>s+m.adjMid,0).toFixed(2)}</div><div class="metric-sub">if all purchased</div></div>
+      </div>
+      <button class="btn" onclick="exportShortlist()">↓ Export CSV</button>
+    </div>`;
+  } else {
+    document.getElementById('sl-compare').innerHTML = '';
+  }
+}
+
+// ══════ EXPORT ══════
+function exportCurrentReport() {
+  const v = window._currentValidation;
+  if (!v) return;
+  const matL = MAT[v.matKey] ? MAT[v.matKey].label : v.matKey;
+  const lines = [
+    'PELLET MACHINE VALIDATION REPORT v2',
+    '=====================================',
+    `Vendor: ${v.vendorDisplay}`,`Model: ${v.modelDisplay}`,
+    `Motor: ${v.kw} kW @ ${v.motorRpm} RPM`,
+    `Die type: ${v.dieType} | Transmission: ${v.trans.label}`,
+    `Gearbox ratio: ${v.ratio}:1 | Efficiency: ${Math.round(v.trans.eff*100)}%`,
+    `Motor torque: ${v.motorTorque.toLocaleString()} Nm`,
+    `Die shaft torque: ${v.dieShaftTorque.toLocaleString()} Nm`,
+    `Die RPM: ${v.dieRpm} | Peripheral speed: ${v.peripheralSpeed} m/s`,
+    ``,`Claimed TPH: ${v.claimedTph} t/h`,
+    `Real TPH (mid): ${v.adjMid.toFixed(2)} t/h`,
+    `Real TPH range: ${v.adjLow.toFixed(2)}–${v.adjHigh.toFixed(2)} t/h`,
+    `Overstatement: -${v.overstate}%`,`Price: ₹${v.price}L`,
+    `₹ per real t/h: ₹${v.adjMid>0?(v.price/v.adjMid).toFixed(1):'—'}L`,
+    `Feedstock: ${matL} | Moisture: target 10–14%`,
+    `Conditioner: ${v.hasConditioner?'Yes':'No'} | Rollers: ${v.numRollers}`,
+    `Die wear cost: ₹${v.dieWearPerTonne}/tonne`,
+    `Validation score: ${v.score}/100`,``,
+    'FLAGS:',
+    ...(v.flags||[]).map(f=>`[${f.sev.toUpperCase()}] ${f.text}`),``,
+    `Generated: ${new Date().toLocaleString('en-IN')}`
+  ];
+  const blob = new Blob([lines.join('\n')],{type:'text/plain'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `pellet-validation-${v.vendorDisplay.replace(/\s/g,'-')}-${Date.now()}.txt`;
+  a.click();
+}
+
+function exportShortlist() {
+  const items = loadShortlist();
+  if (!items.length) return;
+  const header = 'Vendor,Model,kW,Motor RPM,Die type,Transmission,Gearbox ratio,Die shaft torque (Nm),Die RPM,Peripheral speed (m/s),Claimed t/h,Real t/h,Low t/h,High t/h,Overstate%,Price (L),₹/t/h,Die wear ₹/t,Score,Feedstock,Conditioner,Rollers,Bad flags,Warn flags';
+  const rows = items.map(m => {
+    const matL = MAT[m.matKey]?MAT[m.matKey].label:m.matKey;
+    const tL = TRANS[m.transKey]?TRANS[m.transKey].label:m.transKey;
+    const bf = (m.flags||[]).filter(f=>f.sev==='bad').length;
+    const wf = (m.flags||[]).filter(f=>f.sev==='warn').length;
+    return [m.vendorDisplay,m.modelDisplay,m.kw,m.motorRpm,m.dieType,tL,m.ratio,m.dieShaftTorque||'',m.dieRpm||'',m.peripheralSpeed||'',m.claimedTph,m.adjMid.toFixed(2),m.adjLow.toFixed(2),m.adjHigh.toFixed(2),m.overstate,m.price,(m.price/m.adjMid).toFixed(1),m.dieWearPerTonne||'',m.score,matL,m.hasConditioner?'Yes':'No',m.numRollers,bf,wf].join(',');
+  });
+  const csv = [header,...rows].join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `pellet-shortlist-${Date.now()}.csv`;
+  a.click();
+}
+
+// ══════ INIT ══════
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('sl-badge').textContent = loadShortlist().length;
+  onTransChange();
+  validate();
+});
+</script>
+</body>
+</html>

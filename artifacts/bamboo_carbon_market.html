@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bamboo Activated Carbon — Market Deep Dive</title>
+<style>
+  :root{
+    --bg:#0d0f0c; --panel:#14170f; --panel2:#1b1f14; --ink:#eef1e6; --muted:#9aa488;
+    --line:#2b3320; --acc:#a6d049; --acc2:#6fae3a; --gold:#d9b23a; --red:#e0655a;
+    --blue:#5aa9e0; --amber:#e0a94a; --purple:#b489e0;
+    --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16px}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+  a{color:var(--acc)}
+  h1,h2,h3,h4{line-height:1.15;letter-spacing:-.02em}
+  h2{font-size:1.7rem;margin:0 0 6px} h3{font-size:1.12rem;margin:22px 0 8px} h4{margin:0 0 4px}
+  p{color:#d7dccb} .muted{color:var(--muted)} .lead{font-size:1.12rem;color:#e6ead9}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--acc);margin:0 0 10px}
+
+  .mast{position:sticky;top:0;z-index:50;background:rgba(13,15,12,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .mast .row{display:flex;align-items:center;gap:14px;padding:12px 22px;max-width:1160px;margin:0 auto;flex-wrap:wrap}
+  .brand{font-size:.98rem;font-weight:700;letter-spacing:-.01em;color:#fff;white-space:nowrap}
+  .brand .dot{color:var(--acc)}
+  .brand small{display:block;font-weight:500;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .tabs{display:flex;gap:5px;overflow-x:auto;padding:0 22px 10px;max-width:1160px;margin:0 auto;scrollbar-width:thin}
+  .tabs button{flex:none;font-family:var(--sans);font-size:.82rem;color:var(--muted);background:transparent;border:1px solid var(--line);
+    padding:7px 13px;border-radius:9px;cursor:pointer;white-space:nowrap;transition:.15s}
+  .tabs button:hover{color:var(--ink);border-color:#3c4a2b}
+  .tabs button.on{color:#0d0f0c;background:var(--acc);border-color:var(--acc);font-weight:600}
+  .tabnum{font-family:var(--mono);font-size:.7rem;opacity:.6;margin-right:5px}
+
+  .panel{display:none;padding:38px 0 70px;animation:fade .25s ease}
+  .panel.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .grid{display:grid;gap:16px}
+  .g2{grid-template-columns:1fr 1fr} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h3{margin-top:0}
+  .stat{font-size:2rem;font-weight:700;letter-spacing:-.03em;line-height:1}
+  .stat.sm{font-size:1.45rem}
+  .stat .u{font-size:.82rem;color:var(--muted);font-weight:500}
+  .klabel{font-family:var(--mono);font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+
+  .call{border-radius:12px;padding:16px 18px;border:1px solid var(--line);margin:15px 0}
+  .call.good{background:rgba(111,174,58,.10);border-color:rgba(111,174,58,.4)}
+  .call.warn{background:rgba(224,169,74,.09);border-color:rgba(224,169,74,.38)}
+  .call.bad{background:rgba(224,101,90,.09);border-color:rgba(224,101,90,.38)}
+  .call.key{background:rgba(90,169,224,.08);border-color:rgba(90,169,224,.34)}
+  .call b{color:#fff}
+  .call .h{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px;display:block}
+  .good .h{color:var(--acc)} .warn .h{color:var(--amber)} .bad .h{color:var(--red)} .key .h{color:var(--blue)}
+
+  table{width:100%;border-collapse:collapse;font-size:.86rem;margin:8px 0}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--mono);font-size:.66rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  tbody tr:hover{background:rgba(255,255,255,.015)}
+  .num{font-family:var(--mono);white-space:nowrap}
+  .win{color:var(--acc);font-weight:600} .lose{color:var(--red);font-weight:600} .mid{color:var(--amber);font-weight:600}
+  .scroll{overflow-x:auto}
+
+  .bar{display:flex;align-items:center;gap:10px;margin:9px 0}
+  .bar .nm{width:170px;font-size:.84rem;color:#d7dccb;flex:none}
+  .bar .track{flex:1;height:22px;background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden;position:relative}
+  .bar .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--acc2),var(--acc));display:flex;align-items:center;justify-content:flex-end;padding-right:7px;font-family:var(--mono);font-size:.7rem;color:#0d0f0c;font-weight:700}
+  .bar .val{width:130px;text-align:right;font-family:var(--mono);font-size:.77rem;color:var(--muted);flex:none}
+
+  .pill{display:inline-block;font-family:var(--mono);font-size:.62rem;padding:2px 7px;border-radius:5px;margin:2px 4px 2px 0}
+  .p-fit{background:rgba(111,174,58,.16);color:var(--acc)} .p-mid{background:rgba(224,169,74,.15);color:var(--amber)} .p-no{background:rgba(224,101,90,.14);color:var(--red)}
+
+  .verdict{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:24px 26px;margin:18px 0;position:relative;overflow:hidden}
+  .verdict::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(var(--acc),var(--gold))}
+  .verdict .big{font-size:1.2rem;color:#fff;font-weight:600;margin:0 0 10px}
+  .disc{font-size:.76rem;color:var(--muted);font-style:italic}
+  .srcs{font-size:.79rem;color:var(--muted)} .srcs a{color:#b9c7a0}
+  hr.sep{border:none;border-top:1px solid var(--line);margin:14px 0}
+  ul.clean{padding-left:18px} ul.clean li{margin:5px 0}
+  .ladder{display:flex;flex-direction:column;gap:6px;margin:14px 0}
+  .rung{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px 15px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+  .rung .r-price{font-family:var(--mono);font-weight:700;white-space:nowrap}
+  @media(max-width:820px){.g2,.g3,.g4{grid-template-columns:1fr}.bar .nm{width:120px}}
+</style>
+</head>
+<body>
+
+<div class="mast">
+  <div class="row">
+    <div class="brand">Bamboo Carbon <span class="dot">·</span> Market Deep Dive<small>Sizing · pricing · segments · export · the ₹500 cr question</small></div>
+  </div>
+  <div class="tabs" id="tabs">
+    <button class="on" data-t="reality"><span class="tabnum">00</span>The ₹500 Cr Reality</button>
+    <button data-t="size"><span class="tabnum">01</span>Market Size</button>
+    <button data-t="pricing"><span class="tabnum">02</span>Price, Decoded</button>
+    <button data-t="segments"><span class="tabnum">03</span>Segments</button>
+    <button data-t="world"><span class="tabnum">04</span>World &amp; Export</button>
+    <button data-t="players"><span class="tabnum">05</span>Who You're Up Against</button>
+    <button data-t="frontiers"><span class="tabnum">06</span>Emerging Frontiers</button>
+    <button data-t="path500"><span class="tabnum">07</span>Path to ₹500 Cr</button>
+    <button data-t="sources"><span class="tabnum">08</span>Sources</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- 00 REALITY -->
+<section class="panel on" id="reality">
+  <p class="eyebrow">The honest headline</p>
+  <h2>₹500 cr is not a niche play. It makes you one of India's largest carbon producers.</h2>
+  <p class="lead">You were right to be bothered. At the market's real bulk price, ₹500 cr implies a <b>lot</b> of tonnage — and that collides with the fact that activated carbon is bought in modest lots by any single buyer. The number is achievable, but only by understanding exactly which price you're selling at, to whom, and where. That's what this report is for.</p>
+
+  <div class="grid g4" style="margin:20px 0">
+    <div class="card"><div class="stat" style="color:var(--gold)">₹158.6<span class="u">/kg</span></div><div class="klabel">India's avg AC export price (FY25, vetted)</div></div>
+    <div class="card"><div class="stat">~31,500<span class="u"> t/yr</span></div><div class="klabel">Tonnage for ₹500 cr at that bulk price</div></div>
+    <div class="card"><div class="stat">~18<span class="u">%</span></div><div class="klabel">…of India's ENTIRE AC export volume</div></div>
+    <div class="card"><div class="stat">~₹166<span class="u"> cr</span></div><div class="klabel">Revenue of Kalpaka (10,000 t plant) — for scale</div></div>
+  </div>
+
+  <div class="verdict">
+    <p class="big">Selling ₹500 cr of carbon at ₹159/kg means shipping ~31,500 tonnes a year — nearly a fifth of everything India currently exports. As a pure bulk-commodity play, that is not realistic for a new entrant.</p>
+    <p style="margin:0">But the market isn't one price. The same physical carbon trades from <b>₹8/kg</b> (wholesale filter media) to <b>₹3,500/kg</b> (specialty bamboo powder) — a <b>400×</b> spread. The path to ₹500 cr isn't more tonnage at ₹159; it's <b>lifting your average realisation up the grade ladder</b> so you need 13–16k tonnes, not 31k — and <b>exporting</b>, because India's domestic market alone can't absorb it.</p>
+  </div>
+
+  <div class="grid g3">
+    <div class="call bad" style="margin:0"><span class="h">The trap</span>Competing as a bulk coconut-carbon clone. At ₹150/kg you're fighting China (₹140/kg) and 16,000-tonne incumbents on cost, with bamboo's feedstock edge only ~3× (see main report). Thin margins, brutal scale requirement.</div>
+    <div class="call warn" style="margin:0"><span class="h">The reframe</span>Blend a bulk base (water/gas at ₹150–200) with a growing specialty tier (food/pharma/energy at ₹400–3,500). A blended ₹350/kg cuts the tonnage for ₹500 cr from 31.5k to ~14.3k.</div>
+    <div class="call good" style="margin:0"><span class="h">The tailwind</span>Two structural shifts — the coconut supply crisis and the sodium-ion/energy-storage carbon boom (19.5% CAGR) — are opening room for a new, export-oriented, feedstock-secure Indian player at exactly the right moment.</div>
+  </div>
+
+  <p class="disc" style="margin-top:18px">Navigate with the tabs. Every figure is sourced under the last tab. FX used throughout: ~₹87/US$. Prices are indicative market ranges, not quotes — validate before committing capital.</p>
+</section>
+
+<!-- 01 SIZE -->
+<section class="panel" id="size">
+  <p class="eyebrow">01 — How big is the pie, really</p>
+  <h2>Market size — in both dollars and tonnes</h2>
+  <p class="lead">Value figures get quoted a lot; volume figures matter more for a producer, because your plant is sized in tonnes. Here's both, reconciled across sources.</p>
+
+  <div class="grid g4" style="margin:20px 0">
+    <div class="card"><div class="stat">$5.6–7.9<span class="u"> bn</span></div><div class="klabel">Global market value, 2025</div></div>
+    <div class="card"><div class="stat">~5.8<span class="u"> Mt</span></div><div class="klabel">Global volume (2022) · ~6.5–7 Mt now</div></div>
+    <div class="card"><div class="stat">~8–9<span class="u">%</span></div><div class="klabel">CAGR (value)</div></div>
+    <div class="card"><div class="stat">44<span class="u">%</span></div><div class="klabel">Asia-Pacific share ($2.47 bn)</div></div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3>Global value by region (2025→26)</h3>
+      <div class="bar"><span class="nm">Asia-Pacific</span><span class="track"><span class="fill" style="width:100%">$2.47 bn</span></span><span class="val">44.1%</span></div>
+      <div class="bar"><span class="nm">North America</span><span class="track"><span class="fill" style="width:50%">$1.25 bn</span></span><span class="val">22.2%</span></div>
+      <div class="bar"><span class="nm">Europe</span><span class="track"><span class="fill" style="width:44%">~$1.1 bn</span></span><span class="val">~20%</span></div>
+      <div class="bar"><span class="nm">MEA</span><span class="track"><span class="fill" style="width:7%"></span></span><span class="val">$0.15 bn</span></div>
+      <div class="bar"><span class="nm">Latin America</span><span class="track"><span class="fill" style="width:6%"></span></span><span class="val">$0.13 bn</span></div>
+      <p class="disc">Country pockets 2026: China $1.62 bn · India $0.32 bn · Japan $0.31 bn.</p>
+    </div>
+    <div class="card">
+      <h3>India in the global picture</h3>
+      <table>
+        <tr><td>Domestic market value (2024)</td><td class="num">$254 M (~₹2,100 cr)</td></tr>
+        <tr><td>Exports (FY25)</td><td class="num win">₹2,799 cr / 1,76,435 t</td></tr>
+        <tr><td>Exports (FY24)</td><td class="num">₹2,108 cr / 1,54,059 t</td></tr>
+        <tr><td>Imports (12-mo)</td><td class="num">$69 M / 25,321 t</td></tr>
+        <tr><td>Share of world consumption</td><td class="num">~11%</td></tr>
+        <tr><td>Share of world production</td><td class="num">~16%</td></tr>
+      </table>
+      <p class="disc">India makes far more than it consumes — it is a <b>net export machine</b>. That is the single most important structural fact for your plan.</p>
+    </div>
+  </div>
+
+  <div class="call key">
+    <span class="h">Reading the two numbers together</span>
+    Global demand is ~6.5 Mt worth ~$6 bn → a blended global average of roughly <b>$900–1,000/t (~₹80–90/kg)</b>. That low blended number is dominated by cheap coal-based bulk carbon. <b>Your job is to sell almost nothing at that average</b> — the whole game is operating in the coconut/bamboo premium tiers well above it. India's own export average (₹159/kg) already sits ~2× the global blended price because it's coconut-led and higher-grade. Bamboo, sold right, should sit higher still.
+  </div>
+</section>
+
+<!-- 02 PRICING -->
+<section class="panel" id="pricing">
+  <p class="eyebrow">02 — Making sense of the chaos</p>
+  <h2>Why the "same" carbon costs ₹8 or ₹3,500</h2>
+  <p class="lead">Your BISJ example — ₹150/kg in bulk, ₹550/kg in small lots, ₹3,500/kg for premium bamboo powder — isn't a contradiction. Price is set by <b>three independent axes</b> stacked on top of each other. Once you separate them, the market stops looking random.</p>
+
+  <div class="grid g3" style="margin:18px 0">
+    <div class="card">
+      <h3 style="color:var(--acc)">Axis 1 — Grade</h3>
+      <p style="font-size:.9rem">Feedstock + activation + surface area + purity. This is a <b>real product difference</b>. A gold-grade or supercapacitor carbon genuinely costs more to make and does more.</p>
+      <p class="disc" style="margin-bottom:0">Spans ₹40 → ₹5,000/kg.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--amber)">Axis 2 — Quantity / channel</h3>
+      <p style="font-size:.9rem">The <b>same</b> carbon: sold by the tonne (ex-works/FOB) vs in 1–25 kg retail packs. Small lots carry 3–4× markup for packaging, distribution, working capital &amp; margin.</p>
+      <p class="disc" style="margin-bottom:0">₹150 bulk → ₹550 retail = this axis.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--blue)">Axis 3 — Form &amp; brand</h3>
+      <p style="font-size:.9rem">Powder vs granular vs pellet; bagged vs bulk; unbranded industrial drum vs branded consumer pack (aquarium, water filter, cosmetic).</p>
+      <p class="disc" style="margin-bottom:0">Branding can 2–5× a commodity carbon.</p>
+    </div>
+  </div>
+
+  <div class="call key">
+    <span class="h">Your BISJ example, decoded</span>
+    <b>₹150 bulk vs ₹550 small-quantity = Axis 2</b> (same product, channel markup — completely normal). <b>₹3,500/kg bamboo powder = Axis 1</b> (a genuinely different, high-surface-area premium grade for specialty/lab/cosmetic/pharma use). Both true at once. The lesson: <b>the margin is not in the ₹150 bulk carbon</b> — it's in owning higher grades (Axis 1) and/or owning the channel and brand (Axis 2–3).
+  </div>
+
+  <h3>The grade ladder — indicative Indian bulk prices</h3>
+  <div class="ladder">
+    <div class="rung"><span>Coal / mixed filter-media (wholesale, low iodine)</span><span class="r-price" style="color:var(--muted)">₹8–120/kg</span></div>
+    <div class="rung"><span>Coconut/bamboo <b>water GAC</b> (bulk, iodine 800–1000)</span><span class="r-price">₹120–200/kg</span></div>
+    <div class="rung"><span><b>India export average</b> — all grades blended (FY25)</span><span class="r-price" style="color:var(--gold)">₹159/kg</span></div>
+    <div class="rung"><span><b>Gold / high-iodine</b> specialty (iodine 1000–1200, hard)</span><span class="r-price">₹180–350/kg</span></div>
+    <div class="rung"><span><b>Food / pharma / impregnated</b> (acid-washed, certified)</span><span class="r-price" style="color:var(--acc)">₹300–800/kg</span></div>
+    <div class="rung"><span><b>Supercapacitor / EV / specialty bamboo powder</b> (BET 1800–3000)</span><span class="r-price" style="color:var(--acc)">₹1,500–5,000+/kg</span></div>
+    <div class="rung"><span>Retail consumer packs (aquarium/filter, 1 kg) — Axis 2 markup on above</span><span class="r-price" style="color:var(--amber)">₹300–1,000/kg</span></div>
+  </div>
+
+  <div class="call good">
+    <span class="h">The strategic point</span>
+    A one-rung climb roughly <b>doubles</b> your realisation. Moving your blended average from ₹159 (bulk) to ₹350 (bulk base + a real specialty tier) <b>halves the tonnage</b> you need for any revenue target — the single most powerful lever in this whole report. You don't win by making more cheap carbon; you win by making the same tonnage worth more.
+  </div>
+</section>
+
+<!-- 03 SEGMENTS -->
+<section class="panel" id="segments">
+  <p class="eyebrow">03 — Where the demand actually is</p>
+  <h2>Segments — size, price, and where bamboo should aim</h2>
+  <p class="lead">Water dominates by volume but sits low on price. The margin lives in the smaller, faster, fussier segments. A ₹500 cr business needs the volume floor of water <i>and</i> the price ceiling of specialty.</p>
+
+  <div class="card" style="margin:16px 0">
+    <h3>Global demand share by application (value)</h3>
+    <div class="bar"><span class="nm">Water &amp; wastewater</span><span class="track"><span class="fill" style="width:100%">~44%</span></span><span class="val">largest</span></div>
+    <div class="bar"><span class="nm">Air / gas purification</span><span class="track"><span class="fill" style="width:38%">~17%</span></span><span class="val">growing</span></div>
+    <div class="bar"><span class="nm">Food &amp; beverage</span><span class="track"><span class="fill" style="width:28%">~12%</span></span><span class="val">steady</span></div>
+    <div class="bar"><span class="nm">Pharma / medical</span><span class="track"><span class="fill" style="width:20%">~9%</span></span><span class="val">high value</span></div>
+    <div class="bar"><span class="nm">Mining / metallurgy (gold)</span><span class="track"><span class="fill" style="width:20%">~9%</span></span><span class="val">commoditised</span></div>
+    <div class="bar"><span class="nm">Automotive / other</span><span class="track"><span class="fill" style="width:20%">~9%</span></span><span class="val">specialty</span></div>
+    <p class="disc">Shares approximate/blended across market-research sources; water is consistently reported as the single largest at 40–51%.</p>
+  </div>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Segment</th><th>Bulk price band</th><th>Volume pull</th><th>Growth</th><th>Bamboo role in your mix</th></tr></thead>
+    <tbody>
+      <tr><td><b>Water / wastewater</b></td><td class="num">₹120–200/kg</td><td class="win">Very high</td><td>High (PFAS)</td><td>Volume floor — your tonnage base</td></tr>
+      <tr><td><b>Air / gas / VOC</b></td><td class="num">₹180–260/kg</td><td>High</td><td>Mid-high</td><td>Steady mid-margin base load</td></tr>
+      <tr><td><b>Food / beverage</b></td><td class="num">₹180–300/kg</td><td>Mid</td><td>Mid</td><td>Margin step-up; needs certs</td></tr>
+      <tr><td><b>Pharma / medical</b></td><td class="num">₹300–800/kg</td><td>Low-mid</td><td>Mid-high</td><td>High margin; slow qualification</td></tr>
+      <tr><td><b>Gold / metallurgy</b></td><td class="num">₹180–350/kg</td><td>Mid</td><td>Mid</td><td class="lose">Avoid (hardness) — see main report</td></tr>
+      <tr><td><b>Auto canister</b></td><td class="num">specialty</td><td>Mid</td><td>5.6%</td><td>OEM-locked; long game</td></tr>
+      <tr><td><b>Energy storage / Na-ion</b></td><td class="num">₹250–5,000/kg</td><td class="win">Exploding</td><td class="win">15–24%</td><td>The realisation multiplier</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="call warn">
+    <span class="h">The volume-vs-value tension, stated plainly</span>
+    If you chase only <b>water</b>, you get the tonnage but stay stuck near ₹159/kg → you need 31k tonnes for ₹500 cr. If you chase only <b>specialty</b>, the price is great but any single buyer takes small volumes and qualification is slow → you struggle to place 5,000 tonnes. <b>Neither extreme reaches ₹500 cr comfortably.</b> The answer is a deliberate blend — engineered in the next tabs.
+  </div>
+</section>
+
+<!-- 04 WORLD -->
+<section class="panel" id="world">
+  <p class="eyebrow">04 — The export imperative</p>
+  <h2>You cannot hit ₹500 cr selling only to India</h2>
+  <p class="lead">India's entire domestic market is ~₹2,100 cr. A single company taking ₹500 cr of that would be ~24% of the whole country's domestic consumption — impossible. The Indian AC industry already knows this: it <b>exports more than it sells at home</b>. Export isn't optional for your target; it's the plan.</p>
+
+  <div class="grid g4" style="margin:20px 0">
+    <div class="card"><div class="stat">₹2,799<span class="u"> cr</span></div><div class="klabel">India AC exports FY25 (&gt; domestic market)</div></div>
+    <div class="card"><div class="stat">#3</div><div class="klabel">India's rank among world AC exporters</div></div>
+    <div class="card"><div class="stat">$43<span class="u"> M</span></div><div class="klabel">India→US AC exports (2023)</div></div>
+    <div class="card"><div class="stat">+15<span class="u">%</span></div><div class="klabel">India export volume growth FY24→FY25</div></div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3>Top AC exporting nations (value, 2020 baseline)</h3>
+      <div class="bar"><span class="nm">China</span><span class="track"><span class="fill" style="width:100%">$397 M</span></span><span class="val">#1</span></div>
+      <div class="bar"><span class="nm">United States</span><span class="track"><span class="fill" style="width:72%">$286 M</span></span><span class="val">#2</span></div>
+      <div class="bar"><span class="nm">India</span><span class="track"><span class="fill" style="width:50%">$199 M</span></span><span class="val">#3</span></div>
+      <div class="bar"><span class="nm">Philippines</span><span class="track"><span class="fill" style="width:31%">$122 M</span></span><span class="val">#4</span></div>
+      <div class="bar"><span class="nm">Sri Lanka</span><span class="track"><span class="fill" style="width:30%">$118 M</span></span><span class="val">#5</span></div>
+      <p class="disc">India's export value has since grown to ₹2,799 cr (~$320 M+) by FY25.</p>
+    </div>
+    <div class="card">
+      <h3>Who imports (US example, 2023)</h3>
+      <table>
+        <tr><td>Mexico → US</td><td class="num">$61.6 M</td></tr>
+        <tr><td>Sri Lanka → US</td><td class="num">$44.8 M</td></tr>
+        <tr><td><b>India → US</b></td><td class="num win">$43.1 M</td></tr>
+        <tr><td>China → US</td><td class="num">$24.3 M</td></tr>
+        <tr><td>Canada → US</td><td class="num">$19.6 M</td></tr>
+      </table>
+      <p class="disc">Big buyers: US, Germany, UK, Japan, South Korea — for gold, water, air &amp; specialty. US PFAS rules are pulling GAC demand up structurally.</p>
+    </div>
+  </div>
+
+  <div class="call good">
+    <span class="h">The export angle that's uniquely yours</span>
+    Two things make a <b>bamboo</b> export story sell abroad better than a generic coconut one: <b>(1) supply security</b> — Western buyers signing 5–10 yr PFAS contracts are terrified of the coconut crisis and want a non-coconut, climate-resilient source; <b>(2) ESG / traceability</b> — a documented bamboo-from-degraded-land, rural-livelihood chain of custody commands preference (and sometimes price) with EU/US utilities and OEMs. You're not just exporting carbon; you're exporting <b>supply-chain resilience</b>, which is exactly what the post-2024 market is short of.
+  </div>
+</section>
+
+<!-- 05 PLAYERS -->
+<section class="panel" id="players">
+  <p class="eyebrow">05 — Competitive reality</p>
+  <h2>Who you're up against — and what ₹500 cr means next to them</h2>
+  <p class="lead">Benchmarking your target against real companies is sobering and clarifying. ₹500 cr would put you among the largest carbon producers in India — bigger than most, a fraction of the global majors.</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Company</th><th>Base</th><th>Revenue / scale</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td><b>Kuraray</b> (incl. Calgon)</td><td>Japan/US</td><td class="num">$5–6 bn group</td><td>Global #1; owns the supercap benchmark (YP-50F)</td></tr>
+      <tr><td><b>Cabot (Norit)</b></td><td>US/NL</td><td class="num">multi-$bn group</td><td>Water, specialty, mercury</td></tr>
+      <tr><td><b>Jacobi Carbons</b></td><td>Sweden (Osaka Gas)</td><td class="num">major</td><td>Coconut GAC, global reach</td></tr>
+      <tr><td><b>Haycarb PLC</b></td><td>Sri Lanka</td><td class="num win">$218 M (~₹1,820 cr)</td><td>World's largest coconut AC — your closest role model</td></tr>
+      <tr><td><b>Ingevity</b></td><td>US</td><td class="num">canister leader (10.2%)</td><td>Owns automotive EVAP niche</td></tr>
+      <tr><td><b>Active Char Products (ACPL)</b></td><td>India</td><td class="num">16,000 t capacity</td><td>Among world's largest coconut steam-AC</td></tr>
+      <tr><td><b>Kalpaka Chemicals</b></td><td>India (Tuticorin)</td><td class="num mid">~$20 M (~₹166 cr) · 10,000 t</td><td>Direct India-scale benchmark for you</td></tr>
+      <tr><td>Suneeta, Raj Carbon, Micbac</td><td>India</td><td class="num">mid-size</td><td>The tier you'd enter and pass</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3>What ₹500 cr actually means</h3>
+      <ul class="clean">
+        <li><b>~3× Kalpaka</b> (₹166 cr) — you'd out-scale a well-established Tuticorin exporter.</li>
+        <li><b>~27% of Haycarb</b> — roughly a quarter of the global coconut leader.</li>
+        <li><b>Plant scale ~14–20k t/yr</b> — larger than ACPL's 16,000 t line, i.e. among the biggest single AC plants in India.</li>
+        <li><b>Top-3 to top-5</b> Indian producer by revenue.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Where a newcomer actually wins</h3>
+      <ul class="clean">
+        <li><b>Feedstock security</b> — the incumbents are <i>all</i> coconut-exposed. You're not.</li>
+        <li><b>ESG/traceability</b> story the coconut base can't easily match.</li>
+        <li><b>Specialty/energy grades</b> — the majors are slow; a focused bamboo player can own the sodium-ion/supercap niche early.</li>
+        <li><b>Not on bulk price</b> — you will never beat China's ₹140/kg coal carbon. Don't try.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="call warn">
+    <span class="h">The honest benchmark</span>
+    ₹500 cr is a <b>7–10 year, top-5-producer ambition</b>, not a start-up milestone. Haycarb took decades to reach ₹1,800 cr. That doesn't make ₹500 cr wrong — it makes it a <b>build</b>, requiring staged capex (₹150–300 cr+ for full scale), multi-line activation, export channels, and certifications. Treat it as the destination, not year 3.
+  </div>
+</section>
+
+<!-- 06 FRONTIERS -->
+<section class="panel" id="frontiers">
+  <p class="eyebrow">06 — Where the market is going</p>
+  <h2>Emerging frontiers that change the maths</h2>
+  <p class="lead">The traditional AC market grows ~8%. Two adjacent carbon markets grow 2–3× faster and pay far more — and bamboo is a credible feedstock for both. These are what could take you to ₹500 cr on far less tonnage.</p>
+
+  <div class="grid g2" style="margin:18px 0">
+    <div class="card">
+      <h3 style="color:var(--acc)">Sodium-ion &amp; hard-carbon anodes ⚡</h3>
+      <table>
+        <tr><td>Hard-carbon anode market 2025</td><td class="num">$6.3 bn</td></tr>
+        <tr><td>2026</td><td class="num">$7.5 bn</td></tr>
+        <tr><td>CAGR</td><td class="num win">19.5%</td></tr>
+        <tr><td>EV share of demand</td><td class="num">43.5%</td></tr>
+        <tr><td>Price now → target</td><td class="num">~$4,400 → &lt;$2,944/t</td></tr>
+      </table>
+      <p style="font-size:.88rem">Sodium-ion batteries (cheaper, safer, no lithium/cobalt) need <b>hard carbon</b> anodes — and biomass, including bamboo, is a leading feedstock. Note: hard carbon is a <i>different product</i> from activated carbon (non-porous, non-graphitising — a different process, not steam/KOH activation), so it's a <b>pivot/extension</b>, not a drop-in. But the volume is gigawatt-scale and the coconut crisis is already pushing this industry to hunt alternative biomass. A genuine option worth an R&amp;D track.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--blue)">Supercapacitor / EDLC carbon 🔋</h3>
+      <ul class="clean" style="font-size:.9rem">
+        <li>15–20% CAGR; premium grade sells at <b>3–5×</b> water carbon (₹1,500–5,000+/kg).</li>
+        <li>Bamboo KOH-activated carbon already hits 2,000–3,000+ m²/g in published work — <b>bamboo's single best materials fit</b> (see main report, Energy tab).</li>
+        <li>Lower volume than Na-ion but much higher price/kg — a <b>realisation multiplier</b> that lifts your blended average fast.</li>
+        <li>Benchmark to beat: Kuraray YP-50F (coconut, KOH).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3>Automotive EVAP canister carbon 🚗</h3>
+      <p style="font-size:.9rem">$2.58 bn (2025) → $2.72 bn (2026), 5.6% CAGR. Ingevity-dominated (10.2%), Asia-Pacific 38% and fastest-growing. Spec-heavy, OEM-locked, long qualification — a <b>later, sticky</b> annuity once you have a proven premium line, not an entry point.</p>
+    </div>
+    <div class="card">
+      <h3>PFAS water remediation (US/EU) 💧</h3>
+      <p style="font-size:.9rem">Regulation forcing hundreds of utilities onto multi-year GAC contracts. Not a new product — it's a <b>structural demand surge in your volume-base segment</b>, and it rewards exactly the supply-security story bamboo offers. The most reliable near-term export demand driver.</p>
+    </div>
+  </div>
+
+  <div class="call key">
+    <span class="h">How the frontiers reshape ₹500 cr</span>
+    Traditional AC gets you volume at ₹150–350/kg. The frontiers get you <b>price</b>: even a modest slice of supercap/Na-ion output at ₹1,000–3,500/kg lifts your blended realisation dramatically. A plausible ₹500 cr mix isn't "31k tonnes of water carbon" — it's "<b>10–14k tonnes of blended water + food/pharma + a high-value energy tier</b>." The energy frontier is what makes the target reachable at a sane plant size.
+  </div>
+</section>
+
+<!-- 07 PATH TO 500 -->
+<section class="panel" id="path500">
+  <p class="eyebrow">07 — The number, modelled</p>
+  <h2>How you actually reach ₹500 cr</h2>
+  <p class="lead">Five routes to the same revenue, each a different bet on price vs tonnage. The realistic one is the blend — and it's a staged build, not a single leap.</p>
+
+  <h3>₹500 cr — the tonnage/price trade-off</h3>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Strategy</th><th>Avg realisation</th><th>Tonnage needed</th><th>% of India's FY25 exports</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td>Pure commodity bulk</td><td class="num">₹159/kg</td><td class="num lose">31,450 t</td><td class="num">17.8%</td><td><span class="pill p-no">unrealistic solo</span></td></tr>
+      <tr><td>Bulk + some mid-grade</td><td class="num">₹250/kg</td><td class="num">20,000 t</td><td class="num">11.3%</td><td><span class="pill p-no">very hard</span></td></tr>
+      <tr><td><b>Blended grade ladder</b></td><td class="num mid">₹350/kg</td><td class="num mid">14,300 t</td><td class="num">8.1%</td><td><span class="pill p-mid">stretch — the target</span></td></tr>
+      <tr><td>Premium-tilted</td><td class="num win">₹500/kg</td><td class="num win">10,000 t</td><td class="num">5.7%</td><td><span class="pill p-fit">plausible w/ specialty demand</span></td></tr>
+      <tr><td>Heavy specialty / energy</td><td class="num">₹1,000/kg</td><td class="num">5,000 t</td><td class="num">2.8%</td><td><span class="pill p-mid">demand/qualification-limited</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="disc">Tonnage = ₹500 cr ÷ price. "% of India exports" contextualises scale against the whole country's FY25 export volume (1,76,435 t).</p>
+
+  <h3>The recommended blend — a worked ₹500 cr mix</h3>
+  <div class="card" style="margin:14px 0">
+    <div class="bar"><span class="nm">Water/gas bulk @ ₹175</span><span class="track"><span class="fill" style="width:100%">7,000 t → ₹122 cr</span></span><span class="val">~24%</span></div>
+    <div class="bar"><span class="nm">Food/pharma/impreg @ ₹450</span><span class="track"><span class="fill" style="width:55%">4,000 t → ₹180 cr</span></span><span class="val">~36%</span></div>
+    <div class="bar"><span class="nm">Specialty powder @ ₹900</span><span class="track"><span class="fill" style="width:26%">1,500 t → ₹135 cr</span></span><span class="val">~27%</span></div>
+    <div class="bar"><span class="nm">Energy/supercap @ ₹2,500</span><span class="track"><span class="fill" style="width:12%">250 t → ₹63 cr</span></span><span class="val">~13%</span></div>
+    <hr class="sep">
+    <div class="bar"><span class="nm"><b>Total</b></span><span class="track"><span class="fill" style="width:90%;background:linear-gradient(90deg,#8a5,#cd6)"><b>12,750 t → ₹500 cr</b></span></span><span class="val"><b>₹392/kg avg</b></span></div>
+    <p class="disc">Illustrative, not a forecast. Note how <b>250 t of energy carbon contributes as much revenue as 3,600 t of water carbon</b> — that's the realisation lever doing the work. ~12,750 t is a large but buildable plant (≈ ACPL scale), vs 31,450 t for the naive bulk route.</p>
+  </div>
+
+  <h3>The staged build to get there</h3>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Phase</th><th>Focus</th><th>Volume</th><th>Revenue</th></tr></thead>
+    <tbody>
+      <tr><td><b>Yr 1–2</b></td><td>Pilot + water/gas bulk; prove bamboo spec &amp; aggregation</td><td class="num">1,000–2,000 t</td><td class="num">₹15–35 cr</td></tr>
+      <tr><td><b>Yr 3–4</b></td><td>Scale bulk + enter food/pharma; first exports; certifications</td><td class="num">4,000–6,000 t</td><td class="num">₹80–160 cr</td></tr>
+      <tr><td><b>Yr 5–7</b></td><td>Full blended ladder + specialty tier; export channels mature</td><td class="num">9,000–13,000 t</td><td class="num win">₹350–500 cr</td></tr>
+      <tr><td><b>Yr 7–10</b></td><td>Energy/Na-ion optionality; brand/channel for margin</td><td class="num">13,000 t+</td><td class="num">₹500 cr+</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="verdict">
+    <p class="big">₹500 cr is reachable — as a blended, export-led, energy-tilted producer of ~13k tonnes at a ~₹390/kg average, built over 7–10 years to become a top-5 Indian carbon company.</p>
+    <p style="margin:0">It is <b>not</b> reachable as a bulk-commodity clone (needs 31k tonnes and thin margins), and it is <b>not</b> reachable selling only to India (domestic market too small). The three non-negotiables: <b>(1) climb the grade ladder</b> so tonnage stays sane, <b>(2) export</b> from day one of scale, and <b>(3) secure bamboo aggregation</b> at 13k-tonne-output scale — which needs ~90k+ tonnes of raw bamboo a year, the single hardest piece of the whole plan.</p>
+  </div>
+
+  <div class="call warn">
+    <span class="h">The one number that will actually gate you</span>
+    Revenue models are easy; <b>feedstock logistics are the real constraint</b>. ~13,000 t of finished AC needs roughly <b>85,000–95,000 tonnes of raw bamboo per year</b> (at ~7:1). Aggregating that reliably, at ₹3–5k/t, within economical trucking distance, from a post-2017 fragmented supply base that nobody has organised yet — that is your actual moat and your actual risk. Solve bamboo supply and the revenue follows; don't, and the grade ladder is academic.
+  </div>
+</section>
+
+<!-- 08 SOURCES -->
+<section class="panel" id="sources">
+  <p class="eyebrow">08 — Provenance</p>
+  <h2>Sources &amp; how to read the numbers</h2>
+  <p class="lead">Market-research value figures vary by publisher (different scopes/methodologies) — ranges reflect that. Volume, trade and price-realisation figures are the most load-bearing and are drawn from trade data and industry reporting. Company revenues are latest disclosed. Treat all pricing as indicative market ranges, not quotes.</p>
+
+  <p class="srcs" style="margin-top:14px">
+    • Global market size, volume &amp; regional split: <a href="https://www.fortunebusinessinsights.com/activated-carbon-market-102175">Fortune Business Insights</a> · <a href="https://market.us/report/global-activated-carbon-market/">Market.us (5.8 Mt volume)</a> · <a href="https://www.precedenceresearch.com/activated-carbon-market">Precedence Research</a> · <a href="https://www.grandviewresearch.com/industry-analysis/activated-carbon-market">Grand View Research</a><br>
+    • India market, exports/imports, production share: <a href="https://carpediemias.com/current-affairs/article/activated-carbon-drives-india-s-coconut-product-exports-fy25">India AC exports FY25 (₹2,799 cr / 1,76,435 t)</a> · <a href="https://www.grandviewresearch.com/horizon/outlook/activated-carbon-market/india">India market ($254 M, 2024)</a> · <a href="https://oec.world/en/profile/bilateral-product/activated-carbon/reporter/ind">OEC India AC trade</a><br>
+    • Segment shares (water dominant): <a href="https://market.us/press-release/activated-carbon-market/">Market.us application split</a> · <a href="https://www.grandviewresearch.com/industry-analysis/activated-carbon-market">Grand View — end-use</a><br>
+    • Companies / competitive: <a href="https://www.haycarb.com/wp-content/uploads/2025/06/Haycarb-PLC-Annual-Report-2024-25.pdf">Haycarb Annual Report 2024/25 ($218 M)</a> · <a href="https://www.businesswire.com/news/home/20240624750585/en/">Majors (Cabot/Kuraray/Jacobi/Ingevity)</a> · <a href="https://www.eximpedia.app/blog/activated-carbon-manufacturers">Top India manufacturers</a> · <a href="https://www.kalpakachemicals.com/about-us/">Kalpaka Chemicals</a> · <a href="http://www.activechar.com/about_us.html">Active Char Products (16,000 t)</a><br>
+    • Trade / export destinations: <a href="https://oec.world/en/profile/bilateral-product/activated-carbon/reporter/usa">OEC US AC imports (India $43.1 M)</a> · top-exporter 2020 baseline (China $397 M, US $286 M, India $199 M)<br>
+    • Emerging frontiers: <a href="https://www.indexbox.io/blog/hard-carbon-anode-materials-market-demand-to-accelerate-by-2035-driven-by-sodium-ion-battery-commercialization/">Hard-carbon anode market ($6.3→7.5 bn, 19.5%)</a> · <a href="https://www.lpinformationdata.com/reports/2014585/hard-carbon-anode-material-for-sodium-ion-batteries">Na-ion hard carbon subsegment</a> · <a href="https://www.maximizemarketresearch.com/market-report/global-activated-carbon-canisters-market/95412/">Auto canister market ($2.58→2.72 bn)</a> · <a href="https://carnewschina.com/2026/07/01/china-sodium-battery-coal-anode-coconut-crisis/">Coconut crisis → Na-ion anode shift</a><br>
+    • Price points: <a href="https://dir.indiamart.com/impcat/activated-carbon.html">IndiaMART AC price range</a> · <a href="https://activatedcarbonfactory.com/blog/activated-carbon-price-guide">AC price guide 2026</a> · India export realisation derived from FY25 trade data (₹2,799 cr ÷ 1,76,435 t = ₹158.6/kg)
+  </p>
+  <p class="disc" style="margin-top:16px">Companion to the main technical report at <a href="bamboocarbonreport.html">bamboocarbonreport.html</a>. Prepared as a market briefing · indicative ranges · verify against live quotes and primary trade data (DGCIS/OEC/company filings) before committing capital.</p>
+</section>
+
+</div>
+
+<script>
+(function(){
+  var tabs=document.getElementById('tabs');
+  var btns=tabs.querySelectorAll('button');
+  var panels=document.querySelectorAll('.panel');
+  function show(id){
+    panels.forEach(function(p){p.classList.toggle('on', p.id===id);});
+    btns.forEach(function(b){b.classList.toggle('on', b.dataset.t===id);});
+    window.scrollTo({top:0,behavior:'instant'});
+    if(history.replaceState) history.replaceState(null,'','#'+id);
+  }
+  tabs.addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b) return; show(b.dataset.t);
+  });
+  var h=(location.hash||'').replace('#',''); if(h && document.getElementById(h)) show(h);
+})();
+</script>
+</body>
+</html>

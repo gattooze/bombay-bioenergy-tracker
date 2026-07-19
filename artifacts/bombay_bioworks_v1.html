@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bombay Bioworks Corp</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@300;400;500;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0A0A08;
+    --deep: #0F1209;
+    --amber: #C8941A;
+    --amber-light: #E8B84B;
+    --amber-pale: rgba(200,148,26,0.08);
+    --sage: #3D6B4F;
+    --sage-light: #5D8F6E;
+    --sage-pale: rgba(61,107,79,0.12);
+    --stone: #9E9B8A;
+    --stone-light: #C4C1B0;
+    --white: #F5F3ED;
+    --white-dim: rgba(245,243,237,0.7);
+    --white-faint: rgba(245,243,237,0.15);
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--amber);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 32px; height: 32px;
+    border: 1px solid rgba(200,148,26,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.4s ease, width 0.3s, height 0.3s;
+    transform: translate(-50%, -50%);
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 24px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(10,10,8,0.95) 0%, transparent 100%);
+  }
+
+  .nav-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .nav-logo span { color: var(--amber); }
+
+  .nav-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--stone);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 48px 80px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 60% 40%, rgba(61,107,79,0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 80% 70%, rgba(200,148,26,0.08) 0%, transparent 60%),
+      linear-gradient(160deg, #0A0A08 0%, #0D110A 50%, #0A0A08 100%);
+  }
+
+  /* Animated grid lines */
+  .grid-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(245,243,237,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,243,237,0.03) 1px, transparent 1px);
+    background-size: 80px 80px;
+    animation: gridShift 20s linear infinite;
+  }
+
+  @keyframes gridShift {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(80px); }
+  }
+
+  /* Glowing orb */
+  .orb {
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(61,107,79,0.2) 0%, transparent 70%);
+    top: 10%; right: -100px;
+    animation: pulse 6s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.1); opacity: 1; }
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--amber);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.3s;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(52px, 8vw, 120px);
+    font-weight: 900;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.5s;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--amber);
+  }
+
+  .hero-title .outline {
+    -webkit-text-stroke: 1px rgba(245,243,237,0.3);
+    color: transparent;
+  }
+
+  .hero-sub {
+    max-width: 560px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--white-dim);
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.7s;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.9s;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .meta-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--amber);
+  }
+
+  .meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--stone);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    right: 48px;
+    bottom: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 1.2s;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--amber), transparent);
+    animation: scrollDrop 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollDrop {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  .scroll-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--stone);
+    writing-mode: vertical-rl;
+    text-transform: uppercase;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(200,148,26,0.4), transparent);
+    margin: 0;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    position: relative;
+    padding: 120px 48px;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--amber);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 64px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--amber);
+    opacity: 0.4;
+  }
+
+  /* ── FOCUS AREAS ── */
+  .focus {
+    background: var(--deep);
+  }
+
+  .focus-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: rgba(200,148,26,0.1);
+  }
+
+  .focus-card {
+    background: var(--deep);
+    padding: 64px 56px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s ease;
+  }
+
+  .focus-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .focus-card.fuels::before {
+    background: radial-gradient(ellipse at 0% 100%, rgba(200,148,26,0.08) 0%, transparent 60%);
+  }
+
+  .focus-card.eco::before {
+    background: radial-gradient(ellipse at 100% 0%, rgba(61,107,79,0.1) 0%, transparent 60%);
+  }
+
+  .focus-card:hover::before { opacity: 1; }
+
+  .focus-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 120px;
+    font-weight: 900;
+    line-height: 1;
+    position: absolute;
+    top: 32px; right: 40px;
+    opacity: 0.04;
+    color: var(--white);
+    pointer-events: none;
+  }
+
+  .focus-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--stone);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .focus-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 3vw, 48px);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 32px;
+  }
+
+  .fuels .focus-title { color: var(--amber); }
+  .eco .focus-title { color: var(--sage-light); }
+
+  .focus-desc {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--white-dim);
+    margin-bottom: 40px;
+    max-width: 420px;
+  }
+
+  .focus-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .focus-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 14px;
+    color: var(--stone-light);
+    line-height: 1.5;
+  }
+
+  .focus-item-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .fuels .focus-item-dot { background: var(--amber); }
+  .eco .focus-item-dot { background: var(--sage-light); }
+
+  /* ── STATEMENT ── */
+  .statement {
+    text-align: center;
+    padding: 140px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .statement-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 50% 50%, rgba(61,107,79,0.08) 0%, transparent 70%);
+  }
+
+  .statement-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.4;
+    max-width: 900px;
+    margin: 0 auto 40px;
+    color: var(--white);
+  }
+
+  .statement-quote strong {
+    font-style: normal;
+    font-weight: 700;
+    color: var(--amber);
+  }
+
+  .statement-attr {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--stone);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  /* ── FOUNDERS ── */
+  .founders {
+    background: var(--deep);
+  }
+
+  .founders-intro {
+    max-width: 600px;
+    margin-bottom: 80px;
+  }
+
+  .founders-intro h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 24px;
+  }
+
+  .founders-intro p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--white-dim);
+  }
+
+  .founders-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: rgba(245,243,237,0.05);
+  }
+
+  .founder-card {
+    background: var(--deep);
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease;
+  }
+
+  .founder-card:hover {
+    background: rgba(245,243,237,0.02);
+  }
+
+  .founder-avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    margin-bottom: 28px;
+    overflow: hidden;
+    border: 1px solid rgba(200,148,26,0.3);
+    background: var(--sage-pale);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--amber);
+  }
+
+  .founder-avatar img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  .founder-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .founder-role {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--amber);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .founder-bio {
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--stone-light);
+    margin-bottom: 24px;
+  }
+
+  .founder-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--sage-light);
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+  }
+
+  .founder-link:hover { color: var(--amber); }
+
+  .founder-link::after {
+    content: '↗';
+    font-size: 12px;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    padding: 120px 48px;
+  }
+
+  .timeline-track {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    margin-top: 64px;
+    position: relative;
+  }
+
+  .timeline-track::before {
+    content: '';
+    position: absolute;
+    top: 20px; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, var(--amber), rgba(200,148,26,0.2));
+  }
+
+  .timeline-item {
+    flex: 1;
+    padding-top: 48px;
+    position: relative;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    top: 12px; left: 0;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 1px solid var(--amber);
+    background: var(--black);
+    transform: translateX(-50%);
+  }
+
+  .timeline-dot.active {
+    background: var(--amber);
+    box-shadow: 0 0 20px rgba(200,148,26,0.4);
+  }
+
+  .timeline-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--amber);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+
+  .timeline-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 8px;
+    padding-right: 20px;
+  }
+
+  .timeline-desc {
+    font-size: 13px;
+    color: var(--stone);
+    line-height: 1.6;
+    padding-right: 20px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 80px 48px 48px;
+    border-top: 1px solid rgba(245,243,237,0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .footer-logo span { color: var(--amber); }
+
+  .footer-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--stone);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .footer-right {
+    text-align: right;
+  }
+
+  .footer-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--stone);
+    letter-spacing: 0.1em;
+    line-height: 1.8;
+  }
+
+  .footer-note strong {
+    color: var(--amber);
+    font-weight: 400;
+  }
+
+  /* ── REVEAL ANIMATIONS ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .hero { padding: 0 24px 64px; min-height: 100svh; }
+    .hero-meta { gap: 28px; flex-wrap: wrap; }
+    .hero-scroll { display: none; }
+    section { padding: 80px 24px; }
+    .focus-grid { grid-template-columns: 1fr; }
+    .focus-card { padding: 48px 32px; }
+    .founders-grid { grid-template-columns: 1fr; }
+    .timeline-track { flex-direction: column; padding-left: 32px; }
+    .timeline-track::before { top: 0; left: 8px; bottom: 0; right: auto; width: 1px; height: 100%; background: linear-gradient(to bottom, var(--amber), rgba(200,148,26,0.2)); }
+    .timeline-item { padding-top: 0; padding-bottom: 48px; padding-left: 32px; }
+    .timeline-dot { top: 0; left: 0; transform: translateY(0); }
+    footer { flex-direction: column; align-items: flex-start; gap: 32px; }
+    .footer-right { text-align: left; }
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Bombay <span>Bioworks</span> Corp</div>
+  <div class="nav-tag">Est. 2026 · Mumbai, India</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="grid-lines"></div>
+  <div class="orb"></div>
+
+  <div class="hero-eyebrow">Greenfield · Biomass · Circular Economy</div>
+
+  <h1 class="hero-title">
+    Turning<br>
+    <em>Waste</em><br>
+    <span class="outline">Into Power.</span>
+  </h1>
+
+  <p class="hero-sub">
+    A new venture building India's most integrated bamboo and agri-biomass platform — from sustainable harvest to advanced industrial fuels. Ground operations begin August 2026.
+  </p>
+
+  <div class="hero-meta">
+    <div class="meta-item">
+      <span class="meta-value">$10M+</span>
+      <span class="meta-label">Capital Committed</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-value">Aug '26</span>
+      <span class="meta-label">Ground Operations</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-value">2</span>
+      <span class="meta-label">Core Verticals</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-value">50yr</span>
+      <span class="meta-label">Combined Experience</span>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll</span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FOCUS AREAS -->
+<section class="focus">
+  <div class="section-label">What We're Building</div>
+
+  <div class="focus-grid">
+
+    <!-- Future Fuels -->
+    <div class="focus-card fuels reveal">
+      <div class="focus-number">01</div>
+      <div class="focus-tag">Frontend Vertical</div>
+      <h2 class="focus-title">Future<br>Fuels</h2>
+      <p class="focus-desc">
+        Converting bamboo and agricultural residues into next-generation coal alternatives and advanced carbon products for industry and export.
+      </p>
+      <div class="focus-items">
+        <div class="focus-item">
+          <div class="focus-item-dot"></div>
+          <span><strong style="color:var(--white-dim)">Pellets & Briquettes</strong> — High-GCV coal substitutes for thermal power and industrial boilers</span>
+        </div>
+        <div class="focus-item">
+          <div class="focus-item-dot"></div>
+          <span><strong style="color:var(--white-dim)">Biochar & Black Pellets</strong> — Advanced carbon products for steel PCI and premium energy markets</span>
+        </div>
+        <div class="focus-item">
+          <div class="focus-item-dot"></div>
+          <span><strong style="color:var(--white-dim)">Activated Carbon</strong> — For fertilisers, water filtration, specialty chemicals and industrial applications</span>
+        </div>
+        <div class="focus-item">
+          <div class="focus-item-dot"></div>
+          <span><strong style="color:var(--white-dim)">Feedstock</strong> — Bamboo-primary, with rice straw, cotton stalk and mixed agri-residue</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ecosystem Development -->
+    <div class="focus-card eco reveal">
+      <div class="focus-number">02</div>
+      <div class="focus-tag">Backend Vertical</div>
+      <h2 class="focus-title">Ecosystem<br>Development</h2>
+      <p class="focus-desc">
+        Building the ground infrastructure that makes sustainable biomass supply chains viable — from farmer to factory gate.
+      </p>
+      <div class="focus-items">
+        <div class="focus-item">
+          <div class="focus-item-dot"></div>
+          <span><strong style="color:var(--white-dim)">Sustainable Harvest</strong> — Responsible bamboo harvesting protocols with community co-management</span>
+        </div>
+        <div class="focus-item">
+          <div class="focus-item-dot"></div>
+          <span><strong style="color:var(--white-dim)">Farmer Empowerment</strong> — Tools, equipment and training for harvest, grading and quality management</span>
+        </div>
+        <div class="focus-item">
+          <div class="focus-item-dot"></div>
+          <span><strong style="color:var(--white-dim)">Quality & Grading</strong> — Age grading, species recognition and GI-mapped bamboo for fair trade premiums</span>
+        </div>
+        <div class="focus-item">
+          <div class="focus-item-dot"></div>
+          <span><strong style="color:var(--white-dim)">Commercial Plantation</strong> — Bamboo plantation and farming development across target geographies</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- STATEMENT -->
+<section class="statement">
+  <div class="statement-bg"></div>
+  <p class="statement-quote reveal">
+    "India generates over <strong>500 million tonnes</strong> of agricultural residue annually. We are building the infrastructure to turn this liability into a globally traded industrial asset."
+  </p>
+  <div class="statement-attr reveal">— The Bombay Bioworks thesis</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FOUNDERS -->
+<section class="founders">
+  <div class="section-label">The Team</div>
+
+  <div class="founders-intro reveal">
+    <h2>Three Decades<br>of Real-World<br><em style="color:var(--amber)">Operating Experience.</em></h2>
+    <p>A supply chain operator, a capital allocator, and a technology builder — coming together to solve one of India's largest untapped resource challenges.</p>
+  </div>
+
+  <div class="founders-grid">
+
+    <div class="founder-card reveal">
+      <div class="founder-avatar">KV</div>
+      <div class="founder-name">Karan Vora</div>
+      <div class="founder-role">Supply Chain & Operations</div>
+      <p class="founder-bio">
+        Nearly two decades building and scaling supply chains across India's most demanding commodity sectors — salt, steel, and timber. Deep operational knowledge of sourcing, logistics, and last-mile infrastructure at scale.
+      </p>
+    </div>
+
+    <div class="founder-card reveal">
+      <div class="founder-avatar">MK</div>
+      <div class="founder-name">Mukund Khetan</div>
+      <div class="founder-role">Capital & Policy</div>
+      <p class="founder-bio">
+        15+ years across private equity, venture capital and impact investing. ISB alumnus. Advisor to government and policy initiatives. Brings institutional capital discipline and public-private ecosystem understanding to the venture.
+      </p>
+      <a href="https://www.linkedin.com/in/mukund-khetan-a75a2636/" target="_blank" class="founder-link">LinkedIn Profile</a>
+    </div>
+
+    <div class="founder-card reveal">
+      <div class="founder-avatar">PA</div>
+      <div class="founder-name">Pratik Agarwal</div>
+      <div class="founder-role">Technology & Systems</div>
+      <p class="founder-bio">
+        16+ years across technology, education, and manufacturing. Led government ecosystem development in education. ISB alumnus. Brings systems thinking and technology infrastructure to build what the biomass sector has been missing.
+      </p>
+      <a href="https://www.linkedin.com/in/gattooze/" target="_blank" class="founder-link">LinkedIn Profile</a>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TIMELINE -->
+<section class="timeline">
+  <div class="section-label">Where We Are</div>
+
+  <div class="timeline-track">
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot active"></div>
+      <div class="timeline-date">Now · 2026</div>
+      <div class="timeline-title">Research & Foundation</div>
+      <div class="timeline-desc">Deep market research, supply chain mapping, machinery evaluation, regulatory groundwork and team assembly.</div>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot active"></div>
+      <div class="timeline-date">Aug 2026</div>
+      <div class="timeline-title">Ground Operations Begin</div>
+      <div class="timeline-desc">Feedstock supply chain activation. Pilot plant commissioning. Farmer onboarding in target geographies.</div>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2027</div>
+      <div class="timeline-title">Commercial Scale</div>
+      <div class="timeline-desc">Full production capacity. Domestic offtake agreements. Export market entry into Japan and South Korea.</div>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2028+</div>
+      <div class="timeline-title">Platform Expansion</div>
+      <div class="timeline-desc">Advanced fuels (biochar, black pellets). Activated carbon vertical. GI-certified bamboo export ecosystem.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-logo">Bombay <span>Bioworks</span> Corp</div>
+    <div class="footer-sub">Mumbai, Maharashtra · India</div>
+  </div>
+  <div class="footer-right">
+    <div class="footer-note">
+      <strong>$10M+ committed</strong> · Greenfield venture<br>
+      Ground operations: <strong>August 2026</strong><br>
+      For enquiries and partnerships, reach out to the founding team.
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      ring.style.width = '48px';
+      ring.style.height = '48px';
+      cursor.style.transform = 'translate(-50%, -50%) scale(2)';
+    });
+    el.addEventListener('mouseleave', () => {
+      ring.style.width = '32px';
+      ring.style.height = '32px';
+      cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+    });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pellet Mill — Machine Decision Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --bg1: #111111;
+  --bg2: #181818;
+  --bg3: #222222;
+  --bg4: #2a2a2a;
+  --border: #2e2e2e;
+  --border2: #3a3a3a;
+  --text: #e8e8e0;
+  --text2: #8a8a80;
+  --text3: #555550;
+  --green: #4ade80;
+  --green-bg: #0d2414;
+  --green-border: #1a4a2a;
+  --amber: #f59e0b;
+  --amber-bg: #1a1200;
+  --amber-border: #3a2800;
+  --red: #f87171;
+  --red-bg: #1a0808;
+  --red-border: #3a1010;
+  --blue: #60a5fa;
+  --blue-bg: #080f1a;
+  --blue-border: #102030;
+  --accent: #4ade80;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.header {
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 100;
+}
+
+.logo {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-dot {
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.header-nav {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.hnav-btn {
+  padding: 6px 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--border);
+  color: var(--text2);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.hnav-btn:last-child { border-right: none; }
+.hnav-btn:hover { background: var(--bg2); color: var(--text); }
+.hnav-btn.active { background: var(--bg3); color: var(--accent); }
+
+.sl-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px;
+  background: var(--accent);
+  color: var(--bg);
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 600;
+  margin-left: 6px;
+  font-family: var(--mono);
+}
+
+/* ── LAYOUT ── */
+.main { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── GRID SYSTEM ── */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+.g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+.gcols-val { display: grid; grid-template-columns: 380px 1fr; gap: 1.5rem; align-items: start; }
+
+@media (max-width: 1100px) { .gcols-val { grid-template-columns: 1fr; } }
+@media (max-width: 768px) { .g2,.g3,.g4,.gcols-val { grid-template-columns: 1fr; } .main { padding: 1rem; } }
+
+/* ── PANEL / CARD ── */
+.panel {
+  background: var(--bg1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.panel-header {
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg2);
+}
+
+.panel-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text2);
+}
+
+.panel-body { padding: 1.25rem; }
+
+/* ── FORM ELEMENTS ── */
+.field { margin-bottom: 1rem; }
+.field:last-child { margin-bottom: 0; }
+
+.field-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.field-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 5px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  border-color: var(--accent);
+}
+
+select option { background: var(--bg2); }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 2px;
+  background: var(--bg4);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+.range-val {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  min-width: 64px;
+  text-align: right;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  padding: 8px 16px;
+  border-radius: 5px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--text2);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn:hover { background: var(--bg3); color: var(--text); border-color: var(--border2); }
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.btn-primary:hover { background: #22c55e; border-color: #22c55e; color: var(--bg); }
+
+.btn-danger {
+  border-color: var(--red-border);
+  color: var(--red);
+}
+
+.btn-danger:hover { background: var(--red-bg); }
+
+/* ── METRICS ── */
+.metric {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.875rem 1rem;
+}
+
+.metric-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 4px;
+}
+
+.metric-value {
+  font-family: var(--mono);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.metric-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+  margin-top: 3px;
+}
+
+.metric-green .metric-value { color: var(--green); }
+.metric-amber .metric-value { color: var(--amber); }
+.metric-red .metric-value { color: var(--red); }
+.metric-blue .metric-value { color: var(--blue); }
+
+/* ── SCORE RING ── */
+.score-block {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.25rem;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.score-circle {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  border: 3px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.score-number {
+  font-family: var(--mono);
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.score-info { flex: 1; min-width: 0; }
+
+.score-verdict {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.score-sub {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+/* ── VERDICT BOXES ── */
+.verdict {
+  border-radius: 6px;
+  padding: 0.875rem 1rem;
+  margin-bottom: 0.75rem;
+  border-left: 3px solid;
+}
+
+.verdict-ok { background: var(--green-bg); border-color: var(--green); }
+.verdict-warn { background: var(--amber-bg); border-color: var(--amber); }
+.verdict-bad { background: var(--red-bg); border-color: var(--red); }
+.verdict-info { background: var(--blue-bg); border-color: var(--blue); }
+
+.verdict-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.verdict-ok .verdict-title { color: var(--green); }
+.verdict-warn .verdict-title { color: var(--amber); }
+.verdict-bad .verdict-title { color: var(--red); }
+.verdict-info .verdict-title { color: var(--blue); }
+
+.verdict p {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.55;
+}
+
+/* ── FLAGS ── */
+.flag-list { margin-top: 0.75rem; }
+
+.flag-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.flag-item:last-child { border-bottom: none; }
+
+.flag-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.flag-dot-bad { background: var(--red); }
+.flag-dot-warn { background: var(--amber); }
+
+.flag-text {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.45;
+}
+
+/* ── BADGES ── */
+.badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin-right: 4px;
+}
+
+.badge-ok { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+.badge-warn { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+.badge-bad { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+.badge-info { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+.badge-gray { background: var(--bg3); color: var(--text2); border: 1px solid var(--border); }
+
+/* ── BAR ── */
+.bar-wrap {
+  background: var(--bg4);
+  border-radius: 2px;
+  height: 4px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.bar { height: 4px; border-radius: 2px; transition: width 0.4s ease; }
+
+/* ── TABLE ── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.data-table th {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+}
+
+.data-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--text2);
+}
+
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--bg2); }
+
+/* ── SHORTLIST CARD ── */
+.sl-card {
+  background: var(--bg1);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  transition: border-color 0.15s;
+}
+
+.sl-card:hover { border-color: var(--border2); }
+.sl-card.ok { border-left-color: var(--green); }
+.sl-card.warn { border-left-color: var(--amber); }
+.sl-card.bad { border-left-color: var(--red); }
+
+.sl-score-num {
+  font-family: var(--mono);
+  font-size: 28px;
+  font-weight: 600;
+  min-width: 48px;
+  text-align: center;
+  line-height: 1;
+  padding-top: 2px;
+}
+
+.sl-body { flex: 1; min-width: 0; }
+
+.sl-name {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+
+.sl-sub {
+  font-size: 11px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+.sl-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+
+.sl-remove {
+  background: none;
+  border: none;
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.15s;
+  align-self: flex-start;
+}
+
+.sl-remove:hover { color: var(--red); }
+
+/* ── HANDBOOK SECTION ── */
+.hb-section { margin-bottom: 2.5rem; }
+
+.hb-section-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hb-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.concept-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.concept-card {
+  background: var(--bg1);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+.concept-icon {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: var(--accent);
+}
+
+.concept-title {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.concept-body {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+.formula-block {
+  background: var(--bg2);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 5px 5px 0;
+  padding: 0.75rem 1rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+  margin: 0.75rem 0;
+  line-height: 1.6;
+}
+
+.formula-comment { color: var(--text3); }
+
+/* ── SEPARATOR ── */
+.sep { height: 1px; background: var(--border); margin: 1.25rem 0; }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--text3);
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 2;
+}
+
+/* ── COMPARE SUMMARY ── */
+.compare-banner {
+  background: var(--bg2);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+/* ── HERO ── */
+.page-hero {
+  padding: 2rem 0 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+}
+
+.page-hero-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 0.5rem;
+}
+
+.page-hero-title {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.page-hero-title span { color: var(--accent); font-weight: 500; }
+
+.page-hero-sub {
+  font-size: 13px;
+  color: var(--text2);
+  max-width: 600px;
+}
+
+/* ── STEP INDICATOR ── */
+.step-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  white-space: nowrap;
+}
+
+.step-item.current { color: var(--accent); }
+.step-item.done { color: var(--text2); }
+
+.step-num {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.step-item.current .step-num { border-color: var(--accent); color: var(--accent); background: var(--green-bg); }
+.step-item.done .step-num { border-color: var(--border2); background: var(--bg3); }
+
+.step-arrow {
+  width: 32px;
+  height: 1px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+/* ── TOOLTIP ── */
+[data-tip] { position: relative; cursor: help; }
+[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 5px 8px;
+  font-size: 11px;
+  font-family: var(--sans);
+  color: var(--text2);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 10;
+  max-width: 220px;
+  white-space: normal;
+  text-align: center;
+}
+[data-tip]:hover::after { opacity: 1; }
+
+/* ── SCROLL ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border2); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.anim { animation: fadeIn 0.25s ease; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-dot"></div>
+    PELLET.ENGINE — PHASE 01
+  </div>
+  <nav class="header-nav">
+    <button class="hnav-btn active" onclick="showTab('validator', this)">VALIDATOR</button>
+    <button class="hnav-btn" onclick="showTab('shortlist', this)">SHORTLIST<span class="sl-badge" id="sl-badge">0</span></button>
+    <button class="hnav-btn" onclick="showTab('handbook', this)">HANDBOOK</button>
+  </nav>
+</header>
+
+<main class="main">
+
+<!-- ════════════════ VALIDATOR TAB ════════════════ -->
+<div id="tab-validator" class="tab-content active">
+
+  <div class="page-hero">
+    <div class="page-hero-label">Phase 01 · Machine Decision Engine</div>
+    <div class="page-hero-title">Validate any pellet mill quote<br>against <span>real physics</span></div>
+    <div class="page-hero-sub">Input vendor specs. The engine calculates actual throughput for your feedstock, flags overstatements, and scores the machine 0–100. Save passing machines to your shortlist.</div>
+  </div>
+
+  <div class="gcols-val">
+
+    <!-- LEFT: INPUTS -->
+    <div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span style="color:var(--accent);font-size:12px">01</span>
+          <span class="panel-title">Vendor & machine identity</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label class="field-label">Vendor name</label>
+            <input type="text" id="v-vendor" placeholder="e.g. Andritz, Yulong, Hitech Agro" oninput="validate()">
+          </div>
+          <div class="field">
+            <label class="field-label">Model / series</label>
+            <input type="text" id="v-model" placeholder="e.g. LM 520, MZLH-420" oninput="validate()">
+          </div>
+          <div class="field">
+            <label class="field-label">Origin / manufacturer</label>
+            <select id="v-origin" onchange="originChange()">
+              <option value="eu_andritz">Europe — Andritz</option>
+              <option value="eu_cpm">Europe — CPM</option>
+              <option value="eu_salmatec">Europe — Salmatec</option>
+              <option value="eu_buhler">Europe — Bühler</option>
+              <option value="eu_other">Europe — other</option>
+              <option value="cn_muyang">China — Muyang</option>
+              <option value="cn_yulong">China — Yulong</option>
+              <option value="cn_rotex">China — Rotexmaster</option>
+              <option value="cn_hitech" selected>China/India — Hitech Agro</option>
+              <option value="cn_trio">China/India — Trio</option>
+              <option value="cn_richi">China — Richi</option>
+              <option value="cn_other">China — other</option>
+              <option value="in_other">India — other local</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">Die type</label>
+            <select id="v-dietype" onchange="validate()">
+              <option value="ring">Ring die — rotating die, fixed rollers (European standard)</option>
+              <option value="flat">Flat die — fixed plate, rotating rollers (budget Chinese)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span style="color:var(--accent);font-size:12px">02</span>
+          <span class="panel-title">Motor & mechanical specs</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label class="field-label" data-tip="Nameplate power of main pellet mill motor only. Do not include conditioner or ancillary motors.">Main motor (kW)</label>
+            <div class="field-row">
+              <input type="range" min="22" max="600" value="132" step="1" id="v-kw" oninput="document.getElementById('v-kw-v').textContent=this.value+' kW';validate()">
+              <span class="range-val" id="v-kw-v">132 kW</span>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label" data-tip="What the vendor claims in brochure/quotation for your feedstock. If they gave a range, use the lower number.">Claimed TPH (manufacturer)</label>
+            <div class="field-row">
+              <input type="range" min="0.5" max="20" value="3" step="0.5" id="v-tph" oninput="document.getElementById('v-tph-v').textContent=parseFloat(this.value).toFixed(1)+' t/h';validate()">
+              <span class="range-val" id="v-tph-v">3.0 t/h</span>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">Transmission type</label>
+            <select id="v-trans" onchange="validate()">
+              <option value="0.94">Direct drive / gearbox (94% efficiency)</option>
+              <option value="0.88" selected>V-belt (88% efficiency)</option>
+              <option value="0.90">Poly-V belt (90% efficiency)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label" data-tip="Full quoted price including basic commissioning. Exclude freight and civil works.">Quoted price (₹ Lakh)</label>
+            <div class="field-row">
+              <input type="range" min="5" max="800" value="45" step="5" id="v-price" oninput="document.getElementById('v-price-v').textContent='₹'+this.value+'L';validate()">
+              <span class="range-val" id="v-price-v">₹45L</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span style="color:var(--accent);font-size:12px">03</span>
+          <span class="panel-title">Die specifications</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label class="field-label" data-tip="Outer diameter of the die ring (ring die) or plate diameter (flat die). Larger = more throughput capacity.">Die diameter (mm)</label>
+            <div class="field-row">
+              <input type="range" min="200" max="1000" value="420" step="10" id="v-died" oninput="document.getElementById('v-died-v').textContent=this.value+'mm';validate()">
+              <span class="range-val" id="v-died-v">420mm</span>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label" data-tip="Diameter of each individual pellet hole. 6mm = ENplus residential. 8mm = industrial/power plant. 10mm+ = NTPC co-firing spec.">Pellet hole diameter (mm)</label>
+            <div class="field-row">
+              <input type="range" min="4" max="12" value="8" step="0.5" id="v-hole" oninput="document.getElementById('v-hole-v').textContent=parseFloat(this.value).toFixed(1)+'mm';validate()">
+              <span class="range-val" id="v-hole-v">8.0mm</span>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label" data-tip="Hole depth ÷ hole diameter. Higher = stronger pellet but more kWh/tonne. Straw needs 5–7:1. Wood needs 7–10:1. Wrong ratio = crumble or blocked die.">L/D ratio (compression)</label>
+            <div class="field-row">
+              <input type="range" min="3" max="12" value="6" step="0.5" id="v-ld" oninput="document.getElementById('v-ld-v').textContent=parseFloat(this.value).toFixed(1)+':1';validate()">
+              <span class="range-val" id="v-ld-v">6.0:1</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span style="color:var(--accent);font-size:12px">04</span>
+          <span class="panel-title">Your feedstock conditions</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label class="field-label">Primary material</label>
+            <select id="v-mat" onchange="validate()">
+              <option value="rice_straw">Rice straw</option>
+              <option value="wheat_straw">Wheat straw</option>
+              <option value="bamboo">Bamboo (green / fresh)</option>
+              <option value="bamboo_dry">Bamboo (seasoned / dried)</option>
+              <option value="bagasse">Sugarcane bagasse</option>
+              <option value="cotton_stalk">Cotton stalk</option>
+              <option value="mustard">Mustard stalk</option>
+              <option value="maize">Maize stover</option>
+              <option value="sawdust_soft">Sawdust — softwood</option>
+              <option value="sawdust_hard">Sawdust — hardwood</option>
+              <option value="mixed_agri">Mixed agri-residue (Indian)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label" data-tip="Moisture % at the pellet mill inlet — after drying. Target: 10–14%. Every 1% off costs 5–8% throughput.">Inlet moisture at mill (%)</label>
+            <div class="field-row">
+              <input type="range" min="6" max="22" value="12" step="1" id="v-mc" oninput="document.getElementById('v-mc-v').textContent=this.value+'%';validate()">
+              <span class="range-val" id="v-mc-v">12%</span>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label" data-tip="Particle size entering the pellet mill. Should be ≤6mm. Coarser = more blockages and power consumption.">Particle size at mill inlet (mm)</label>
+            <div class="field-row">
+              <input type="range" min="1" max="15" value="5" step="0.5" id="v-ps" oninput="document.getElementById('v-ps-v').textContent=parseFloat(this.value).toFixed(1)+'mm';validate()">
+              <span class="range-val" id="v-ps-v">5.0mm</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: RESULTS -->
+    <div id="results-panel" class="anim">
+      <div class="empty-state">
+        <div style="font-size:28px;color:var(--border2);margin-bottom:1rem">⟳</div>
+        Adjust inputs on the left<br>to run validation
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════ SHORTLIST TAB ════════════════ -->
+<div id="tab-shortlist" class="tab-content">
+  <div class="page-hero">
+    <div class="page-hero-label">Phase 01 · Shortlist</div>
+    <div class="page-hero-title">Validated machine <span>shortlist</span></div>
+    <div class="page-hero-sub">Machines you've validated and saved. Persists in your browser. Phase 02 will use this list to build production lines.</div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
+    <button class="btn btn-danger" onclick="clearShortlist()">✕ Clear all</button>
+  </div>
+  <div id="sl-list"></div>
+  <div id="sl-compare"></div>
+</div>
+
+<!-- ════════════════ HANDBOOK TAB ════════════════ -->
+<div id="tab-handbook" class="tab-content">
+  <div class="page-hero">
+    <div class="page-hero-label">Physics handbook</div>
+    <div class="page-hero-title">The <span>physics</span> of densification</div>
+    <div class="page-hero-sub">What every buyer should understand before talking to a vendor. Read this once — you will never be fooled by a TPH claim again.</div>
+  </div>
+
+  <!-- SECTION 1: FUNDAMENTALS -->
+  <div class="hb-section">
+    <div class="hb-section-title">01 — Fundamental physics</div>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <div class="concept-icon">⟳</div>
+        <div class="concept-title">What the machine actually does</div>
+        <div class="concept-body">Forces loose biomass through die holes under extreme sustained pressure. Lignin — the natural polymer binder in plant cells — softens at 80–130°C from friction heat, flows into voids, and re-solidifies on cooling. No lignin activation = no durable pellet. Everything else is secondary.</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-icon">⊗</div>
+        <div class="concept-title">Torque is the real metric, not kW</div>
+        <div class="concept-body">Power = Torque × RPM ÷ 9,550. A pellet mill needs HIGH torque at LOW die speed (100–200 RPM). Two machines with identical kW but different gearbox ratios exert completely different force at the die face. Always ask for gearbox output torque in Nm.</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-icon">≋</div>
+        <div class="concept-title">Moisture: the hidden control variable</div>
+        <div class="concept-body">10–14% moisture at mill inlet = optimal. Below 8%: die overheats, pellets crack and dust. Above 16%: steam flash in holes, no bonding, pellets crumble on exit. Every 1% off the optimal costs 5–8% throughput. All manufacturer TPH claims assume exactly 12%.</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-icon">∥</div>
+        <div class="concept-title">L/D ratio — compression ratio</div>
+        <div class="concept-body">Die hole depth ÷ hole diameter. Higher ratio = more compression = stronger pellet = more kWh consumed per tonne. Straw needs 5:1–7:1. Bamboo and hardwood need 7:1–10:1. Using wood-spec L/D on straw = blocked die and motor trips. Using straw-spec L/D on wood = crumbly pellets that fail transit.</div>
+      </div>
+    </div>
+
+    <div class="formula-block">
+      Actual TPH = (Motor kW × Transmission efficiency) ÷ SEC (kWh/tonne)<br>
+      <span class="formula-comment">
+      — Transmission efficiency: direct drive 94%, poly-V belt 90%, V-belt 88%<br>
+      — SEC (Specific Energy Consumption): rice/wheat straw 38–60 kWh/t · cotton stalk 65–90 · bamboo 80–130 · softwood sawdust 35–50 · hardwood 65–95
+      </span>
+    </div>
+  </div>
+
+  <!-- SECTION 2: RING VS FLAT -->
+  <div class="hb-section">
+    <div class="hb-section-title">02 — Ring die vs flat die</div>
+    <div class="g2" style="gap:1rem;margin-bottom:1rem">
+      <div class="verdict verdict-info">
+        <div class="verdict-title">Ring die — industrial standard</div>
+        <p>Die is a hollow cylinder (drum) that rotates. Rollers are fixed inside. Material is fed radially through the die wall. Pressure field is uniform across the full die width. Suitable for fibrous biomass at any scale. Maximum practical die size ~1,000mm. One machine can produce 1–15 t/h. All serious European manufacturers (Andritz, CPM, Salmatec, Bühler) use ring die exclusively. Gearbox output torque: 8,000–80,000 Nm depending on size.</p>
+      </div>
+      <div class="verdict verdict-warn">
+        <div class="verdict-title">Flat die — small scale and budget</div>
+        <p>Die is a round flat plate. Rollers press down from above. Pressure field is non-uniform — centre vs edge of plate differs by up to 30%. Throughput ceiling ~1.5 t/h per machine due to die area limits. Works adequately on sawdust. Struggles significantly with long-fibre agri-residue (straw, cotton stalk). Most budget Chinese and Indian-branded machines are flat die. If you need >3 t/h, you need multiple flat-die units — which costs more than one ring die.</p>
+      </div>
+    </div>
+    <div class="verdict verdict-bad">
+      <div class="verdict-title">The flat-die-as-ring-die misrepresentation — how to catch it</div>
+      <p>Some vendors show ring die machine photos in brochures but quote and ship flat die machines. The distinction is physical: a ring die's die assembly is a vertical hollow cylinder you can look through. A flat die's die is a horizontal plate lying flat — like a grinding wheel. Ask for an unedited video of the machine running, showing the die orientation clearly. If the die rotates horizontally (like a spinning plate), it is a flat die regardless of what the brochure or invoice states. Demand this video before placing any deposit.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 3: MOTOR SIZES DECODED -->
+  <div class="hb-section">
+    <div class="hb-section-title">03 — Motor sizes decoded for Indian agri-residue</div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Motor (kW)</th>
+            <th>Die diameter</th>
+            <th>Machine class</th>
+            <th>Real TPH — straw</th>
+            <th>Real TPH — bamboo</th>
+            <th>Best use case</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong style="color:var(--text)">90–132</strong></td><td>350–420mm</td><td>Small industrial</td><td style="color:var(--amber)">1.5–2.8 t/h</td><td style="color:var(--red)">0.7–1.3 t/h</td><td>Trial plant, single feedstock</td></tr>
+          <tr><td><strong style="color:var(--text)">160–185</strong></td><td>420–508mm</td><td>Mid industrial</td><td style="color:var(--amber)">2.5–4.2 t/h</td><td style="color:var(--amber)">1.2–2.0 t/h</td><td>NTPC co-firing, 3–5 TPH target</td></tr>
+          <tr><td><strong style="color:var(--text)">220–260</strong></td><td>508–600mm</td><td>Heavy industrial</td><td style="color:var(--green)">3.8–6.0 t/h</td><td style="color:var(--amber)">1.8–3.0 t/h</td><td>5–6 TPH plant, single line</td></tr>
+          <tr><td><strong style="color:var(--text)">315–400</strong></td><td>600–750mm</td><td>Very large</td><td style="color:var(--green)">5.5–9.0 t/h</td><td style="color:var(--amber)">2.5–4.2 t/h</td><td>8–10 TPH with dedicated feedstock</td></tr>
+          <tr><td><strong style="color:var(--text)">520+</strong></td><td>750–1000mm</td><td>Mega / export</td><td style="color:var(--green)">8.0–14.0 t/h</td><td style="color:var(--green)">4.0–7.0 t/h</td><td>Export-grade, very consistent feed</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="verdict verdict-warn" style="margin-top:1rem">
+      <div class="verdict-title">The "10 TPH plant" claim — what it actually means</div>
+      <p>A Chinese vendor quoting 10 TPH from a single 260 kW ring die pellet mill is testing on pine sawdust at 12% moisture. Your Indian mixed crop residue from the same machine will give 3.5–5.5 t/h. For a genuine 10 TPH plant on Indian agri-residue, you need 2× 260 kW mills (ring die, in parallel) or 1× 520 kW mill with very consistent, pre-characterised feedstock.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 4: VENDORS -->
+  <div class="hb-section">
+    <div class="hb-section-title">04 — Vendor profiles</div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Vendor</th>
+            <th>Die type</th>
+            <th>TPH claim reliability</th>
+            <th>Gearbox</th>
+            <th>Die steel</th>
+            <th>Price (132 kW)</th>
+            <th>Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:var(--text)">Andritz</strong></td>
+            <td><span class="badge badge-info">Ring</span></td>
+            <td><span style="color:var(--green);font-family:var(--mono)">90–95%</span></td>
+            <td>Flender / own</td>
+            <td>M2 / D2 tool steel</td>
+            <td>₹2.5–4 Cr</td>
+            <td><span class="badge badge-ok">Best</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--text)">CPM</strong></td>
+            <td><span class="badge badge-info">Ring</span></td>
+            <td><span style="color:var(--green);font-family:var(--mono)">88–95%</span></td>
+            <td>Own, excellent</td>
+            <td>D2 stainless</td>
+            <td>₹2.5–4 Cr</td>
+            <td><span class="badge badge-ok">Best</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--text)">Salmatec</strong></td>
+            <td><span class="badge badge-info">Ring</span></td>
+            <td><span style="color:var(--green);font-family:var(--mono)">85–92%</span></td>
+            <td>SEW / Flender</td>
+            <td>X46Cr13+</td>
+            <td>₹1.5–3 Cr</td>
+            <td><span class="badge badge-ok">Good</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--text)">Bühler</strong></td>
+            <td><span class="badge badge-info">Ring</span></td>
+            <td><span style="color:var(--green);font-family:var(--mono)">88–93%</span></td>
+            <td>Own, excellent</td>
+            <td>D2</td>
+            <td>₹2–4 Cr</td>
+            <td><span class="badge badge-ok">Best</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--text)">Muyang</strong></td>
+            <td><span class="badge badge-info">Ring</span></td>
+            <td><span style="color:var(--amber);font-family:var(--mono)">72–80%</span></td>
+            <td>SEW options</td>
+            <td>4Cr13</td>
+            <td>₹60–110L</td>
+            <td><span class="badge badge-warn">Best Chinese</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--text)">Richi</strong></td>
+            <td><span class="badge badge-warn">Flat / Ring</span></td>
+            <td><span style="color:var(--amber);font-family:var(--mono)">62–72%</span></td>
+            <td>Local + SEW option</td>
+            <td>4Cr13</td>
+            <td>₹30–60L</td>
+            <td><span class="badge badge-warn">Verify die type</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--text)">Yulong</strong></td>
+            <td><span class="badge badge-warn">Flat</span></td>
+            <td><span style="color:var(--red);font-family:var(--mono)">50–65%</span></td>
+            <td>Local casting</td>
+            <td>X46Cr13</td>
+            <td>₹18–35L</td>
+            <td><span class="badge badge-bad">Trial only</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--text)">Rotexmaster</strong></td>
+            <td><span class="badge badge-warn">Flat</span></td>
+            <td><span style="color:var(--red);font-family:var(--mono)">55–68%</span></td>
+            <td>Local</td>
+            <td>X46Cr13</td>
+            <td>₹22–40L</td>
+            <td><span class="badge badge-bad">Caution</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--text)">Hitech Agro</strong></td>
+            <td><span class="badge badge-warn">Flat</span></td>
+            <td><span style="color:var(--red);font-family:var(--mono)">50–65%</span></td>
+            <td>Local Indian</td>
+            <td>Basic stainless</td>
+            <td>₹15–30L</td>
+            <td><span class="badge badge-bad">Low CapEx only</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--text)">Trio</strong></td>
+            <td><span class="badge badge-warn">Flat</span></td>
+            <td><span style="color:var(--red);font-family:var(--mono)">50–63%</span></td>
+            <td>Local</td>
+            <td>Basic</td>
+            <td>₹15–28L</td>
+            <td><span class="badge badge-bad">Low CapEx only</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 5: QUESTIONS -->
+  <div class="hb-section">
+    <div class="hb-section-title">05 — Questions that vendors cannot fake</div>
+    <div class="g2" style="gap:1rem">
+      <div class="verdict verdict-bad">
+        <div class="verdict-title">Technical demands — ask these first</div>
+        <p>
+          1. On which exact material, moisture %, and particle size was the claimed TPH tested?<br>
+          2. What is the gearbox output shaft torque in Nm at rated motor RPM?<br>
+          3. What is the die RPM at full rated load?<br>
+          4. What L/D ratio die are you supplying for my specific feedstock?<br>
+          5. What PDI (Pellet Durability Index) was achieved at the claimed TPH?<br>
+          6. Show me the motor amp draw log at full load during commissioning — not the nameplate rating.<br>
+          7. For ring die claim: show cross-section engineering drawing of die assembly.
+        </p>
+      </div>
+      <div class="verdict verdict-ok">
+        <div class="verdict-title">Commercial demands — put in contract</div>
+        <p>
+          1. Performance guarantee clause: minimum TPH on YOUR specific feedstock at YOUR moisture, with penalty for shortfall.<br>
+          2. Die + roller warranty: minimum 2,000 operating hours or 12 months, whichever later.<br>
+          3. Commissioning support: named engineer on-site, minimum 7 days, at vendor cost.<br>
+          4. Spare parts: rollers, die shell, bearings in India within 72 hours.<br>
+          5. Reference visit: operating plant in India on same feedstock before deposit.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</main>
+
+<script>
+// ══════════════════════════════════
+// DATA
+// ══════════════════════════════════
+const MAT = {
+  rice_straw:   { sec:[38,50],  label:'Rice straw',           fibre:'long',   hard:'soft',   ldMin:5,  ldMax:7,  mcOpt:12 },
+  wheat_straw:  { sec:[45,60],  label:'Wheat straw',          fibre:'long',   hard:'soft',   ldMin:5,  ldMax:7,  mcOpt:12 },
+  bamboo:       { sec:[90,130], label:'Bamboo (green)',        fibre:'short',  hard:'hard',   ldMin:7,  ldMax:10, mcOpt:11 },
+  bamboo_dry:   { sec:[70,100], label:'Bamboo (seasoned)',     fibre:'short',  hard:'hard',   ldMin:7,  ldMax:10, mcOpt:11 },
+  bagasse:      { sec:[50,70],  label:'Sugarcane bagasse',     fibre:'mixed',  hard:'soft',   ldMin:5,  ldMax:7,  mcOpt:13 },
+  cotton_stalk: { sec:[65,90],  label:'Cotton stalk',          fibre:'long',   hard:'medium', ldMin:6,  ldMax:8,  mcOpt:12 },
+  mustard:      { sec:[50,65],  label:'Mustard stalk',         fibre:'medium', hard:'soft',   ldMin:5,  ldMax:7,  mcOpt:12 },
+  maize:        { sec:[45,60],  label:'Maize stover',          fibre:'medium', hard:'soft',   ldMin:5,  ldMax:7,  mcOpt:12 },
+  sawdust_soft: { sec:[35,50],  label:'Sawdust (softwood)',    fibre:'short',  hard:'soft',   ldMin:4,  ldMax:7,  mcOpt:12 },
+  sawdust_hard: { sec:[65,95],  label:'Sawdust (hardwood)',    fibre:'short',  hard:'hard',   ldMin:7,  ldMax:10, mcOpt:11 },
+  mixed_agri:   { sec:[55,75],  label:'Mixed agri-residue',    fibre:'mixed',  hard:'medium', ldMin:5,  ldMax:8,  mcOpt:12 }
+};
+
+const VENDOR = {
+  eu_andritz: { eff:0.92, tphRel:0.92, label:'Andritz',      defaultDie:'ring', tier:'eu' },
+  eu_cpm:     { eff:0.92, tphRel:0.91, label:'CPM',          defaultDie:'ring', tier:'eu' },
+  eu_salmatec:{ eff:0.90, tphRel:0.88, label:'Salmatec',     defaultDie:'ring', tier:'eu' },
+  eu_buhler:  { eff:0.91, tphRel:0.90, label:'Bühler',       defaultDie:'ring', tier:'eu' },
+  eu_other:   { eff:0.88, tphRel:0.85, label:'Europe other', defaultDie:'ring', tier:'eu' },
+  cn_muyang:  { eff:0.85, tphRel:0.76, label:'Muyang',       defaultDie:'ring', tier:'cn_mid' },
+  cn_yulong:  { eff:0.82, tphRel:0.58, label:'Yulong',       defaultDie:'flat', tier:'cn_budget' },
+  cn_rotex:   { eff:0.82, tphRel:0.62, label:'Rotexmaster',  defaultDie:'flat', tier:'cn_budget' },
+  cn_hitech:  { eff:0.80, tphRel:0.58, label:'Hitech Agro',  defaultDie:'flat', tier:'cn_budget' },
+  cn_trio:    { eff:0.80, tphRel:0.57, label:'Trio',         defaultDie:'flat', tier:'cn_budget' },
+  cn_richi:   { eff:0.83, tphRel:0.67, label:'Richi',        defaultDie:'flat', tier:'cn_mid' },
+  cn_other:   { eff:0.81, tphRel:0.62, label:'China other',  defaultDie:'flat', tier:'cn_budget' },
+  in_other:   { eff:0.79, tphRel:0.60, label:'India local',  defaultDie:'flat', tier:'cn_budget' }
+};
+
+// ══════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.hnav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'shortlist') renderShortlist();
+}
+
+// ══════════════════════════════════
+// ORIGIN CHANGE
+// ══════════════════════════════════
+function originChange() {
+  const key = document.getElementById('v-origin').value;
+  const vnd = VENDOR[key];
+  if (vnd) document.getElementById('v-dietype').value = vnd.defaultDie;
+  validate();
+}
+
+// ══════════════════════════════════
+// CORE VALIDATION
+// ══════════════════════════════════
+function validate() {
+  const kw          = parseInt(document.getElementById('v-kw').value);
+  const claimedTph  = parseFloat(document.getElementById('v-tph').value);
+  const price       = parseInt(document.getElementById('v-price').value);
+  const matKey      = document.getElementById('v-mat').value;
+  const mc          = parseInt(document.getElementById('v-mc').value);
+  const ps          = parseFloat(document.getElementById('v-ps').value);
+  const ld          = parseFloat(document.getElementById('v-ld').value);
+  const dieD        = parseInt(document.getElementById('v-died').value);
+  const trans       = parseFloat(document.getElementById('v-trans').value);
+  const originKey   = document.getElementById('v-origin').value;
+  const dieType     = document.getElementById('v-dietype').value;
+  const vendor      = document.getElementById('v-vendor').value || 'Unnamed vendor';
+  const model       = document.getElementById('v-model').value || '—';
+
+  const mat = MAT[matKey];
+  const vnd = VENDOR[originKey];
+
+  const secLow = mat.sec[0];
+  const secHigh = mat.sec[1];
+  const secMid = (secLow + secHigh) / 2;
+
+  // Moisture penalty
+  let mcPenalty = 0;
+  if (mc < 10) mcPenalty = (10 - mc) * 0.07;
+  else if (mc > 14) mcPenalty = (mc - 14) * 0.055;
+
+  // Particle size penalty
+  let psPenalty = 0;
+  if (ps > 8) psPenalty = (ps - 8) * 0.04;
+  else if (ps < 3) psPenalty = (3 - ps) * 0.03;
+
+  // L/D check
+  const ldLow = ld < mat.ldMin;
+  const ldHigh = ld > mat.ldMax + 2;
+
+  // Raw throughput calculation
+  const usablePower = kw * trans * (1 - mcPenalty - psPenalty);
+  const rawTphLow = usablePower / secHigh;
+  const rawTphHigh = usablePower / secLow;
+  const rawTphMid = usablePower / secMid;
+
+  // Flat die cap at ~1.5 t/h
+  const flatCap = dieType === 'flat' ? Math.min(rawTphMid, 1.5) : rawTphMid;
+  const adjTph = flatCap;
+  const adjLow = dieType === 'flat' ? Math.min(rawTphLow, 1.5) : rawTphLow;
+  const adjHigh = dieType === 'flat' ? Math.min(rawTphHigh, 1.8) : rawTphHigh;
+
+  const overstate = Math.max(0, Math.round((1 - adjTph / claimedTph) * 100));
+  const credPct = Math.min(100, Math.round((adjTph / claimedTph) * 100));
+  const pricePerTph = adjTph > 0 ? (price / adjTph).toFixed(1) : '—';
+
+  // Build flags
+  const flags = [];
+  if (dieType === 'flat' && rawTphMid > 1.5)
+    flags.push({ sev:'bad', text:`Flat die ceiling ~1.5 t/h — physics gives ${rawTphMid.toFixed(2)} t/h but flat die cannot achieve it` });
+  if (dieType === 'flat' && mat.fibre === 'long')
+    flags.push({ sev:'bad', text:`Flat die + long-fibre biomass (${mat.label}) = high blockage risk — strongly prefer ring die` });
+  if (overstate > 40)
+    flags.push({ sev:'bad', text:`Claimed ${claimedTph} t/h is overstated by ~${overstate}% — physics maximum is ${adjTph.toFixed(2)} t/h on ${mat.label}` });
+  else if (overstate > 20)
+    flags.push({ sev:'warn', text:`Claimed ${claimedTph} t/h overstated by ~${overstate}% — negotiate or demand feedstock trial` });
+  if (ldLow)
+    flags.push({ sev:'bad', text:`L/D ${ld}:1 is below minimum ${mat.ldMin}:1 for ${mat.label} — pellets will crumble in transit` });
+  if (ldHigh)
+    flags.push({ sev:'warn', text:`L/D ${ld}:1 is very high — excess kWh/t and elevated blocked-die risk` });
+  if (mc < 8 || mc > 18)
+    flags.push({ sev:'bad', text:`Moisture ${mc}% is outside safe operating window (8–18%) — severe throughput and quality issues` });
+  else if (mc < 10 || mc > 14)
+    flags.push({ sev:'warn', text:`Moisture ${mc}% sub-optimal — penalty applied: ${Math.round(mcPenalty * 100)}% throughput loss` });
+  if (ps > 8)
+    flags.push({ sev:'bad', text:`Particle size ${ps}mm too coarse — hammer mill should reduce to <6mm before pellet mill` });
+  if (vnd.tier === 'cn_budget' && kw > 185)
+    flags.push({ sev:'warn', text:`Budget-tier manufacturer at ${kw}kW — verify gearbox brand (demand Siemens/SEW/Flender nameplate)` });
+  if (vnd.defaultDie === 'flat' && dieType === 'ring')
+    flags.push({ sev:'warn', text:`${vnd.label} default is flat die — demand ring die cross-section engineering drawing in writing` });
+
+  // Score
+  let score = 100;
+  if (overstate > 40) score -= 35;
+  else if (overstate > 25) score -= 20;
+  else if (overstate > 10) score -= 10;
+  if (dieType === 'flat' && rawTphMid > 1.5) score -= 20;
+  if (ldLow) score -= 15;
+  if (ldHigh) score -= 8;
+  if (mcPenalty > 0.10) score -= 10;
+  if (psPenalty > 0.05) score -= 8;
+  if (flags.filter(f => f.sev === 'bad').length >= 3) score = Math.min(score, 35);
+  score = Math.max(0, Math.min(100, score));
+
+  const scoreColor = score >= 75 ? 'var(--green)' : score >= 50 ? 'var(--amber)' : 'var(--red)';
+  const scoreClass = score >= 75 ? 'PASS' : score >= 50 ? 'CAUTION' : 'FAIL';
+  const verdictClass = score >= 75 ? 'verdict-ok' : score >= 50 ? 'verdict-warn' : 'verdict-bad';
+  let verdictText = '';
+  if (score >= 75)
+    verdictText = `Physics supports this machine for ${mat.label}. Real output ${adjLow.toFixed(2)}–${adjHigh.toFixed(2)} t/h. Proceed to contract — ensure performance guarantee clause specifying minimum TPH on your feedstock.`;
+  else if (score >= 50)
+    verdictText = `Moderate concerns. Real output will be ${adjLow.toFixed(2)}–${adjHigh.toFixed(2)} t/h on ${mat.label}, not the claimed ${claimedTph.toFixed(1)} t/h. Negotiate price down or demand a minimum 4-hour feedstock-specific trial run before deposit.`;
+  else
+    verdictText = `Significant red flags. Physics allows at most ${adjLow.toFixed(2)}–${adjHigh.toFixed(2)} t/h on ${mat.label} from this configuration. At ₹${price}L you are overpaying for underperformance. Push back hard on claim, price, or die type — or walk away.`;
+
+  const flatNote = dieType === 'flat' && rawTphMid > 1.5 ? `<div style="font-family:var(--mono);font-size:10px;color:var(--red);margin-top:2px">Flat die capped ≤1.5 t/h</div>` : '';
+
+  // Annual estimates
+  const daily16 = adjTph * 16 * 0.78;
+  const annual280 = daily16 * 280;
+  const rev = annual280 * 8500;
+
+  document.getElementById('results-panel').innerHTML = `
+    <div class="anim">
+      <div class="score-block">
+        <div class="score-circle" style="border-color:${scoreColor}">
+          <span class="score-number" style="color:${scoreColor}">${score}</span>
+        </div>
+        <div class="score-info">
+          <div class="score-verdict" style="color:${scoreColor}">${scoreClass} — ${vendor}</div>
+          <div class="score-sub">${model} · ${document.getElementById('v-dietype').options[document.getElementById('v-dietype').selectedIndex].text.split('—')[0].trim()} · ${kw}kW · ₹${price}L</div>
+          <div style="margin-top:8px">
+            <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:3px">Validation score</div>
+            <div class="bar-wrap" style="width:200px"><div class="bar" style="width:${score}%;background:${scoreColor}"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="g4" style="margin-bottom:1rem">
+        <div class="metric ${score>=75?'metric-green':score>=50?'metric-amber':'metric-red'}">
+          <div class="metric-label">Real TPH (mid)</div>
+          <div class="metric-value">${adjTph.toFixed(2)}</div>
+          <div class="metric-sub">t/h on ${mat.label}${flatNote}</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">TPH range (SEC band)</div>
+          <div class="metric-value" style="color:var(--text)">${adjLow.toFixed(2)}–${adjHigh.toFixed(2)}</div>
+          <div class="metric-sub">t/h pessimistic–optimistic</div>
+        </div>
+        <div class="metric ${overstate>30?'metric-red':overstate>15?'metric-amber':'metric-green'}">
+          <div class="metric-label">Overstatement</div>
+          <div class="metric-value">${overstate > 0 ? '-' + overstate + '%' : '±0%'}</div>
+          <div class="metric-sub">vs claimed ${claimedTph.toFixed(1)} t/h</div>
+        </div>
+        <div class="metric metric-blue">
+          <div class="metric-label">₹ per real t/h cap</div>
+          <div class="metric-value">₹${pricePerTph}L</div>
+          <div class="metric-sub">CapEx efficiency</div>
+        </div>
+      </div>
+
+      <div class="g3" style="margin-bottom:1rem">
+        <div class="metric">
+          <div class="metric-label">Daily (16h · 78% util)</div>
+          <div class="metric-value" style="color:var(--text)">${Math.round(daily16)}</div>
+          <div class="metric-sub">tonnes/day</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Annual (280 days)</div>
+          <div class="metric-value" style="color:var(--text)">${(annual280/1000).toFixed(1)}k</div>
+          <div class="metric-sub">tonnes/year</div>
+        </div>
+        <div class="metric metric-green">
+          <div class="metric-label">Revenue @₹8,500/t</div>
+          <div class="metric-value">₹${(rev/10000000).toFixed(1)}Cr</div>
+          <div class="metric-sub">indicative/year</div>
+        </div>
+      </div>
+
+      <div class="verdict ${verdictClass}">
+        <div class="verdict-title">Verdict</div>
+        <p>${verdictText}</p>
+      </div>
+
+      ${flags.length > 0 ? `
+      <div class="panel" style="margin-bottom:1rem">
+        <div class="panel-header">
+          <span class="panel-title">Flags (${flags.length})</span>
+        </div>
+        <div class="panel-body" style="padding-top:0.75rem;padding-bottom:0.75rem">
+          <div class="flag-list">
+            ${flags.map(f => `
+              <div class="flag-item">
+                <div class="flag-dot flag-dot-${f.sev}"></div>
+                <div class="flag-text">${f.text}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>` : ''}
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="addToShortlist(${score},'${esc(vendor)}','${esc(model)}',${kw},${claimedTph},${adjTph.toFixed(3)},${adjLow.toFixed(3)},${adjHigh.toFixed(3)},${price},'${originKey}','${matKey}','${dieType}',${overstate},${JSON.stringify(flags)})">
+          + Add to shortlist
+        </button>
+        <button class="btn" onclick="exportMachine(${score},'${esc(vendor)}','${esc(model)}',${kw},${claimedTph},${adjTph.toFixed(3)},${adjLow.toFixed(3)},${adjHigh.toFixed(3)},${price},'${originKey}','${matKey}','${dieType}',${overstate},${JSON.stringify(flags)})">
+          ↓ Export report
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function esc(s) { return String(s).replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g,''); }
+
+// ══════════════════════════════════
+// SHORTLIST (localStorage)
+// ══════════════════════════════════
+function loadShortlist() {
+  try { return JSON.parse(localStorage.getItem('pellet_shortlist') || '[]'); }
+  catch(e) { return []; }
+}
+
+function saveShortlist(items) {
+  localStorage.setItem('pellet_shortlist', JSON.stringify(items));
+  document.getElementById('sl-badge').textContent = items.length;
+}
+
+function addToShortlist(score, vendor, model, kw, claimed, adj, low, high, price, origin, mat, die, overstate, flags) {
+  const items = loadShortlist();
+  items.push({ id: 'M' + Date.now(), score, vendor, model, kw, claimed, adj: +adj, low: +low, high: +high, price, origin, mat, die, overstate, flags, ts: Date.now() });
+  saveShortlist(items);
+  // Flash badge
+  const badge = document.getElementById('sl-badge');
+  badge.style.background = 'var(--green)';
+  badge.style.color = 'var(--bg)';
+  setTimeout(() => { badge.style.background = ''; badge.style.color = ''; }, 1200);
+}
+
+function removeFromShortlist(id) {
+  const items = loadShortlist().filter(i => i.id !== id);
+  saveShortlist(items);
+  renderShortlist();
+}
+
+function clearShortlist() {
+  if (!confirm('Clear all shortlisted machines?')) return;
+  saveShortlist([]);
+  renderShortlist();
+}
+
+function renderShortlist() {
+  const items = loadShortlist();
+  document.getElementById('sl-badge').textContent = items.length;
+
+  if (!items.length) {
+    document.getElementById('sl-list').innerHTML = `<div class="empty-state">No machines shortlisted yet.<br>Validate a machine in the Validator tab and click "+ Add to shortlist".</div>`;
+    document.getElementById('sl-compare').innerHTML = '';
+    return;
+  }
+
+  document.getElementById('sl-list').innerHTML = items.map(m => {
+    const matL = MAT[m.mat] ? MAT[m.mat].label : m.mat;
+    const vndL = VENDOR[m.origin] ? VENDOR[m.origin].label : m.origin;
+    const cls = m.score >= 75 ? 'ok' : m.score >= 50 ? 'warn' : 'bad';
+    const scoreColor = m.score >= 75 ? 'var(--green)' : m.score >= 50 ? 'var(--amber)' : 'var(--red)';
+    const badgeCls = m.score >= 75 ? 'badge-ok' : m.score >= 50 ? 'badge-warn' : 'badge-bad';
+    const pricePerTph = m.adj > 0 ? (m.price / m.adj).toFixed(1) : '—';
+    const badFlags = (m.flags || []).filter(f => f.sev === 'bad').length;
+    const warnFlags = (m.flags || []).filter(f => f.sev === 'warn').length;
+    return `
+      <div class="sl-card ${cls}">
+        <div class="sl-score-num" style="color:${scoreColor}">${m.score}</div>
+        <div class="sl-body">
+          <div class="sl-name">${m.vendor} — ${m.model || '(no model)'}</div>
+          <div class="sl-sub">${m.kw}kW · ${m.die} die · ${matL} · ₹${m.price}L · ${vndL}</div>
+          <div class="sl-sub" style="margin-top:3px">
+            Real TPH: <strong style="color:var(--text)">${m.adj.toFixed(2)} t/h</strong>
+            (${m.low.toFixed(2)}–${m.high.toFixed(2)}) vs claimed ${m.claimed.toFixed(1)} t/h
+            &nbsp;·&nbsp; <span style="color:${m.overstate>25?'var(--red)':'var(--amber)'}">-${m.overstate}% overstated</span>
+            &nbsp;·&nbsp; <span style="color:var(--blue)">₹${pricePerTph}L/real t/h</span>
+          </div>
+          <div class="sl-tags">
+            <span class="badge ${badgeCls}">${m.score >= 75 ? 'PASS' : m.score >= 50 ? 'CAUTION' : 'FAIL'}</span>
+            <span class="badge badge-gray">${m.die} die</span>
+            ${badFlags > 0 ? `<span class="badge badge-bad">${badFlags} critical flag${badFlags>1?'s':''}</span>` : ''}
+            ${warnFlags > 0 ? `<span class="badge badge-warn">${warnFlags} warning${warnFlags>1?'s':''}</span>` : ''}
+          </div>
+        </div>
+        <button class="sl-remove" onclick="removeFromShortlist('${m.id}')" title="Remove">×</button>
+      </div>
+    `;
+  }).join('');
+
+  // Compare summary
+  if (items.length > 1) {
+    const best = items.reduce((a, b) => a.score > b.score ? a : b);
+    const bestVal = items.reduce((a, b) => (a.price / a.adj) < (b.price / b.adj) ? a : b);
+    const totalTph = items.reduce((s, m) => s + m.adj, 0);
+    document.getElementById('sl-compare').innerHTML = `
+      <div class="compare-banner">
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.875rem">Shortlist summary — ${items.length} machines</div>
+        <div class="g3" style="margin-bottom:1rem">
+          <div class="metric metric-green">
+            <div class="metric-label">Highest score</div>
+            <div class="metric-value">${best.score}</div>
+            <div class="metric-sub">${best.vendor} ${best.model || ''}</div>
+          </div>
+          <div class="metric metric-blue">
+            <div class="metric-label">Best ₹/real t/h</div>
+            <div class="metric-value">₹${(bestVal.price/bestVal.adj).toFixed(1)}L</div>
+            <div class="metric-sub">${bestVal.vendor}</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Combined real TPH</div>
+            <div class="metric-value" style="color:var(--text)">${totalTph.toFixed(2)}</div>
+            <div class="metric-sub">if all purchased</div>
+          </div>
+        </div>
+        <button class="btn" onclick="exportShortlist()">↓ Export full shortlist as CSV</button>
+      </div>
+    `;
+  } else {
+    document.getElementById('sl-compare').innerHTML = '';
+  }
+}
+
+// ══════════════════════════════════
+// EXPORT
+// ══════════════════════════════════
+function exportMachine(score, vendor, model, kw, claimed, adj, low, high, price, origin, mat, die, overstate, flags) {
+  const matL = MAT[mat] ? MAT[mat].label : mat;
+  const vndL = VENDOR[origin] ? VENDOR[origin].label : origin;
+  const lines = [
+    'PELLET MACHINE VALIDATION REPORT',
+    '==================================',
+    `Vendor: ${vendor}`,
+    `Model: ${model}`,
+    `Origin: ${vndL}`,
+    `Die type: ${die}`,
+    `Motor: ${kw} kW`,
+    `Claimed TPH: ${claimed} t/h`,
+    `Real TPH (mid): ${(+adj).toFixed(2)} t/h`,
+    `Real TPH range: ${(+low).toFixed(2)}–${(+high).toFixed(2)} t/h`,
+    `Overstatement: -${overstate}%`,
+    `Price: ₹${price}L`,
+    `₹ per real t/h: ₹${price > 0 && adj > 0 ? (price/adj).toFixed(1) : '—'}L`,
+    `Feedstock: ${matL}`,
+    `Validation score: ${score}/100`,
+    '',
+    'FLAGS:',
+    ...(flags || []).map(f => `[${f.sev.toUpperCase()}] ${f.text}`),
+    '',
+    `Generated: ${new Date().toLocaleString('en-IN')}`
+  ];
+  const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `pellet-validation-${vendor.replace(/\s/g,'-')}-${Date.now()}.txt`;
+  a.click();
+}
+
+function exportShortlist() {
+  const items = loadShortlist();
+  if (!items.length) return;
+  const header = 'Vendor,Model,Origin,Die,kW,Claimed t/h,Real t/h,Low t/h,High t/h,Price (L),₹/t/h,Feedstock,Score,Overstate%,Bad Flags,Warn Flags';
+  const rows = items.map(m => {
+    const matL = MAT[m.mat] ? MAT[m.mat].label : m.mat;
+    const vndL = VENDOR[m.origin] ? VENDOR[m.origin].label : m.origin;
+    const bf = (m.flags||[]).filter(f=>f.sev==='bad').length;
+    const wf = (m.flags||[]).filter(f=>f.sev==='warn').length;
+    return [m.vendor,m.model,vndL,m.die,m.kw,m.claimed,m.adj.toFixed(2),m.low.toFixed(2),m.high.toFixed(2),m.price,(m.price/m.adj).toFixed(1),matL,m.score,m.overstate,bf,wf].join(',');
+  });
+  const csv = [header, ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `pellet-shortlist-${Date.now()}.csv`;
+  a.click();
+}
+
+// ══════════════════════════════════
+// INIT
+// ══════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('sl-badge').textContent = loadShortlist().length;
+  validate();
+});
+</script>
+</body>
+</html>

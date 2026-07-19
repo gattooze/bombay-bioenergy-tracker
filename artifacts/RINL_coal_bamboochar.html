@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RINL Tender Analysis — Coal Parameters vs Bamboo Char</title>
+<style>
+:root{
+  --bg:#0f1210;--panel:#161b18;--panel2:#1c2220;--border:#2a322d;
+  --text:#e8ece8;--dim:#9aa69e;--accent:#5dcaa5;--warn:#ef9f27;
+  --danger:#f0997b;--info:#85b7eb;--mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);margin:0;padding:0;line-height:1.5;}
+.wrap{max-width:1280px;margin:0 auto;padding:24px 20px 60px;}
+.masthead{border-bottom:2px solid var(--accent);padding-bottom:14px;margin-bottom:20px;}
+.masthead .tag{color:var(--accent);font-size:11px;letter-spacing:2px;text-transform:uppercase;}
+.masthead h1{font-size:20px;margin:6px 0 4px;font-weight:600;}
+.masthead .sub{color:var(--dim);font-size:12px;}
+.tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;}
+.tab{background:var(--panel);border:1px solid var(--border);color:var(--dim);padding:8px 14px;font-size:12px;cursor:pointer;border-radius:3px;transition:all .15s;}
+.tab:hover{border-color:var(--accent);color:var(--text);}
+.tab.active{background:var(--accent);color:#06241a;border-color:var(--accent);font-weight:600;}
+.panel{display:none;}
+.panel.active{display:block;}
+h2.sect{font-size:14px;color:var(--accent);border-left:3px solid var(--accent);padding-left:10px;margin:22px 0 12px;text-transform:uppercase;letter-spacing:1px;}
+p,li{font-size:12.5px;color:var(--text);}
+.callout{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--warn);padding:11px 14px;font-size:12.5px;margin:12px 0;}
+.callout.good{border-left-color:var(--accent);}
+.callout.bad{border-left-color:var(--danger);}
+table{width:100%;border-collapse:collapse;font-size:11.5px;margin:10px 0 18px;}
+th{background:var(--panel2);color:var(--accent);text-align:left;padding:8px 10px;border:1px solid var(--border);font-size:11px;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;}
+td{padding:7px 10px;border:1px solid var(--border);color:var(--text);vertical-align:top;}
+tr:nth-child(even) td{background:#13181590;}
+.g{color:#5dcaa5;font-weight:600;}   /* green = bamboo meets spec */
+.y{color:#ef9f27;font-weight:600;}   /* yellow = partial / conditional */
+.r{color:#f0997b;font-weight:600;}   /* red = bamboo fails */
+.na{color:#9aa69e;}                  /* grey = not applicable */
+.badge{display:inline-block;font-size:10px;padding:1px 7px;border-radius:10px;margin-left:4px;vertical-align:middle;}
+.bg{background:#1a3329;color:#5dcaa5;border:1px solid #5dcaa5;}
+.by{background:#322508;color:#ef9f27;border:1px solid #ef9f27;}
+.br{background:#321810;color:#f0997b;border:1px solid #f0997b;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0;}
+.box{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:14px;}
+.box .k{color:var(--accent);font-size:11px;letter-spacing:1px;text-transform:uppercase;}
+.box .v{font-size:18px;font-weight:600;margin:6px 0 4px;}
+.box .d{font-size:11.5px;color:var(--dim);}
+.src{font-size:10.5px;color:var(--dim);border-top:1px solid var(--border);margin-top:24px;padding-top:10px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="masthead">
+  <div class="tag">Bombay Bioenergy — Tender Analysis & Market Intelligence</div>
+  <h1>RINL GEM/2025/B/6850356 — Tender Clarification + Coal Parameters vs Bamboo Char</h1>
+  <div class="sub">What this tender is · PCI/Coking coal parameter specs · Industry-accepted levels · Bamboo char achievability</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-p="p1">1 · What the tender is</button>
+  <button class="tab" data-p="p2">2 · PCI coal parameters</button>
+  <button class="tab" data-p="p3">3 · Coking coal parameters</button>
+  <button class="tab" data-p="p4">4 · Bamboo char vs PCI specs</button>
+  <button class="tab" data-p="p6">5 · Process — where it's used</button>
+  <button class="tab" data-p="p5">6 · Strategic verdict</button>
+</div>
+
+<!-- ===== PANEL 1 ===== -->
+<div class="panel active" id="p1">
+<h2 class="sect">What this tender actually is — and why it is NOT relevant to Bombay Bioenergy</h2>
+
+<div class="callout bad">
+<b>Bottom line up front:</b> RINL GEM/2025/B/6850356 is a <b>lab services / sampling agency contract</b> — not a coal/fuel purchase tender. RINL is hiring a certified testing firm (Public Analyst) to physically sample incoming vessels of imported coal and iron ore pellets at Vizag and Gangavaram ports, test them in a NABL-accredited lab, and report results to RINL. Bombay Bioenergy cannot and should not bid on this. Zero commercial relevance to selling bamboo char or pellets.
+</div>
+
+<div class="grid2">
+<div class="box">
+  <div class="k">Tender type</div>
+  <div class="v" style="font-size:14px;">Third-party inspection / sampling services</div>
+  <div class="d">RINL is NOT buying coal or fuel. It is hiring an analyst firm to verify quality of coal it is already importing.</div>
+</div>
+<div class="box">
+  <div class="k">Who can bid</div>
+  <div class="v" style="font-size:14px;">NABL-accredited labs</div>
+  <div class="d">Mandatory NABL accreditation covering all test parameters. Minimum ₹15.18L average annual turnover and one prior similar work ≥₹25.28L in last 5 years.</div>
+</div>
+</div>
+
+<h2 class="sect">What RINL is actually importing — the coal that IS the market opportunity</h2>
+<p>The <b>useful intelligence</b> buried in this tender is what RINL is importing and in what quantities, which signals the scale of their fuel-sourcing operation and — critically — what quality specifications any future bamboo-based PCI substitute would need to meet.</p>
+
+<table>
+<tr><th>Item</th><th>Commodity</th><th>Annual indicative quantity</th><th>Ports</th></tr>
+<tr><td>Item 1</td><td>Coking coal (imported)</td><td><b>50,32,000 MT/year</b> (~5 million MT)</td><td>Gangavaram (GPL) + Vizag Port (VPT)</td></tr>
+<tr><td>Item 2</td><td>PCI coal + Imported Boiler Coal</td><td><b>12,88,000 MT/year</b> PCI + <b>3,44,000 MT/year</b> IBC</td><td>GPL + VPT</td></tr>
+<tr><td>Item 3</td><td>Iron ore pellets</td><td><b>3,89,000 MT/year</b></td><td>GPL + VPT</td></tr>
+</table>
+
+<div class="callout good">
+<b>The real strategic signal:</b> RINL/VSP imports ~12.88 lakh MT of PCI coal per year. Even a 5% substitution with bamboo biochar/char would be ~64,400 MT/year. At typical PCI coal import prices of $150–200/MT, that market is $9.6–12.8M/year at RINL alone — and RINL is one of four major Indian integrated steel plants. The tender tells you the scale of the opportunity, even though this specific tender is not the entry point.
+</div>
+
+<h2 class="sect">Testing standards referenced — relevant context</h2>
+<table>
+<tr><th>Standard</th><th>What it covers</th></tr>
+<tr><td>ISO 589-2008</td><td>Total moisture in hard coal</td></tr>
+<tr><td>ISO 1171-2010</td><td>Ash content</td></tr>
+<tr><td>ISO 562-2010</td><td>Volatile matter in hard coal</td></tr>
+<tr><td>ISO 334-2013</td><td>Total sulfur</td></tr>
+<tr><td>ISO 5074-2015 / ASTM D409</td><td>Hardgrove Grindability Index (HGI)</td></tr>
+<tr><td>ISO 1928-2009 / ASTM D5865</td><td>Gross Calorific Value (GCV)</td></tr>
+<tr><td>ISO 7404-5 / ASTM D2798</td><td>Vitrinite reflectance (coal rank)</td></tr>
+<tr><td>ISO 501-2012 / ASTM D720</td><td>Crucible Swelling Number (coking propensity)</td></tr>
+<tr><td>ISO 540-2008 / ASTM D1857</td><td>Ash Fusion Temperature</td></tr>
+<tr><td>ISO 10329 / ASTM D2639</td><td>Gieseler Plastometer (plastic properties of coking coal)</td></tr>
+</table>
+<p class="note" style="font-size:11px;color:var(--dim);">These are the same standards any buyer of bamboo-based PCI char would apply. If BB ever sells into steel plants, these are the test methods your product will be evaluated against.</p>
+</div>
+
+<!-- ===== PANEL 2 ===== -->
+<div class="panel" id="p2">
+<h2 class="sect">PCI coal parameters — what RINL tests, what acceptable levels are, why each matters</h2>
+<p>PCI (Pulverized Coal Injection) coal is injected directly into the blast furnace tuyeres as a partial substitute for coke. Unlike coking coal, it does not need to form coke — it needs to <b>combust efficiently, grind easily, and not introduce harmful impurities into the hot metal</b>. This makes PCI specs in some ways more accessible for alternative carbon sources like bamboo char.</p>
+
+<table>
+<tr>
+  <th style="width:12%">Parameter</th>
+  <th style="width:10%">Unit</th>
+  <th style="width:16%">RINL tests per tender</th>
+  <th style="width:20%">Acceptable / target level (Indian BF practice)</th>
+  <th style="width:10%">Rejection level</th>
+  <th style="width:32%">Why it matters in blast furnace</th>
+</tr>
+<tr>
+  <td><b>Total Moisture</b></td><td>%</td>
+  <td>Yes (ISO 589)</td>
+  <td class="y">&lt;10% (target &lt;8%)</td>
+  <td class="r">&gt;12%</td>
+  <td>Moisture reduces effective calorific input, causes steam generation in tuyeres, lowers raceway flame temp (RAFT). Every 1% moisture above norm costs injectable rate.</td>
+</tr>
+<tr>
+  <td><b>Inherent Moisture</b></td><td>%</td>
+  <td>Yes (ISO 11722)</td>
+  <td class="y">2–6% typical for imported PCI</td>
+  <td>—</td>
+  <td>Diagnostic — separates total moisture into inherent (fixed by coal rank) vs surface moisture (handling). Helps understand storage/drying requirements.</td>
+</tr>
+<tr>
+  <td><b>Ash</b></td><td>%</td>
+  <td>Yes (ISO 1171)</td>
+  <td class="g">&lt;12% (preferred &lt;10%); imported HV PCI typically 8–12%</td>
+  <td class="r">&gt;15%</td>
+  <td>Ash enters slag — every 1% increase in PCI ash content increases slag volume, raises coke rate, reduces productivity. Low ash is critically valuable. Chinese PCI anthracite benchmark is 11% ash.</td>
+</tr>
+<tr>
+  <td><b>Volatile Matter (VM)</b></td><td>%</td>
+  <td>Yes (ISO 562)</td>
+  <td class="y">High volatile PCI: 28–38%; Low volatile PCI (anthracite): 7–16%</td>
+  <td>Outside 7–40% range flags off-spec</td>
+  <td>High VM means faster ignition, better early combustion — good for raceway ignition. But too high VM increases blast momentum, creates more coke fines. Low VM = higher coke replacement ratio but harder to ignite. Indian BFs typically blend HV and LV coals.</td>
+</tr>
+<tr>
+  <td><b>Fixed Carbon (FC)</b></td><td>%</td>
+  <td>Yes (ISO 562)</td>
+  <td class="g">PCI target: 60–80%+ depending on grade. FC/VM ratio (fuel ratio) is key — higher fuel ratio = better coke substitution</td>
+  <td>—</td>
+  <td>FC is the actual heat-bearing carbon. Higher FC = higher coke replacement rate (kg PCI per kg coke saved). The coke substitution ratio depends on FC content of injected material.</td>
+</tr>
+<tr>
+  <td><b>Sulphur</b></td><td>%</td>
+  <td>Yes (ISO 334)</td>
+  <td class="g">&lt;0.8% (preferred &lt;0.6%); Australian Queensland LV PCI benchmark: 0.5–0.7%</td>
+  <td class="r">&gt;1.0%</td>
+  <td>Sulfur transfers to hot metal → makes steel brittle. BF can manage some S via slag basicity but high-S PCI directly raises hot metal S, requiring extra desulfurisation cost downstream. Strict hard limit.</td>
+</tr>
+<tr>
+  <td><b>HGI (Hardgrove Grindability Index)</b></td><td>Number</td>
+  <td>Yes (ISO 5074)</td>
+  <td class="y">40–70 preferred; 50–65 optimal for most PCI mills. Coals with HGI &lt;40 are hard to grind, &gt;80 risk over-grinding.</td>
+  <td class="r">HGI &lt;35 causes mill bottleneck</td>
+  <td>HGI determines mill capacity and power consumption. The higher the HGI, the softer and easier to grind. It is the primary parameter controlling pulverizer throughput — if HGI is limiting, injection rate is limited even if coal quality is excellent.</td>
+</tr>
+<tr>
+  <td><b>GCV (Gross Calorific Value)</b></td><td>kcal/kg</td>
+  <td>Yes (ISO 1928)</td>
+  <td class="g">Imported PCI: 6,500–7,500 kcal/kg; LV anthracite-grade: ~7,500 kcal/kg (31 MJ/kg)</td>
+  <td class="r">&lt;5,500 kcal/kg typically rejected</td>
+  <td>Direct energy input to raceway. Higher GCV = more heat per kg injected = better coke substitution economics. GCV directly determines the replacement ratio and overall cost-benefit of PCI vs coke.</td>
+</tr>
+<tr>
+  <td><b>NCV / Net Calorific Value (ARB)</b></td><td>kcal/kg</td>
+  <td>Yes — IBC only (ISO 1928)</td>
+  <td>~100–150 kcal/kg below GCV depending on moisture and hydrogen</td>
+  <td>—</td>
+  <td>NCV accounts for latent heat of water formed during combustion. More relevant for boiler coal (IBC) than PCI. Used for billing in power generation applications.</td>
+</tr>
+<tr>
+  <td><b>Phosphorus</b></td><td>%</td>
+  <td>Yes — PCI only (ISO 622)</td>
+  <td class="g">&lt;0.04% (PCI); &lt;0.035% preferred</td>
+  <td class="r">&gt;0.05%</td>
+  <td>Phosphorus transfers to pig iron and cannot be removed in BF — it passes through to steel, causing brittleness (cold shortness). Extremely sensitive parameter for high-grade steel plants. Hard cap.</td>
+</tr>
+<tr>
+  <td><b>Total Alkalies (Na₂O+K₂O on ash)</b></td><td>%</td>
+  <td>Yes — PCI only (ISO 13605)</td>
+  <td class="g">&lt;1.5% on ash basis; total alkali input to BF &lt;3 kg/tHM</td>
+  <td class="r">&gt;3% on ash</td>
+  <td>Alkalis (Na, K) catalyze coke degradation in BF shaft, attack the brick lining, and disrupt burden permeability. They circulate and concentrate in the furnace — a small alkali input has outsized long-term operational impact.</td>
+</tr>
+<tr>
+  <td><b>Chlorine</b></td><td>%</td>
+  <td>Yes — PCI only (ISO 587)</td>
+  <td class="g">&lt;0.1% (strict); some specs allow up to 0.2%</td>
+  <td class="r">&gt;0.3%</td>
+  <td>Chlorine causes severe corrosion of equipment, fouling of regenerators and stoves, and damages process gas handling systems. Especially critical in PCI because pulverized coal contacts metal surfaces at high velocity. Limits are very strict.</td>
+</tr>
+<tr>
+  <td><b>Ash Fusion Temperature (AFT)</b></td><td>°C</td>
+  <td>Yes (ISO 540)</td>
+  <td class="g">Initial Deformation Temp (IDT) &gt;1,200°C preferred; Fluid Temperature &gt;1,400°C</td>
+  <td class="r">IDT &lt;1,100°C raises slag-sticking / blockage risk</td>
+  <td>If PCI ash melts at low temperature, it can deposit on tuyere tips, block injection lances, or cause scaffolding in the BF lower zone. High AFT means ash remains granular and flows with hot gas rather than sticking. Alkaline ash (high CaO, MgO) tends to melt at lower temps.</td>
+</tr>
+<tr>
+  <td><b>Size (0–50mm)</b></td><td>%</td>
+  <td>Yes (ISO 1953)</td>
+  <td>Feed coal to pulverizer must be &lt;50mm for equipment protection</td>
+  <td>+50mm fraction rejected</td>
+  <td>Oversize material damages pulverizer components. Run-of-mine coal is typically crushed to –50mm before delivery. For bamboo char, this is not an issue — char is inherently brittle and easy to size.</td>
+</tr>
+<tr>
+  <td><b>Minus 25mm</b></td><td>%</td>
+  <td>PCI only (ISO 1953)</td>
+  <td>Informational — mill feed sizing</td>
+  <td>—</td>
+  <td>Describes particle size distribution of incoming coal before pulverization. Impacts mill efficiency and required grinding energy.</td>
+</tr>
+<tr>
+  <td><b>Minus 100 Mesh</b></td><td>%</td>
+  <td>PCI only (ISO 1953)</td>
+  <td>Post-milling: &gt;80% through 80μm (200 mesh) is the injection standard</td>
+  <td>—</td>
+  <td>Final pulverized coal fineness for injection. Coarser particles combust incompletely in the raceway, producing unburnt char (UBC) that accumulates in deadman and reduces permeability.</td>
+</tr>
+</table>
+
+<div class="callout">
+<b>Summary of PCI coal quality hierarchy:</b> Sulphur and Phosphorus are absolute hard limits (safety/quality of steel). Ash and GCV drive economics. HGI determines operational throughput. AFT, Alkalies, and Chlorine determine long-term furnace health. VM/FC ratio determines coke substitution efficiency.
+</div>
+</div>
+
+<!-- ===== PANEL 3 ===== -->
+<div class="panel" id="p3">
+<h2 class="sect">Coking coal parameters — full breakdown</h2>
+<p>Coking coal is fundamentally different from PCI coal — it must form <b>metallurgical coke</b> in the coke ovens, which means it needs specific plastic/rheological properties when heated to 1000°C+. This is why coking coal specs include parameters like CSN, Gieseler Plastometer, vitrinite reflectance, and Total Dilation — none of which are relevant to PCI. Bamboo char is completely irrelevant to the coking coal category.</p>
+
+<table>
+<tr>
+  <th style="width:13%">Parameter</th>
+  <th style="width:9%">Unit</th>
+  <th style="width:18%">Acceptable range (Indian BF practice)</th>
+  <th style="width:10%">Premium coking coal benchmark</th>
+  <th style="width:50%">Why it matters</th>
+</tr>
+<tr>
+  <td><b>Total Moisture</b></td><td>%</td>
+  <td class="y">&lt;9% typical; Australian HCC typically 7–9%</td>
+  <td>7–8%</td>
+  <td>Moisture impacts bulk density in coke ovens, heat requirements for coking, and reduces effective yield.</td>
+</tr>
+<tr>
+  <td><b>Ash</b></td><td>%</td>
+  <td class="g">&lt;10% for prime hard coking coal (HCC); &lt;18% cut-off for all Indian coking coal processing</td>
+  <td>6–8%</td>
+  <td>Every 1% ash increase reduces BF productivity by ~2–3%. Ash goes into slag, requiring more limestone flux and coke to melt it. Indian coking coal is processed to 16–17% ash cut-off, but imported HCC targets &lt;10%. Coking coal ash content must be below 10% for effective BF operation.</td>
+</tr>
+<tr>
+  <td><b>Inherent Moisture</b></td><td>%</td>
+  <td>2–6% typical</td>
+  <td>—</td>
+  <td>Used to understand actual coal rank and free-from-surface-moisture quality.</td>
+</tr>
+<tr>
+  <td><b>Volatile Matter (VM)</b></td><td>%</td>
+  <td class="y">18–38% dmmf for coking coal; blends target 25–30%</td>
+  <td>HV: 31–38%; MV: 22–31%; LV: 17–22%</td>
+  <td>VM determines coke yield and plastic properties. Too low VM = insufficient plasticity and poor pore structure. Too high = weak coke walls. Blend targets a VM that balances expansion, shrinkage and final coke porosity at 45–55%.</td>
+</tr>
+<tr>
+  <td><b>Crucible Swelling Number (CSN)</b></td><td>1–9 scale</td>
+  <td class="g">CSN ≥4 (preferably ≥6 for prime HCC); &lt;1 is non-coking</td>
+  <td>6–9</td>
+  <td>Measures how much the coal swells when heated — directly indicates coking propensity. High CSN = strong caking coal that can form solid coke structure. CSN is the most basic coking index. Non-coking coal has CSN of 0–1. Bamboo char would score 0.</td>
+</tr>
+<tr>
+  <td><b>Sulphur</b></td><td>%</td>
+  <td class="g">&lt;0.8% (maximum 1.0%); imported HCC typically 0.4–0.6%</td>
+  <td>&lt;0.5%</td>
+  <td>Sulfur transfers directly from coal → coke → pig iron → steel. Every 0.1% excess S in coke may require extra desulfurisation steps costing $2–5/tonne steel. Strict hard limit across all Indian steel plants. Sulfur content in coking coal must be below 1% as sulfur transfers directly to the steel, making it brittle.</td>
+</tr>
+<tr>
+  <td><b>Phosphorus</b></td><td>%</td>
+  <td class="g">&lt;0.04%; many Indian specs &lt;0.03%</td>
+  <td>&lt;0.025%</td>
+  <td>Phosphorus causes "cold shortness" (brittleness at room temperature) in steel. Cannot be removed in BF — passes directly through. Absolute hard limit. Some Australian coking coals are selected specifically for very low P (&lt;0.02%).</td>
+</tr>
+<tr>
+  <td><b>Vitrinite reflectance (MMR)</b></td><td>% Ro</td>
+  <td class="y">LV: 1.42–1.75%; MV: 1.05–1.40%; HV: 0.70–1.02%</td>
+  <td>Blend target: 1.25–1.35%</td>
+  <td>MMR is the primary coal rank indicator — measures % of light reflected off polished vitrinite at 500x magnification in oil. It correlates directly with coking quality, VM content, and final coke properties (CSR, CRI). Blend targets a reflectance of 1.25–1.35% to produce coke with optimal strength and reactivity.</td>
+</tr>
+<tr>
+  <td><b>Vitrinite %</b></td><td>%</td>
+  <td class="y">≥50% vitrinite in productive coking coals; petrographic composition is rank-dependent</td>
+  <td>60–80%</td>
+  <td>Vitrinite is the maceral responsible for plastic behaviour and coke matrix formation. It is the binder that assimilates inertinite (the aggregate). Higher vitrinite % generally means better coking, though some reactive inertinite can contribute positively.</td>
+</tr>
+<tr>
+  <td><b>Vitrinite distribution V9–V14</b></td><td>%</td>
+  <td>Distribution across reflectance classes — single-peaked preferred</td>
+  <td>—</td>
+  <td>The V9–V14 distribution shows whether the coal is petrographically uniform (desirable) or mixed (bi-modal distributions indicate blended or heterogeneous coal that may have unpredictable coking behaviour).</td>
+</tr>
+<tr>
+  <td><b>Maceral Composition</b></td><td>%</td>
+  <td>Vitrinite + Liptinite = "reactive"; Inertinite = "inert" in coking; ~70–80% reactive preferred</td>
+  <td>—</td>
+  <td>Macerals are the microscopic organic constituents of coal. The ratio of reactive macerals (vitrinite, liptinite) to inert (inertinite) determines maximum injection rate of inertinite-rich coal in a blend without degrading coke quality.</td>
+</tr>
+<tr>
+  <td><b>Gray King Coke Type (LTGK)</b></td><td>A–G₄ letter scale</td>
+  <td class="y">G or above for prime HCC; D–F for semi-soft</td>
+  <td>G–G₄</td>
+  <td>A measure of coke swelling in a closed system. G and above indicates a coal that forms a well-expanded, solid coke cake. Type A is non-coking. Used alongside CSN to characterise coking behaviour — LTGK is more sensitive at the lower end of the coking scale.</td>
+</tr>
+<tr>
+  <td><b>Gieseler Plastometer Indices</b></td><td>ddpm / °C</td>
+  <td class="y">Max Fluidity: ≥100 ddpm (prime HCC ≥1,000 ddpm); Plastic range ≥80°C</td>
+  <td>1,000–30,000 ddpm; 70–130°C plastic range</td>
+  <td>The Gieseler test measures the actual plastic behaviour of coal when heated — maximum fluidity (DDPM), initial softening temperature, and the temperature range over which the coal is plastic. This plastic range is when the coal softens, expands, and resolidifies into coke. Low fluidity or narrow plastic range = poor coke structure. Critical for blend design.</td>
+</tr>
+<tr>
+  <td><b>Ash Fusion Temperature (AFT)</b></td><td>°C</td>
+  <td class="g">Free Flow Temp &gt;1,350°C preferred; minimum acceptable ~1,200°C</td>
+  <td>&gt;1,400°C</td>
+  <td>Same principle as PCI — ash that fuses at low temperature causes slagging, sticking, and operational problems in the furnace lower zone and hearth. Higher AFT preferred.</td>
+</tr>
+<tr>
+  <td><b>Total Dilation</b></td><td>%</td>
+  <td class="y">≥+50% (expansion over original volume); prime HCC typically +100–300%</td>
+  <td>&gt;+100%</td>
+  <td>The Audibert-Arnu Dilatometer test measures how much the coal expands during the coking process. High dilation = coal expands strongly and forms a well-knit coke structure. Very high dilation can cause excessive oven wall pressure — blenders manage this carefully. Zero dilation = non-coking.</td>
+</tr>
+<tr>
+  <td><b>Size Analysis</b></td><td>%</td>
+  <td>0–50mm for import specification; microfines &lt;0.5mm tracked separately (max ~5%)</td>
+  <td>—</td>
+  <td>Coal must be correctly sized for safe and efficient charging into coke ovens. Excessive microfines can cause coking problems. Oversize risks oven damage.</td>
+</tr>
+</table>
+<div class="callout bad">
+<b>Key insight:</b> Most coking coal parameters (CSN, Gieseler, Gray King, Vitrinite reflectance, Dilation) measure the coal's <b>plastic/coking behaviour</b> — properties that bamboo char can never have because it has already been carbonized. Bamboo char is entirely irrelevant to the coking coal category. Any bamboo-in-steel-plant strategy must focus exclusively on PCI substitution or other reducing agent applications, never on coke oven blending.
+</div>
+</div>
+
+<!-- ===== PANEL 4 ===== -->
+<div class="panel" id="p4">
+<h2 class="sect">Bamboo char vs PCI coal specifications — parameter-by-parameter comparison</h2>
+
+<p>Bamboo char (at 700–900°C carbonization) is the relevant product for potential PCI substitution. This table compares what Indian blast furnaces require for PCI coal against what bamboo char can actually achieve, based on peer-reviewed literature and ISIJ/ACS Omega data on bamboo char BF injection feasibility.</p>
+
+<div style="margin:10px 0 14px;display:flex;gap:12px;flex-wrap:wrap;">
+  <span style="font-size:11px;"><span class="badge bg">✓ MEETS</span> Bamboo char achieves the spec</span>
+  <span style="font-size:11px;"><span class="badge by">~ CONDITIONAL</span> Achievable with process control / blending</span>
+  <span style="font-size:11px;"><span class="badge br">✗ FAILS</span> Bamboo char does not meet spec or is irrelevant</span>
+</div>
+
+<table>
+<tr>
+  <th style="width:12%">Parameter</th>
+  <th style="width:16%">PCI coal target (Indian BF)</th>
+  <th style="width:16%">Bamboo char achievable range</th>
+  <th style="width:8%">Verdict</th>
+  <th style="width:48%">Evidence & notes</th>
+</tr>
+<tr>
+  <td><b>Ash content</b></td>
+  <td>&lt;12% (preferred &lt;10%)</td>
+  <td class="g"><b>1.8–4.6%</b> at 400–700°C carbonization; ~5–8% worst case with leaf/sheath contamination</td>
+  <td><span class="badge bg">✓ MEETS</span></td>
+  <td>Bamboo char ash (1.81–4.62%) is dramatically lower than standard PCI coal (8–12%) and even below premium anthracite (11% Chinese benchmark). ISIJ 2019 study confirms bamboo char ash is "far less than that of coals." Species and tissue sorting (culm only, no sheath/leaf) keeps ash at lower end. This is bamboo's single strongest advantage over coal for PCI.</td>
+</tr>
+<tr>
+  <td><b>Fixed Carbon (FC)</b></td>
+  <td>&gt;65% (better &gt;75%)</td>
+  <td class="y"><b>50–85%</b> depending on carbonization temperature. 700°C target achieves ~70–78% FC; 900°C achieves 80–85%+</td>
+  <td><span class="badge by">~ CONDITIONAL</span></td>
+  <td>FC increases with carbonization temperature. At 700°C, bamboo char FC is comparable to high-volatile PCI coal. At 900°C+, it approaches semi-anthracite territory. Fuel ratio (FC/VM) of bamboo char at 700°C was 8.62 — between high-VM coal DL (lower) and low-VM coal HY (9.69) in ISIJ study. Achievable with correct process temp.</td>
+</tr>
+<tr>
+  <td><b>Volatile Matter (VM)</b></td>
+  <td>7–38% depending on grade; high-VM blend target 28–35%</td>
+  <td class="y"><b>5–40%</b> depending on temperature. 400°C: ~40% VM; 700°C: ~8–15% VM</td>
+  <td><span class="badge by">~ CONDITIONAL</span></td>
+  <td>VM in bamboo char is highly controllable by carbonization temperature. For high-VM PCI blend entry, char at 400–500°C is appropriate. For low-VM, high-FC injection, 700–900°C is required. The process engineer controls this. VM releases more heat than FC per unit in the raceway — HV blend inclusion improves ignition.</td>
+</tr>
+<tr>
+  <td><b>GCV / HHV</b></td>
+  <td>&gt;6,500 kcal/kg (27+ MJ/kg)</td>
+  <td class="y"><b>24–32 MJ/kg</b> (5,730–7,640 kcal/kg). Bamboo char at 700–800°C achieves ~26–32 MJ/kg; B10 bamboo char in ACS Omega study: 26.95 MJ/kg</td>
+  <td><span class="badge by">~ CONDITIONAL</span></td>
+  <td>HHV of moso bamboo char rises from 19.47 MJ/kg at 200°C to 32.78 MJ/kg at 800°C (BioResources study). Bamboo char at optimal 700–800°C carbonization falls within or just below the lower end of premium PCI GCV specs (27+ MJ/kg). It compares to lower-end imported thermal coal / high-ash PCI rather than premium anthracite. HHV improvement with higher carbonization temp is reliable.</td>
+</tr>
+<tr>
+  <td><b>Sulphur</b></td>
+  <td>&lt;0.8% (hard limit &lt;1%)</td>
+  <td class="g"><b>0.05–0.15%</b> typical for bamboo char</td>
+  <td><span class="badge bg">✓ MEETS</span></td>
+  <td>Bamboo is inherently very low sulfur — raw moso bamboo shows ~0.08% S (Pore and Thermochemical study, 2026). After carbonization, S content is further concentrated but still remains well below 0.5%. This is a major structural advantage over coal (0.5–1.5% S typical). Low S is a premium attribute for steel quality — directly reduces downstream desulfurisation cost.</td>
+</tr>
+<tr>
+  <td><b>Phosphorus</b></td>
+  <td>&lt;0.04% (hard limit)</td>
+  <td class="g"><b>0.01–0.05%</b> for bamboo culm char; can be elevated if full-plant (branches/leaves) is used</td>
+  <td><span class="badge by">~ CONDITIONAL</span></td>
+  <td>Bamboo culm wood P content is typically &lt;0.03%. However, bamboo leaves and sheaths can be significantly higher in P. This is another feedstock sorting argument — clean culm char vs mixed-plant char is the difference between meeting and missing this spec. Needs lab verification for your specific species (B. bambos, D. strictus).</td>
+</tr>
+<tr>
+  <td><b>Alkalies (Na₂O+K₂O on ash)</b></td>
+  <td>&lt;1.5% on ash (total BF input &lt;3 kg/tHM)</td>
+  <td class="r"><b>HIGH RISK — 3–8% K₂O on ash</b> typical for bamboo char; bamboo is a potassium accumulator</td>
+  <td><span class="badge br">✗ FAILS</span></td>
+  <td>This is bamboo char's single most critical failure point for PCI use. Bamboo accumulates potassium (K) in its tissue — much more so than wood. K₂O on ash basis for bamboo char can be 3–8%, far exceeding the BF limit of &lt;1.5%. At high injection rates, K₂O input to BF would catalyse coke degradation and damage the lining. At very low blending rates (&lt;10% bamboo char in PCI blend), the total alkali input may remain within tolerance, but this must be calculated on a per-heat basis. CRITICAL DATA GAP: actual K/Na content of B. bambos and D. strictus char from Indian material must be measured — values vary significantly by species and soil.</td>
+</tr>
+<tr>
+  <td><b>Chlorine</b></td>
+  <td>&lt;0.1% (very strict)</td>
+  <td class="g"><b>&lt;0.05%</b> typical for bamboo char</td>
+  <td><span class="badge bg">✓ MEETS</span></td>
+  <td>Bamboo grown in non-coastal agricultural soils generally has very low Cl content. Carbonization volatilizes most Cl. Well within PCI Cl limits unless bamboo is sourced from coastal zones with high soil Cl.</td>
+</tr>
+<tr>
+  <td><b>Ash Fusion Temperature (AFT)</b></td>
+  <td>IDT &gt;1,200°C</td>
+  <td class="g"><b>IDT typically &gt;1,250°C</b> for bamboo culm char. ACS Omega study: bamboo char AFT &gt;1,250°C, indicating "not easy to block the blast furnace raceway and spray guns"</td>
+  <td><span class="badge bg">✓ MEETS</span></td>
+  <td>Bamboo ash is dominated by SiO₂, K₂O, CaO, and MgO. The presence of CaO and MgO tends to raise AFT compared to coal ash (which is high in SiO₂-Al₂O₃). The ACS Omega study (2021) specifically confirmed bamboo char (B10 sample) had AFT compatible with BF injection — one of the better-performing biomass chars tested. This is a genuine positive. However, high K₂O in the ash can lower AFT — creating a tension with the alkali concern above.</td>
+</tr>
+<tr>
+  <td><b>HGI (Grindability)</b></td>
+  <td>40–70 preferred</td>
+  <td class="g"><b>Bamboo char is highly friable</b> — easy to pulverize. Studies note "high friability" resulting in easy pulverization. Effective HGI-equivalent is typically in the 60–90 range (softer than most coals).</td>
+  <td><span class="badge bg">✓ MEETS</span></td>
+  <td>Bamboo char, having been fully carbonized, is brittle and easy to grind to &lt;80μm — the required PCI injection fineness. ScienceDirect biochar-for-PCI study (2023) confirms char samples exhibit "high friability" and "easy pulverization" and "the produced biochars are suitable for PCI" on grindability criteria. Lower milling energy than most coals is a cost advantage.</td>
+</tr>
+<tr>
+  <td><b>Total Moisture</b></td>
+  <td>&lt;10% (target &lt;8%)</td>
+  <td class="y"><b>3–8%</b> for properly dried bamboo char; fresh/improperly stored char can be 10–15%</td>
+  <td><span class="badge by">~ CONDITIONAL</span></td>
+  <td>Char is hygroscopic — moisture content depends entirely on storage and handling. Well-sealed and properly stored bamboo char achieves &lt;5% moisture. This is manageable with appropriate storage infrastructure but cannot be ignored. Fresh-cut bamboo (50–70% MC as observed in field images) must be fully field-dried before carbonization.</td>
+</tr>
+<tr>
+  <td><b>Size</b></td>
+  <td>&lt;50mm feed; post-mill &gt;80% through 80μm</td>
+  <td class="g">Bamboo char easily crushed to &lt;50mm at harvesting/processing stage. Fine-milling to 80μm well-documented in bamboo char PCI literature.</td>
+  <td><span class="badge bg">✓ MEETS</span></td>
+  <td>No issue. Bamboo char is significantly easier to size and mill than hard coal or anthracite.</td>
+</tr>
+<tr>
+  <td><b>CSN / Gieseler / LTGK / Vitrinite / Dilation</b></td>
+  <td>Required for coking coal only</td>
+  <td class="na">NOT APPLICABLE — irrelevant to PCI</td>
+  <td><span style="font-size:10px;color:var(--dim);">N/A</span></td>
+  <td>PCI coal does not need to form coke. These coking-specific tests are not required for the PCI injection application. Bamboo char would score 0 on CSN and zero dilation — but these simply don't matter for PCI.</td>
+</tr>
+</table>
+
+<h2 class="sect">Summary scorecard — bamboo char vs PCI requirements</h2>
+<table>
+<tr><th>Category</th><th>Parameters</th><th>Bamboo char status</th></tr>
+<tr><td><b>Strong advantages over coal</b></td><td>Ash, Sulphur, AFT, Grindability, Chlorine</td><td class="g">Bamboo char excels — structurally better than imported coal on these dimensions</td></tr>
+<tr><td><b>Achievable with process control</b></td><td>Fixed Carbon, VM, GCV, Moisture, Phosphorus</td><td class="y">Controlled by carbonization temperature (700–900°C target) and feedstock sorting (culm only)</td></tr>
+<tr><td><b>Potentially blocking — must verify</b></td><td>Alkalies (K₂O+Na₂O on ash)</td><td class="r">Highest risk. Bamboo's K-accumulator physiology means alkali load from bamboo char PCI can violate BF limits at significant injection rates. Must be tested for your species and limited to blend rates where total alkali input stays &lt;3 kg/tHM</td></tr>
+</table>
+</div>
+
+<!-- ===== PANEL 6 : PROCESS ===== -->
+<div class="panel" id="p6">
+<h2 class="sect">The two carbon doors — the single idea that explains everything</h2>
+
+<p>A blast furnace has <b>two entirely separate carbon inputs</b>, and they never connect. Every question about where bamboo char fits collapses into one question: <b>which door?</b></p>
+
+<div class="grid2">
+<div class="box" style="border-left:3px solid var(--danger);border-radius:0;">
+  <div class="k" style="color:var(--danger);">Door 1 — Top charge (closed to bamboo)</div>
+  <div class="v" style="font-size:14px;">Lumps only</div>
+  <div class="d">Ore, sinter, limestone and <b>coke</b> are dumped in from the top and sink down over 6–8 hours. Everything here must be <b>big, hard, and load-bearing</b> — it holds up 30 metres of burden. Coking coal feeds this door via the coke ovens.</div>
+</div>
+<div class="box" style="border-left:3px solid var(--accent);border-radius:0;">
+  <div class="k">Door 2 — Tuyere injection (open to bamboo)</div>
+  <div class="v" style="font-size:14px;">Powder only</div>
+  <div class="d">20–40 nozzles (tuyeres) around the base blast hot air at 1200°C. Powdered fuel is blown in with it, ignites in the <b>raceway</b> fireball, and is fully consumed in <b>20–50 milliseconds</b>. PCI coal, petcoke, and bamboo char all compete for this slot.</div>
+</div>
+</div>
+
+<h2 class="sect">Door 1 — Coking coal → coke (structural carbon)</h2>
+<p>Coking coal is not burned as coal. It is baked in a coke oven at ~1100°C for ~18 hours with no air. It melts, fuses, swells and re-solidifies into hard porous lumps of metallurgical coke (40–80mm).</p>
+
+<table>
+<tr><th>Coke does 3 jobs</th><th>Can an injectant replace it?</th></tr>
+<tr><td><b>1. Fuel</b> — burns to generate heat</td><td class="g">Yes — PCI/petcoke/biochar all do this</td></tr>
+<tr><td><b>2. Reductant</b> — supplies carbon to strip oxygen from iron ore</td><td class="g">Yes — injectants do this too</td></tr>
+<tr><td><b>3. Load-bearing skeleton</b> — physically holds the burden apart so gas rises and molten iron drains</td><td class="r"><b>NO — nothing else in the furnace does this job.</b> This is why you can never go to 100% injection with any material, ever.</td></tr>
+</table>
+
+<div class="callout bad">
+<b>Why Door 1 is permanently closed to bamboo char:</b> Coke gets its strength from passing through a <b>plastic (molten) phase</b> at 350–550°C, where separate particles fuse into one continuous mass. Bamboo char has <b>already been pyrolyzed</b> in your kiln — it is thermally dead. Reheat it and nothing happens: no softening, no swelling, no fusion. It scores zero on CSN, zero dilation, zero Gieseler fluidity. And even if it could fuse, it's a powder — it can never become a load-bearing lump. Stop thinking about coking coal.
+</div>
+
+<h2 class="sect">Door 2 — The injectants (fuel + reductant only)</h2>
+<p>Through the tuyeres, plants inject powdered carbon to <b>replace some of the coke</b>. Every kg injected saves roughly <b>0.85–0.95 kg of coke</b>. Since coke costs far more than coal, this is pure margin — which is why every modern blast furnace does it.</p>
+
+<table>
+<tr><th>Material</th><th>What it is</th><th>Typical injection rate</th><th>Why it's used / limitations</th></tr>
+<tr>
+  <td><b>PCI coal</b></td>
+  <td>Non-coking coal, pulverized to &lt;80μm</td>
+  <td>120–200 kg/tHM (tonne hot metal)</td>
+  <td>The default. Cheapest carbon per tonne of coke saved. Ash 8–12%, S 0.5–0.8%. This is RINL's 12.88 lakh MT/year import.</td>
+</tr>
+<tr>
+  <td><b>Petcoke</b></td>
+  <td>Petroleum refinery bottoms residue</td>
+  <td>Usually blended at 10–20% of the PCI stream</td>
+  <td>Very high carbon (~90%) and very high GCV (8,000+ kcal/kg). <b>But 3–7% sulphur</b> — so it is always blended into PCI, never used alone. High S is its hard ceiling.</td>
+</tr>
+<tr>
+  <td><b>Bamboo char</b> <span class="badge bg">TARGET</span></td>
+  <td>Carbonized bamboo, 700–900°C, milled to &lt;80μm</td>
+  <td>Realistic entry: <b>10–30 kg/tHM</b> (roughly 5–15% of PCI stream)</td>
+  <td>Renewable, ash 1.8–4.6%, S 0.05–0.15%. Green-steel/CBAM story. <b>Ceiling set by alkali (K₂O) content, not by combustion performance.</b></td>
+</tr>
+</table>
+
+<h2 class="sect">How injection physically works — the equipment chain</h2>
+<div class="flow" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:14px 0;">
+  <div style="background:var(--panel2);border:1px solid var(--border);padding:9px 12px;border-radius:4px;font-size:11px;">Storage bunker</div>
+  <span style="color:var(--dim);">→</span>
+  <div style="background:var(--panel2);border:1px solid var(--accent);padding:9px 12px;border-radius:4px;font-size:11px;color:var(--accent);">Pulverizer mill<br><span style="color:var(--dim);">grind to &lt;80μm</span></div>
+  <span style="color:var(--dim);">→</span>
+  <div style="background:var(--panel2);border:1px solid var(--border);padding:9px 12px;border-radius:4px;font-size:11px;">Bag filter</div>
+  <span style="color:var(--dim);">→</span>
+  <div style="background:var(--panel2);border:1px solid var(--border);padding:9px 12px;border-radius:4px;font-size:11px;">Pneumatic conveying</div>
+  <span style="color:var(--dim);">→</span>
+  <div style="background:var(--panel2);border:1px solid var(--border);padding:9px 12px;border-radius:4px;font-size:11px;">Distributor</div>
+  <span style="color:var(--dim);">→</span>
+  <div style="background:var(--panel2);border:1px solid var(--accent);padding:9px 12px;border-radius:4px;font-size:11px;color:var(--accent);">Lance → tuyere<br><span style="color:var(--dim);">into raceway</span></div>
+</div>
+
+<table>
+<tr><th>Constraint in this chain</th><th>Bamboo char performance</th></tr>
+<tr><td><b>Grindability</b> — must mill to 80μm without choking the pulverizer</td><td class="g">Advantage. Char is brittle and friable — grinds <i>easier</i> than coal, lower mill power draw.</td></tr>
+<tr><td><b>Flowability</b> — must move through pneumatic lines without bridging or blocking</td><td class="y">Manageable. Char's low bulk density is a mild handling nuisance; some plants use a dedicated second lance to avoid density-mismatch problems when co-conveying with coal.</td></tr>
+<tr><td><b>Burnout in raceway</b> — must combust fully within 20–50ms</td><td class="g">Advantage. Bamboo char is highly porous with good combustibility; burnout temperature typically &lt;700°C. Better than low-ash coal in published tuyere simulation work.</td></tr>
+</table>
+
+<h2 class="sect">What actually limits bamboo char — ranked by severity</h2>
+<table>
+<tr><th>#</th><th>Limitation</th><th>Mechanism</th><th>Severity</th></tr>
+<tr>
+  <td>1</td>
+  <td><b>Alkali accumulation (K₂O, Na₂O)</b></td>
+  <td>Potassium and sodium vaporize in the raceway, rise up the shaft, condense on cooler burden above, fall back down, and re-vaporize. They <b>accumulate and circulate</b>. They chemically attack coke (causing it to crumble) and erode the refractory lining. Plants cap total alkali input at roughly <b>3 kg/tHM</b>. Bamboo is a potassium accumulator — char ash can be 3–8% K₂O.</td>
+  <td class="r"><b>THE CEILING.</b> This sets your maximum blend rate. Non-negotiable to test.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><b>Energy density</b></td>
+  <td>Bamboo char ~26–30 MJ/kg vs PCI coal ~30–32 MJ/kg. You inject slightly more mass for the same heat delivered to the raceway.</td>
+  <td class="y">Manageable. Means you must price competitively <b>per GJ</b>, not per tonne. Model this explicitly.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><b>Bulk density / logistics</b></td>
+  <td>Char is light and fluffy. More truck volume per tonne of energy delivered. Storage silo volume also increases.</td>
+  <td class="y">Real cost line. Must be in the landed-cost model, especially over Solapur→Vizag/Bhilai distances.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>Moisture pickup in storage</td>
+  <td>Char is hygroscopic. Poorly stored char picks up moisture, reducing effective GCV and risking handling issues.</td>
+  <td class="y">Solvable with sealed storage. Not a blocker.</td>
+</tr>
+</table>
+
+<h2 class="sect">The realistic commercial pathway — three phases</h2>
+<table>
+<tr><th>Phase</th><th>What happens</th><th>Plant capex needed</th><th>Prerequisite</th></tr>
+<tr>
+  <td><b>Phase 1 — Co-injection trial</b></td>
+  <td>Bamboo char blended into the existing PCI stream at <b>5–10%</b>. Low enough that total alkali input stays safely inside the 3 kg/tHM limit. Uses existing PCI infrastructure.</td>
+  <td class="g">None</td>
+  <td>NABL lab data (proximate + ultimate + XRF ash) and ideally a tuyere combustion simulation report</td>
+</tr>
+<tr>
+  <td><b>Phase 2 — Dedicated second lance</b></td>
+  <td>Separate injection lance for biochar, because density differences make co-conveying with coal in the same line awkward. Allows higher and more stable rates.</td>
+  <td class="y">Moderate (plant-side)</td>
+  <td>Phase 1 must prove out commercially and operationally first</td>
+</tr>
+<tr>
+  <td><b>Phase 3 — Higher substitution rates</b></td>
+  <td>Rates above ~15–20% of the PCI stream.</td>
+  <td class="y">Moderate</td>
+  <td><b>Only if the alkali problem is solved</b> — either your species is naturally low-K, or you water-wash / leach the char to remove potassium (a real technique that adds process cost)</td>
+</tr>
+</table>
+
+<div class="callout good">
+<b>The honest pitch to a steel plant procurement head:</b> <i>"We're not replacing your coal. We're offering a low-ash, low-sulphur, renewable 10% of your PCI stream that reduces your slag volume, cuts your downstream desulfurisation load, and gives you a defensible CBAM/green-steel story for your export customers."</i> That is a credible, technically honest, and commercially viable opening. Anything more aggressive than that will not survive first contact with their metallurgists.
+</div>
+
+<div class="callout">
+<b>Petcoke context worth knowing:</b> Indian steel plants already blend a high-sulphur, high-carbon material (petcoke) into their PCI stream and manage the consequences. This proves the plants are <i>willing to blend non-standard injectants</i> when the economics work. Bamboo char is arguably an easier sell than petcoke on every quality axis except energy density and alkali — you are asking for something they already do, with a cleaner material.
+</div>
+</div>
+
+<!-- ===== PANEL 5 ===== -->
+<div class="panel" id="p5">
+<h2 class="sect">Strategic verdict — what this means for Bombay Bioenergy</h2>
+
+<div class="callout bad">
+<b>This RINL tender (GEM/2025/B/6850356) has zero commercial relevance to Bombay Bioenergy.</b> It is a lab sampling services contract and cannot be bid on by a pellet/biochar manufacturer. Do not pursue it.
+</div>
+
+<div class="callout good">
+<b>The underlying PCI coal market is highly relevant and warrants serious strategic attention.</b> RINL imports 12.88 lakh MT/year of PCI coal alone — and India's four major integrated steel plants (RINL/VSP, SAIL Bhilai/Bokaro/Durgapur/Rourkela, Tata Steel Jamshedpur/Kalinganagar, JSW Vijayanagar) collectively import and consume 15–20 million MT of PCI coal annually. The decarbonisation imperative and Green Steel pressure from EU buyers creates a genuine pull for bio-PCI. The actual entry point is approaching steel plant procurement teams with bio-PCI char product, not the testing tender.
+</div>
+
+<h2 class="sect">What bamboo char genuinely offers for PCI</h2>
+<table>
+<tr><th>Dimension</th><th>Bamboo char position</th></tr>
+<tr><td>Ash content</td><td class="g">Major advantage — 1.8–4.6% vs coal's 8–12%. Lower ash = less slag volume, productivity improvement</td></tr>
+<tr><td>Sulfur</td><td class="g">Major advantage — 0.05–0.15% vs coal's 0.5–1.5%. Less desulfurisation cost downstream</td></tr>
+<tr><td>Carbon neutrality</td><td class="g">Renewable/bio-based — meets EU Green Deal / CBAM requirements for green steel exports. This premium is emerging and real</td></tr>
+<tr><td>GCV</td><td class="y">Adequate at 700–800°C carbonization (~26–30 MJ/kg). Lower than premium anthracite but comparable to HV PCI coal. Must compensate for lower energy density vs coal with pricing</td></tr>
+<tr><td>Alkali content (K)</td><td class="r">Significant risk. Must be quantified for B. bambos and D. strictus before any commercial claim is made. If K₂O on ash exceeds 3%, blending rate must be capped at levels where total BF alkali input remains within tolerance (~5–10% blend share at most)</td></tr>
+</table>
+
+<h2 class="sect">Non-negotiable next steps before approaching any steel plant</h2>
+<table>
+<tr><th>#</th><th>Action</th><th>Why critical</th></tr>
+<tr><td>1</td><td>Commission proximate + ultimate + ash composition analysis on bamboo char from your specific species (B. bambos, D. strictus from Maharashtra) at a NABL-accredited lab at 3 carbonization temperatures: 500°C, 700°C, 900°C</td><td>All specs in this report are from moso bamboo or generic bamboo. Your species may differ in K content, ash composition, and FC yield. This is the foundational data gap.</td></tr>
+<tr><td>2</td><td>Specifically measure K₂O and Na₂O in the char ash (XRF analysis) — the alkali parameter is the single most dangerous unknown</td><td>If K₂O on ash &gt;3%, BF injection at meaningful rates is blocked without blending dilution strategy. If &lt;1.5%, you have a substantially cleaner pathway.</td></tr>
+<tr><td>3</td><td>Calculate maximum permissible blending rate: (BF alkali limit of 3 kg/tHM) ÷ (your char alkali input per kg injected) = max kg/tHM of bamboo char</td><td>This gives you the commercial ceiling for substitution rate, which drives total addressable volume and revenue per steel plant.</td></tr>
+<tr><td>4</td><td>Identify the right buyer contact: Raw Materials / Procurement head at RINL, JSW, SAIL, Tata Steel — not the testing tender division</td><td>PCI coal procurement is handled by RM departments, often under 3-year contracts with international coal traders. You need to get onto approved vendor lists and into R&D co-trials, not tender systems.</td></tr>
+<tr><td>5</td><td>Pilot tuyere combustion test with a research partner (IIT or SAIL R&D/RDCIS Ranchi) before approaching commercial scale</td><td>Steel plants will not substitute even 5% PCI rate without combustion test data. RDCIS and TATA Steel R&D have done similar work on biomass PCI. A published or co-developed tuyere test report is the technical passport.</td></tr>
+</table>
+
+<div class="src">
+Sources: ISIJ International Vol.59 No.3 (2019) — Effect of Carbonization Conditions on Bamboo Char for BF Injection · ACS Omega (2021) — Feasibility of Pyrolysis Biomass Char for BF Injection · ScienceDirect (2023) — Biochar from agricultural waste for BF energy source · MDPI Sustainability (2022) — Modeling Biochar Injection into BF · BioResources (2023) — Proximate analysis of bamboo char · Materials (2026) — Pore and Thermochemical Properties of Moso Bamboo Biochar · IspatGuru — PCI in BF, Coking Coal, Metallurgical Coal · IEA CCC/116 (2006) — Use of PCI in Blast Furnaces · M Heavy Technology — PCI technical requirements · RINL GEM/2025/B/6850356 tender document · Coking coal ash content / productivity relationship from B.D. Colwell (2025) · S&P Global Platts Metallurgical Coal Specs Guide.
+</div>
+</div>
+
+</div>
+<script>
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById(t.dataset.p).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

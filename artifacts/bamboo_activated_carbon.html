@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bamboo Activated Carbon in India — A Deep Dive</title>
+<style>
+  :root{
+    --bg:#0d0f0c; --panel:#14170f; --panel2:#1b1f14; --ink:#eef1e6; --muted:#9aa488;
+    --line:#2b3320; --acc:#a6d049; --acc2:#6fae3a; --gold:#d9b23a; --red:#e0655a;
+    --blue:#5aa9e0; --amber:#e0a94a; --purple:#b489e0;
+    --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased;font-size:16px}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+  a{color:var(--acc)}
+  h1,h2,h3{line-height:1.15;letter-spacing:-.02em}
+  h2{font-size:1.75rem;margin:0 0 6px}
+  h3{font-size:1.15rem;margin:24px 0 8px}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--acc);margin:0 0 10px}
+  section{padding:54px 0;border-top:1px solid var(--line)}
+  section:first-of-type{border-top:none}
+  p{color:#d7dccb}
+  .muted{color:var(--muted)}
+  .lead{font-size:1.12rem;color:#e6ead9}
+
+  /* hero */
+  header.hero{padding:78px 0 60px;background:
+    radial-gradient(900px 380px at 78% -10%, rgba(166,208,73,.16), transparent 60%),
+    radial-gradient(700px 340px at 10% 8%, rgba(217,178,58,.10), transparent 60%);}
+  .hero h1{font-size:2.9rem;margin:0 0 16px;max-width:16ch}
+  .hero .sub{font-size:1.18rem;color:#cdd3bf;max-width:60ch}
+  .tagrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;padding:5px 11px;border:1px solid var(--line);
+    border-radius:999px;color:var(--muted);background:rgba(255,255,255,.02)}
+
+  /* verdict */
+  .verdict{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);
+    border-radius:16px;padding:26px 28px;margin-top:30px;position:relative;overflow:hidden}
+  .verdict::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(var(--acc),var(--gold))}
+  .verdict h3{margin:0 0 10px;font-size:1.05rem;color:var(--acc)}
+  .verdict .big{font-size:1.28rem;color:#fff;font-weight:600;letter-spacing:-.01em;margin:0 0 12px}
+
+  /* grids + cards */
+  .grid{display:grid;gap:16px}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h3{margin-top:0}
+  .stat{font-size:2rem;font-weight:700;letter-spacing:-.03em;line-height:1}
+  .stat.sm{font-size:1.5rem}
+  .stat .u{font-size:.85rem;color:var(--muted);font-weight:500}
+  .klabel{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+
+  /* callouts */
+  .call{border-radius:12px;padding:16px 18px;border:1px solid var(--line);margin:16px 0}
+  .call.good{background:rgba(111,174,58,.10);border-color:rgba(111,174,58,.4)}
+  .call.warn{background:rgba(224,169,74,.09);border-color:rgba(224,169,74,.38)}
+  .call.bad{background:rgba(224,101,90,.09);border-color:rgba(224,101,90,.38)}
+  .call.key{background:rgba(90,169,224,.08);border-color:rgba(90,169,224,.34)}
+  .call b{color:#fff}
+  .call .h{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px;display:block}
+  .good .h{color:var(--acc)} .warn .h{color:var(--amber)} .bad .h{color:var(--red)} .key .h{color:var(--blue)}
+
+  /* tables */
+  table{width:100%;border-collapse:collapse;font-size:.9rem;margin:6px 0}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  td .win{color:var(--acc);font-weight:600}
+  td .lose{color:var(--red);font-weight:600}
+  tbody tr:hover{background:rgba(255,255,255,.015)}
+  .num{font-family:var(--mono);text-align:right}
+
+  /* bars */
+  .bar{display:flex;align-items:center;gap:10px;margin:9px 0}
+  .bar .nm{width:150px;font-size:.85rem;color:#d7dccb;flex:none}
+  .bar .track{flex:1;height:20px;background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden}
+  .bar .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--acc2),var(--acc))}
+  .bar .val{width:96px;text-align:right;font-family:var(--mono);font-size:.78rem;color:var(--muted);flex:none}
+
+  /* flow */
+  .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:18px 0}
+  .step{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 12px;position:relative}
+  .step .n{font-family:var(--mono);font-size:.66rem;color:var(--acc);letter-spacing:.1em}
+  .step h4{margin:6px 0 4px;font-size:.95rem}
+  .step p{font-size:.78rem;margin:0;color:var(--muted);line-height:1.45}
+  .step .arrow{position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:var(--line);font-size:1.1rem;z-index:2}
+
+  /* roadmap */
+  .phase{display:grid;grid-template-columns:120px 1fr;gap:18px;padding:18px 0;border-bottom:1px solid var(--line)}
+  .phase:last-child{border-bottom:none}
+  .phase .when{font-family:var(--mono);font-size:.78rem;color:var(--gold)}
+  .phase .when .sub{display:block;color:var(--muted);font-size:.68rem;margin-top:3px}
+  .phase h4{margin:0 0 6px}
+  .chk{list-style:none;padding:0;margin:8px 0 0}
+  .chk li{padding-left:22px;position:relative;font-size:.9rem;margin:5px 0;color:#d0d6c4}
+  .chk li::before{content:"→";position:absolute;left:0;color:var(--acc)}
+
+  ul.clean{padding-left:18px} ul.clean li{margin:6px 0}
+  .foot{padding:44px 0 60px;color:var(--muted);font-size:.82rem}
+  .srcs{font-size:.8rem;color:var(--muted)} .srcs a{color:#b9c7a0}
+  .pill{display:inline-block;font-family:var(--mono);font-size:.66rem;padding:2px 8px;border-radius:5px;margin-right:6px}
+  .pill.mi{background:rgba(90,169,224,.15);color:var(--blue)}
+  .pill.me{background:rgba(180,137,224,.15);color:var(--purple)}
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+  .toc a{font-size:.8rem;text-decoration:none;color:var(--muted);border:1px solid var(--line);padding:5px 11px;border-radius:8px}
+  .toc a:hover{color:var(--ink);border-color:var(--acc)}
+  .disc{font-size:.76rem;color:var(--muted);font-style:italic;margin-top:10px}
+  @media(max-width:820px){
+    .g2,.g3,.g4{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.step .arrow{display:none}
+    .hero h1{font-size:2.1rem}.phase{grid-template-columns:1fr}.bar .nm{width:110px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Feedstock strategy · Materials science · Market economics</p>
+    <h1>Activated carbon from Indian bamboo</h1>
+    <p class="sub">A grounded look at whether India's bamboo can feed the activated-carbon industry — the chemistry, the process, the market, the economics, and the one uncomfortable truth about gold refineries that should reshape your plan.</p>
+    <div class="tagrow">
+      <span class="tag">No Moso bamboo needed</span>
+      <span class="tag">Steam-first activation</span>
+      <span class="tag">Coconut shell ₹40k→₹85k/t</span>
+      <span class="tag">India = #3 AC exporter</span>
+    </div>
+
+    <div class="verdict">
+      <h3>The honest verdict — read this first</h3>
+      <p class="big">Indian bamboo makes genuinely good activated carbon. But gold refining is the single worst beachhead to prove it, because gold is the one large market decided by the exact property bamboo is weakest at — hardness.</p>
+      <p>Bamboo species native to India (<i>Bambusa tulda, B. bambos, Dendrocalamus strictus</i>) already hit iodine numbers of 820–1,000 mg/g and BET surface areas of 700–2,000+ m²/g in peer-reviewed work — comfortably in commercial range. The chemistry is not the problem. The problem is that CIP/CIL/CIC gold circuits recycle carbon through abrasive slurry and repeated thermal reactivation, so they select almost entirely on <b>hardness (&gt;97–98%), attrition resistance and density</b> — and coconut shell is uniquely good at exactly that, while bamboo char is intrinsically low-density and fibre-splitting.</p>
+      <p class="big" style="font-size:1.05rem;color:var(--acc)">Your real moat isn't a better gold carbon. It's a cheaper, secure, ESG-clean <i>feedstock platform</i> — deployed first against water, air, food/pharma and energy-storage carbons, where bamboo's tunable pores win and coconut's price crisis is your opening.</p>
+    </div>
+
+    <nav class="toc">
+      <a href="#can">1 · Can bamboo do it</a>
+      <a href="#process">2 · The process</a>
+      <a href="#pores">3 · Pores &amp; activation</a>
+      <a href="#gold">4 · The gold problem</a>
+      <a href="#why">5 · Why nobody does it</a>
+      <a href="#nodes">6 · Nodes &amp; biochar</a>
+      <a href="#market">7 · Markets &amp; profit</a>
+      <a href="#moat">8 · The moat</a>
+      <a href="#econ">9 · Economics</a>
+      <a href="#path">10 · Path forward</a>
+      <a href="bamboo-activated-carbon-part2.html" style="border-color:var(--acc);color:var(--acc)">→ Part 2 · Specs &amp; industries</a>
+    </nav>
+  </div>
+</header>
+
+<!-- 1 -->
+<section id="can">
+  <div class="wrap">
+    <p class="eyebrow">01 — The material question</p>
+    <h2>Does Indian bamboo make good activated carbon?</h2>
+    <p class="lead">Yes — and you do not need Moso. Multiple Indian species carbonise cleanly and activate to commercial-grade numbers. Bamboo is a legitimate lignocellulosic precursor; on paper it sits between wood and coconut shell.</p>
+
+    <div class="grid g4" style="margin-top:22px">
+      <div class="card"><div class="stat">75–81<span class="u">%</span></div><div class="klabel">Fixed carbon (char, 600 °C)</div></div>
+      <div class="card"><div class="stat">820–1000<span class="u"> mg/g</span></div><div class="klabel">Iodine no. (steam-activated)</div></div>
+      <div class="card"><div class="stat">700–2024<span class="u"> m²/g</span></div><div class="klabel">BET surface area range</div></div>
+      <div class="card"><div class="stat">5–10<span class="u">%</span></div><div class="klabel">Ash (species dependent)</div></div>
+    </div>
+
+    <h3>Which Indian species — and how they rank</h3>
+    <p>Five species make up <b>~85% of India's growing stock</b>: <i>Dendrocalamus strictus, D. brandisii, D. stocksii, Bambusa bambos, B. balcooa</i>. In a north-east India activated-carbon study, <b><i>Bambusa tulda</i> came out best</b> — lowest ash (5.81%) and highest fixed carbon (75.94%). Low ash and high fixed carbon are exactly what you want: more carbon skeleton per tonne, less mineral residue to wash out.</p>
+
+    <div class="call good">
+      <span class="h">What this means</span>
+      <b>The precursor is not the risk.</b> Bamboo's higher cellulose content actually makes very high surface areas achievable — activated-carbon <i>fibres</i> from bamboo reach 2,024 m²/g. The catch (covered below) is that high cellulose → more crystalline char → harder to hit high surface area by <i>steam alone</i>, nudging you toward chemical or hybrid activation for premium grades.
+    </div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section id="process">
+  <div class="wrap">
+    <p class="eyebrow">02 — From culm to carbon</p>
+    <h2>The process, end to end</h2>
+    <p class="lead">Two thermal stages: carbonise, then activate. Everything else — sizing, washing, drying, QC — hangs off those two.</p>
+
+    <div class="flow">
+      <div class="step"><div class="n">STEP 1</div><h4>Prep &amp; size</h4><p>Chip culms, separate nodes, dry to &lt;15% moisture. Split internodes (carbon) from nodes (silica-heavy).</p><span class="arrow">›</span></div>
+      <div class="step"><div class="n">STEP 2</div><h4>Carbonise</h4><p>Pyrolysis 400–600 °C, low oxygen. ~30% char yield, 75–81% fixed carbon. Capture syngas/heat.</p><span class="arrow">›</span></div>
+      <div class="step"><div class="n">STEP 3</div><h4>Activate</h4><p>Steam at 800–1100 °C (physical) <i>or</i> H₃PO₄ at 400–600 °C (chemical). Builds the pore network.</p><span class="arrow">›</span></div>
+      <div class="step"><div class="n">STEP 4</div><h4>Wash &amp; neutralise</h4><p>Remove ash/silica &amp; residual chemical. Lime or dilute-acid/alkali wash; rinse to target pH.</p><span class="arrow">›</span></div>
+      <div class="step"><div class="n">STEP 5</div><h4>Grade &amp; QC</h4><p>Dry, screen to mesh (GAC/PAC/pellet), test iodine, BET, hardness, ash, density, moisture.</p></div>
+    </div>
+
+    <div class="grid g2" style="margin-top:6px">
+      <div class="card">
+        <h3>Mass balance reality</h3>
+        <p class="muted" style="margin-top:0">Roughly what disappears at each stage:</p>
+        <div class="bar"><span class="nm">Air-dry bamboo</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">100%</span></div>
+        <div class="bar"><span class="nm">After carbonising</span><span class="track"><span class="fill" style="width:30%"></span></span><span class="val">~30%</span></div>
+        <div class="bar"><span class="nm">After activation</span><span class="track"><span class="fill" style="width:14%"></span></span><span class="val">~12–15%</span></div>
+        <p class="disc">≈ 7 tonnes of raw bamboo (or ~3–4 t of dry chips) per 1 tonne of finished activated carbon. This single ratio drives your feedstock logistics and your cost model.</p>
+      </div>
+      <div class="card">
+        <h3>Where quality is won or lost</h3>
+        <ul class="clean">
+          <li><b>Carbonisation rate &amp; temperature</b> — slow, controlled pyrolysis preserves structure; too fast fractures granules.</li>
+          <li><b>Burn-off %</b> in activation — more burn-off = more pores but lower yield and softer, more fragile carbon. The core trade-off.</li>
+          <li><b>Ash/silica removal</b> — untreated bamboo ash blocks pores and drags down iodine number.</li>
+          <li><b>Particle integrity</b> — how you handle granules between kiln and bag determines your attrition/hardness number.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section id="pores">
+  <div class="wrap">
+    <p class="eyebrow">03 — Pore structure &amp; activation route</p>
+    <h2>Microporous, mesoporous — and how you steer it</h2>
+    <p class="lead">You are not stuck with one pore structure. The activation route <i>is</i> the pore-design lever. This is genuinely good news: bamboo is tunable.</p>
+
+    <div class="grid g2" style="margin:20px 0">
+      <div class="card">
+        <h3><span class="pill mi">MICRO</span>Steam / CO₂ (physical)</h3>
+        <p>Steam activation of bamboo char produces a <b>predominantly microporous</b> carbon — only a few mesopores even above 66% burn-off. Micropores (&lt;2 nm) are what drive iodine number and small-molecule adsorption. Great for water polishing, gold-cyanide capture, gas.</p>
+        <p class="muted">Trade-off: bamboo's crystalline char makes it <i>harder</i> to push surface area very high on steam alone versus coconut.</p>
+      </div>
+      <div class="card">
+        <h3><span class="pill me">MESO</span>H₃PO₄ (chemical) &amp; hybrid</h3>
+        <p>Phosphoric-acid activation at lower temperature (400–600 °C) opens a <b>mesoporous</b> network (2–50 nm), lifts surface area, and raises yield. Mesopores matter for large molecules — decolourisation, pharma, and as transport channels in supercapacitors.</p>
+        <p class="muted">Hybrid (H₃PO₄ + steam) lets you tune crystallinity <i>and</i> pore size — the route to premium grades.</p>
+      </div>
+    </div>
+
+    <div class="call key">
+      <span class="h">On "acidic activation is banned in India"</span>
+      This is a common misconception worth correcting. <b>Phosphoric-acid (H₃PO₄) activation is standard and legal in India</b> — it's explicitly one of the two mainstream routes local producers use alongside steam. What's regulated is the <b>effluent</b>: spent acid and wash water need CPCB/State-Board consent and an ETP/CETP. <b>Zinc chloride (ZnCl₂)</b> activation is the one being phased out globally on zinc-waste grounds. Mineral-acid <i>washing</i> (dilute HCl) for ash removal is routine and permit-manageable. So: acid isn't the wall you think it is — effluent treatment is the real line item.
+    </div>
+
+    <h3>Is steam activation "good enough"?</h3>
+    <p>For water treatment, air/gas, food decolourising to mid-grade, and even gold-cyanide adsorption chemistry — <b>yes, steam is good enough on the adsorption spec.</b> India's entire coconut-shell export industry runs on steam at 900–1100 °C. Steam is also cleaner (no chemical effluent) and simpler to permit, which is why it should be your <b>default route</b>. You only reach for H₃PO₄ when a customer needs mesoporosity or surface area that steam can't deliver from bamboo's crystalline char.</p>
+
+    <h3>Will a lime wash help?</h3>
+    <div class="call good">
+      <span class="h">Lime wash — yes, for a specific job</span>
+      A calcium-hydroxide (lime) wash is a cheap, low-regulation way to <b>strip silica and reduce ash</b> — directly useful for India's higher-silica bamboo, especially node-heavy feed. It also acts as a mild activation catalyst. It is <i>not</i> a magic surface-area booster: overdosing calcium can <i>raise</i> ash. For heavy silica (nodes), alkali (KOH/NaOH) leaching is more effective but costlier. Net: keep lime wash in the kit as an ash/silica manager, not as your activation strategy.
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section id="gold">
+  <div class="wrap">
+    <p class="eyebrow">04 — The gold refinery problem</p>
+    <h2>Why gold is bamboo's hardest sell</h2>
+    <p class="lead">This is the part that should change your plan. Gold recovery doesn't buy adsorption capacity in isolation — it buys <b>durability under abuse</b>. And that is the one axis where coconut shell is structurally, not incidentally, superior.</p>
+
+    <div class="grid g2" style="margin:20px 0">
+      <div class="card">
+        <h3>What a gold circuit actually demands</h3>
+        <table>
+          <tr><th>Spec</th><th>Gold-grade target</th></tr>
+          <tr><td>Hardness / abrasion no.</td><td class="num">97–98%+</td></tr>
+          <tr><td>Iodine number</td><td class="num">1000–1200 mg/g</td></tr>
+          <tr><td>Attrition loss</td><td class="num">&lt;3–5%</td></tr>
+          <tr><td>Apparent density</td><td class="num">high, uniform</td></tr>
+          <tr><td>Mesh</td><td class="num">6×12 / 6×16, few fines</td></tr>
+          <tr><td>Au load (K-value)</td><td class="num">≥26 kg Au / t C</td></tr>
+        </table>
+        <p class="disc">Carbon is recycled through slurry, screens, elution and thermal reactivation dozens of times. Every % of attrition = carbon lost <i>and</i> adsorbed gold trapped in fines. Hardness is the economics.</p>
+      </div>
+      <div class="card">
+        <h3>Coconut vs bamboo on the deciding axes</h3>
+        <table>
+          <tr><th>Property</th><th>Coconut</th><th>Bamboo (raw)</th></tr>
+          <tr><td>Hardness</td><td class="win">Very high</td><td class="lose">Low</td></tr>
+          <tr><td>Density</td><td class="win">High</td><td class="lose">Low</td></tr>
+          <tr><td>Attrition resist.</td><td class="win">Excellent</td><td class="lose">Fragile, splits</td></tr>
+          <tr><td>Micropore / iodine</td><td class="win">Excellent</td><td>Good</td></tr>
+          <tr><td>Reactivation cycles</td><td class="win">Many</td><td class="lose">Few</td></tr>
+          <tr><td>Feedstock cost/security</td><td class="lose">Scarce, ₹85k/t</td><td class="win">Cheap, abundant</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="call bad">
+      <span class="h">The fundamental issue — stated plainly</span>
+      Bamboo char is <b>low-density and fibre-structured</b>: it fractures along its grain and generates fines under the mechanical and thermal cycling of a CIP/CIL plant. Coconut shell's dense, isotropic structure is <i>why</i> it dominates gold. This is a real materials constraint, not a supply-chain gap you can out-execute. Selling <i>raw granular</i> bamboo carbon into a gold circuit means competing on the one spec you're worst at.
+    </div>
+
+    <div class="call warn">
+      <span class="h">The escape hatch — if you insist on gold</span>
+      You <i>can</i> reach gold-grade hardness by <b>agglomeration</b>: grind bamboo char, add a binder, extrude/briquette to a dense pellet, then carbonise + activate. This "reconstituted" route rebuilds density and hardness — but it adds cost and process steps, and you're still benchmarked against a mature coconut product. Alternatively, target <b>less abrasive gold formats</b> (carbon-in-column / heap-leach vs fluidised CIP) or offer a <b>reactivation service</b> rather than virgin carbon. Treat gold as a Phase-3 option, not the beachhead.
+    </div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section id="why">
+  <div class="wrap">
+    <p class="eyebrow">05 — The "why is nobody doing this" question</p>
+    <h2>Is bamboo AC nascent, or fundamentally flawed?</h2>
+    <p class="lead">You asked the exact right question. The honest answer is <b>"both, but split by application"</b> — and separating the two is the whole strategy.</p>
+
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card">
+        <h3 style="color:var(--red)">Genuine constraint (won't fully fix)</h3>
+        <ul class="clean">
+          <li><b>Gold / abrasive fluidised uses:</b> hardness &amp; density limits are real materials physics. This niche stays coconut's.</li>
+          <li><b>High-crystallinity char:</b> makes very-high surface area harder via steam alone — needs chemical/hybrid routes.</li>
+          <li><b>Node silica/ash variability:</b> raises washing burden vs uniform coconut shell.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--acc)">Nascent &amp; fixable (your opening)</h3>
+        <ul class="clean">
+          <li><b>Supply chain is young:</b> bamboo was only <b>declassified from "tree/forest" in India's 2017 Forest Act amendment</b> — freeing harvest &amp; transport. Aggregation is fragmented; no one has built the industrial feedstock rail yet.</li>
+          <li><b>Coconut was cheap &amp; "good enough":</b> zero pull to switch — until coconut shell doubled to ₹85k/t.</li>
+          <li><b>Bamboo AC already works elsewhere:</b> China runs a large bamboo-charcoal/AC industry for air, water &amp; consumer goods. Proof the material sells — just not into gold.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="call key" style="margin-top:18px">
+      <span class="h">Reframe</span>
+      "Nobody uses bamboo for activated carbon" is really <b>"nobody uses bamboo for the gold-grade carbon that dominates India's export headlines."</b> For water, air, food, pharma and energy storage, bamboo is not flawed — it's an <b>under-built supply chain sitting on top of a feedstock-cost dislocation.</b> That's an opportunity shape, not a dead end.
+    </div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section id="nodes">
+  <div class="wrap">
+    <p class="eyebrow">06 — Nodes, biochar &amp; the waste question</p>
+    <h2>What to do with bamboo nodes — and is biochar worth it?</h2>
+
+    <div class="grid g2">
+      <div class="card">
+        <h3>The node problem &amp; three uses</h3>
+        <p>Nodes are the dense diaphragms between internodes. They carbonise unevenly and concentrate <b>silica (8.7–49%) and potassium</b> — the two dominant ash minerals in Indian bamboo. Options:</p>
+        <ul class="clean">
+          <li><b>Separate &amp; divert</b> (recommended): route nodes to biochar / energy / aggregate; keep clean internodes for AC.</li>
+          <li><b>Blend small fraction</b> with heavier lime/alkali washing to hit ash spec.</li>
+          <li><b>Silica valorisation:</b> node silica can template mesoporous carbon or be leached to bio-silica — a specialty play, not a day-one one.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Biochar vs activated carbon</h3>
+        <table>
+          <tr><th></th><th>Biochar</th><th>Activated carbon</th></tr>
+          <tr><td>Rough value</td><td class="num">₹15–40k/t</td><td class="num">₹1.2–3.5 L/t</td></tr>
+          <tr><td>Capex/complexity</td><td class="win">Low</td><td>High</td></tr>
+          <tr><td>Activation kit</td><td>No</td><td>Yes</td></tr>
+          <tr><td>Cert / QC burden</td><td class="win">Light</td><td>Heavy</td></tr>
+          <tr><td>Carbon credits</td><td class="win">Strong</td><td>Some</td></tr>
+        </table>
+        <p class="disc">L = lakh. AC is 4–10× the value per tonne — the real profit pool. Biochar is the <i>byproduct monetiser</i>, not the main business.</p>
+      </div>
+    </div>
+
+    <div class="call good">
+      <span class="h">The clean answer</span>
+      <b>Activated carbon is the profit engine; biochar + carbon credits monetise everything AC can't use</b> — nodes, fines, off-spec batches. Don't choose between them: design one plant where the AC line's rejects feed a biochar/credit line. That waste-to-value loop is also part of your ESG story to buyers.
+    </div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section id="market">
+  <div class="wrap">
+    <p class="eyebrow">07 — Markets, growth &amp; profit pools</p>
+    <h2>Who buys activated carbon — and where the money is going</h2>
+    <p class="lead">Global market ≈ <b>US$6.0bn in 2026</b>, heading to ~US$11–12bn by 2034 at <b>~8–9% CAGR</b>. But the headline hides where you actually want to be: the fast-growing, higher-margin segments — not the commoditised ones.</p>
+
+    <h3>End-use segments — size, growth &amp; fit for bamboo</h3>
+    <table style="margin-top:8px">
+      <thead><tr><th>Segment</th><th>Scale / signal</th><th>Growth</th><th>Bamboo fit</th></tr></thead>
+      <tbody>
+        <tr><td><b>Water &amp; wastewater</b></td><td>Largest share (~42% value / ~58% volume). PFAS rules → US utilities signing 5–10yr GAC contracts.</td><td class="num">High</td><td><span class="win">Strong</span></td></tr>
+        <tr><td><b>Energy storage (EDLC / supercapacitor)</b></td><td>~24% of global usage; premium grade &gt;1,800 m²/g sells at 3–5× water grade.</td><td class="num">15–20%</td><td><span class="win">Strong (hybrid activation)</span></td></tr>
+        <tr><td><b>Air / gas / VOC</b></td><td>Emission norms tightening; steady industrial pull.</td><td class="num">Mid–High</td><td><span class="win">Good</span></td></tr>
+        <tr><td><b>Automotive canisters (EVAP)</b></td><td>Tied to ~15.5M light-vehicle sales 2026; spec-driven, sticky OEM supply.</td><td class="num">Mid</td><td>Good</td></tr>
+        <tr><td><b>Food, beverage, pharma</b></td><td>Decolourising, high-purity; values mesopores &amp; low ash.</td><td class="num">Mid</td><td><span class="win">Good</span></td></tr>
+        <tr><td><b>Gold / mining</b></td><td>Big, but commoditised &amp; hardness-gated.</td><td class="num">Mid</td><td><span class="lose">Weak (raw)</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="grid g2" style="margin-top:22px">
+      <div class="card">
+        <h3>Relative segment growth (indicative CAGR)</h3>
+        <div class="bar"><span class="nm">Supercapacitor AC</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">15–20%</span></div>
+        <div class="bar"><span class="nm">Water (PFAS pull)</span><span class="track"><span class="fill" style="width:62%"></span></span><span class="val">~10–12%</span></div>
+        <div class="bar"><span class="nm">Air / gas</span><span class="track"><span class="fill" style="width:50%"></span></span><span class="val">~8–9%</span></div>
+        <div class="bar"><span class="nm">Market overall</span><span class="track"><span class="fill" style="width:45%"></span></span><span class="val">~8–9%</span></div>
+        <div class="bar"><span class="nm">Gold / mining</span><span class="track"><span class="fill" style="width:38%"></span></span><span class="val">~6–7%</span></div>
+      </div>
+      <div class="card">
+        <h3>Where to aim first</h3>
+        <p><b>Beachhead: water &amp; wastewater treatment.</b> Biggest pool, huge regulatory tailwind (PFAS, tightening Indian discharge norms), forgiving on hardness, values micropore + steam-grade carbon bamboo does well.</p>
+        <p><b>Margin expansion: energy-storage / supercapacitor grade.</b> Fastest growth, 3–5× price, and the one place where investing in H₃PO₄/KOH hybrid activation pays off. This is where a bamboo specialist can build real premium.</p>
+        <p><b>Steady base load: air/gas + food/pharma decolourising.</b> Absorbs mid-grade output, diversifies customers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section id="moat">
+  <div class="wrap">
+    <p class="eyebrow">08 — The moat</p>
+    <h2>What bamboo actually gives you over coconut shell</h2>
+    <p class="lead">Be precise about the moat, because it's easy to claim the wrong one. Your edge is <b>not</b> "better carbon." It's <b>feedstock cost, security and ESG</b> — arriving exactly as coconut's supply cracks.</p>
+
+    <div class="grid g3" style="margin:20px 0">
+      <div class="card">
+        <div class="stat sm" style="color:var(--gold)">₹40k → ₹85k</div>
+        <div class="klabel">Coconut-shell charcoal /t, 2023→2025</div>
+        <p style="font-size:.86rem;margin-top:10px">Climate-driven coconut scarcity doubled the competing feedstock in ~2 years. That volatility <i>is</i> your opening.</p>
+      </div>
+      <div class="card">
+        <div class="stat sm" style="color:var(--acc)">~15 Mha</div>
+        <div class="klabel">India's bamboo resource (2nd globally)</div>
+        <p style="font-size:.86rem;margin-top:10px">3–4 year harvest cycles, grows on degraded land, doesn't compete with a food crop's byproduct chain.</p>
+      </div>
+      <div class="card">
+        <div class="stat sm" style="color:var(--blue)">2017</div>
+        <div class="klabel">Declassified from "tree" — free to trade</div>
+        <p style="font-size:.86rem;margin-top:10px">Legal unlock for harvest &amp; transport. First-mover advantage in building the aggregation rail.</p>
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <h3>Real, defensible advantages</h3>
+        <ul class="clean">
+          <li><b>Input cost:</b> bamboo ₹3–5k/t vs coconut shell charcoal ₹85k/t — a structural raw-material gap.</li>
+          <li><b>Supply security:</b> cultivable, plantable, geographically spreadable — not hostage to one crop's climate year.</li>
+          <li><b>ESG / traceability:</b> fast carbon sequestration + rural livelihoods + a clean chain-of-custody story buyers (esp. water utilities, OEMs) increasingly pay for.</li>
+          <li><b>Pore tunability:</b> hybrid activation gives you a legitimate shot at premium mesoporous / energy grades coconut can't easily make.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>What is <i>not</i> a moat (don't claim it)</h3>
+        <ul class="clean">
+          <li><b>Beating coconut on gold carbon</b> — you won't on hardness. Don't build the pitch here.</li>
+          <li><b>"Higher surface area"</b> as a blanket claim — depends entirely on route; steam-bamboo isn't automatically higher.</li>
+          <li><b>Novelty alone</b> — China already makes bamboo AC; the edge is <i>Indian feedstock economics + supply build-out</i>, not inventing the material.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section id="econ">
+  <div class="wrap">
+    <p class="eyebrow">09 — The economics</p>
+    <h2>Does the money work?</h2>
+    <p class="lead">Order-of-magnitude, per tonne of finished activated carbon, Indian context. Treat as a planning skeleton to pressure-test with your own quotes — not audited figures.</p>
+
+    <div class="grid g2" style="margin:20px 0">
+      <div class="card">
+        <h3>Illustrative cost stack — per tonne AC</h3>
+        <div class="bar"><span class="nm">Bamboo feedstock</span><span class="track"><span class="fill" style="width:16%;background:linear-gradient(90deg,#6fae3a,#a6d049)"></span></span><span class="val">₹12–20k</span></div>
+        <div class="bar"><span class="nm">Energy (kiln/steam)</span><span class="track"><span class="fill" style="width:34%;background:linear-gradient(90deg,#c99a2e,#e0a94a)"></span></span><span class="val">₹25–40k</span></div>
+        <div class="bar"><span class="nm">Labour + overhead</span><span class="track"><span class="fill" style="width:22%;background:linear-gradient(90deg,#c99a2e,#e0a94a)"></span></span><span class="val">₹15–25k</span></div>
+        <div class="bar"><span class="nm">Chem / wash / effluent</span><span class="track"><span class="fill" style="width:14%;background:linear-gradient(90deg,#c99a2e,#e0a94a)"></span></span><span class="val">₹8–20k</span></div>
+        <div class="bar"><span class="nm">Depreciation / misc</span><span class="track"><span class="fill" style="width:14%;background:linear-gradient(90deg,#c99a2e,#e0a94a)"></span></span><span class="val">₹10–20k</span></div>
+        <hr style="border:none;border-top:1px solid var(--line);margin:12px 0">
+        <div class="bar"><span class="nm"><b>≈ Cash cost</b></span><span class="track"><span class="fill" style="width:70%;background:linear-gradient(90deg,#8a5,#cd6)"></span></span><span class="val"><b>₹70k–1.1L</b></span></div>
+      </div>
+      <div class="card">
+        <h3>Against selling price</h3>
+        <table>
+          <tr><th>Grade</th><th>Price /t</th></tr>
+          <tr><td>Water / mid-grade GAC</td><td class="num">₹1.2–1.8 L</td></tr>
+          <tr><td>Air / food / pharma</td><td class="num">₹1.8–2.6 L</td></tr>
+          <tr><td>Energy-storage grade</td><td class="num">₹3–3.5 L +</td></tr>
+          <tr><td>Indian AC export benchmark</td><td class="num">$3,600–3,700</td></tr>
+          <tr><td>Chinese AC benchmark</td><td class="num">$2,500–2,700</td></tr>
+        </table>
+        <p class="disc">Gross margin is workable <b>if</b> you hit spec and sell to the right segment. The feedstock line (₹12–20k vs coconut's ₹85k input) is precisely where bamboo's advantage shows up in the P&amp;L.</p>
+      </div>
+    </div>
+
+    <div class="call warn">
+      <span class="h">Capex &amp; the honest risks</span>
+      Pilot line (rotary kiln + steam activation + QC): roughly <b>₹2–8 cr</b>. Commercial 3,000–5,000 tpa plant: roughly <b>₹25–60 cr</b>. The three things that decide whether this works: <b>(1) reliable low-cost bamboo aggregation</b> (the unbuilt part), <b>(2) hitting consistent spec batch-to-batch</b> from variable feed, and <b>(3) customer qualification cycles</b> — utilities and OEMs test for months before they switch. Energy cost is your biggest controllable line, so heat integration (using pyrolysis syngas to fire the kiln) is not optional — it's the margin.
+    </div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section id="path">
+  <div class="wrap">
+    <p class="eyebrow">10 — Path forward</p>
+    <h2>What to actually do</h2>
+    <p class="lead">A staged plan that leads with bamboo's strengths and defers its weakness (gold) until you've earned the process maturity to attack it — if ever.</p>
+
+    <div class="phase">
+      <div class="when">PHASE 0<span class="sub">0–3 months</span></div>
+      <div>
+        <h4>De-risk the material</h4>
+        <ul class="chk">
+          <li>Source 3–4 candidate species (lead with <i>Bambusa tulda / bambos, D. strictus</i>); characterise ash, silica, fixed carbon per lot.</li>
+          <li>Lab/toll carbonise + steam-activate; measure iodine, BET, hardness, ash. Establish your <i>real</i> baseline, not the paper's.</li>
+          <li>Map bamboo aggregation within ~150 km radius — this logistics answer decides plant siting.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="when">PHASE 1<span class="sub">3–12 months</span></div>
+      <div>
+        <h4>Pilot line + water beachhead</h4>
+        <ul class="chk">
+          <li>Build/lease a steam-activation pilot with syngas heat integration; lock a repeatable water-grade GAC spec.</li>
+          <li>Sell into water/wastewater — Indian ETPs/CETPs, utilities, and PFAS-driven export buyers. Forgiving on hardness, big pool.</li>
+          <li>Stand up a biochar + carbon-credit line for nodes/fines/off-spec from day one.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="when">PHASE 2<span class="sub">12–30 months</span></div>
+      <div>
+        <h4>Climb into premium</h4>
+        <ul class="chk">
+          <li>Add H₃PO₄/hybrid (and later KOH) activation for mesoporous &amp; energy-storage grades — the 3–5× price tier.</li>
+          <li>Qualify with air/gas, food/pharma, and at least one supercapacitor/energy customer.</li>
+          <li>Formalise the ESG/traceability story; pursue certifications buyers demand (ISO, REACH, NSF where relevant).</li>
+        </ul>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="when">PHASE 3<span class="sub">30 months +</span></div>
+      <div>
+        <h4>Only now, revisit gold — on your terms</h4>
+        <ul class="chk">
+          <li>If you still want gold: pilot the <b>agglomerated/pelletised</b> route to build hardness, or offer a <b>carbon-reactivation service</b> to refineries instead of virgin carbon.</li>
+          <li>Target less-abrasive formats (CIC / heap-leach) before fluidised CIP.</li>
+          <li>Judge it against your then-proven premium lines — gold may simply not be worth the hardness fight.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="verdict" style="margin-top:30px">
+      <h3>One-paragraph conclusion</h3>
+      <p class="big" style="font-size:1.12rem">Indian bamboo is a real, viable activated-carbon feedstock, and steam activation is good enough for most of the market. Your advantage is a cheap, secure, ESG-clean feedstock platform arriving as coconut shell doubles in price — not a superior gold carbon. So lead with <b>water</b>, monetise <b>nodes as biochar</b>, climb into <b>energy-storage premium</b> via hybrid activation, and treat <b>gold as a deferred, pelletised or service-based option</b> rather than the thing you build the company around. Bamboo's weakness is hardness; the whole strategy is to compete everywhere hardness isn't the deciding spec — which is most of a US$6bn, 8–9%-growth market.</p>
+    </div>
+  </div>
+</section>
+
+<div class="foot">
+  <div class="wrap">
+    <h3 style="color:var(--ink)">Sources &amp; evidence base</h3>
+    <p class="srcs">Peer-reviewed &amp; industry data underpinning the numbers above. Figures are ranges from published literature and market reports; the economics are order-of-magnitude planning estimates, not audited costs — validate with your own supplier quotes and lab runs.</p>
+    <p class="srcs">
+      • Bamboo steam-activation iodine/BET (823 mg/g, 719 m²/g; up to 2,024 m²/g ACF): <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5455906/">MDPI Materials / PMC</a>, <a href="https://www.researchgate.net/publication/267827623_Production_of_Activated_Carbon_from_Industrial_Bamboo_Wastes">Industrial Bamboo Wastes study</a><br>
+      • Pore structure — steam→microporous, H₃PO₄→mesoporous: <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11243171/">Lignocellulosic raw materials &amp; pore structure</a>, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8539786/">Bamboo mesoporous AC for EDLC supercapacitors</a><br>
+      • Indian species, ash/silica, fixed carbon (<i>B. tulda</i>, 85% growing stock): <a href="https://www.sciencedirect.com/science/article/pii/S2773139125000278">AC from NE-India bamboo (ScienceDirect)</a>, <a href="https://link.springer.com/article/10.1007/s11676-014-0478-6">Fuel properties of Indian bamboo species</a><br>
+      • Gold-recovery carbon specs (iodine 1000–1200, hardness, K-value, attrition): <a href="https://tingyuancarbon.com/activated-carbon-for-cip-cil-and-cic-gold-recovery-processes/">CIP/CIL/CIC guide</a>, <a href="https://heycarbons.com/gold-recovery-the-role-of-coconut-shell-activated-carbon/">Coconut shell in gold recovery</a><br>
+      • Bamboo vs coconut mechanical strength / hardness: <a href="https://www.yuanlicarbonyl.com/blog/what-is-the-difference-between-bamboo-activated-carbon-and-coconut-shell-activat-1352267.html">Bamboo vs coconut AC comparison</a>, <a href="https://activatedcarbonfactory.com/blog/activated-carbon-raw-materials-comparison">Raw materials comparison</a><br>
+      • Market size / CAGR / segment growth (US$6.0bn 2026, water 42%, EDLC 15–20%, PFAS): <a href="https://www.fortunebusinessinsights.com/activated-carbon-market-102175">Fortune Business Insights</a>, <a href="https://activatedcarbonfactory.com/blog/activated-carbon-energy-storage-supercapacitors">Energy-storage AC</a>, <a href="https://allcarbontech.com/granular-activated-carbon-pfas/">GAC &amp; PFAS</a><br>
+      • India industry, coconut ₹40k→₹85k, exports, activation routes: <a href="https://carpediemias.com/current-affairs/article/activated-carbon-drives-india-s-coconut-product-exports-fy25">India coconut AC exports FY25</a>, <a href="https://www.tpci.in/indiabusinesstrade/blogs/product-profile-activated-carbon/">TPCI product profile</a>, <a href="https://in.thedollarbusiness.com/magazine/activated-carbon-sounds-flashy-it-is-too/46182">Dollar Business — AC in India</a>
+    </p>
+    <p class="srcs" style="margin-top:18px">Prepared as a strategy briefing · figures are indicative planning ranges · verify feedstock &amp; capex locally before committing.</p>
+  </div>
+</div>
+
+</body>
+</html>

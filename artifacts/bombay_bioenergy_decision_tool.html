@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bombay Bioenergy — Opportunity Decision Tool</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#15181a; --panel:#1e2326; --panel2:#252b2f; --line:#343c41;
+  --ink:#e8e6e0; --dim:#9aa4a8; --accent:#7fb544; --accent2:#e0a532; --red:#d4654f;
+  --mono:'Fira Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.45}
+@import url('');
+h1,h2,h3,.disp{font-family:'Barlow Condensed',sans-serif}
+header{padding:22px 28px 14px;border-bottom:2px solid var(--accent);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px}
+header h1{font-size:30px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+header h1 span{color:var(--accent)}
+header .sub{color:var(--dim);font-size:14px}
+.tabs{display:flex;gap:4px;padding:0 28px;background:var(--panel);border-bottom:1px solid var(--line)}
+.tab{padding:12px 20px;cursor:pointer;font-family:'Barlow Condensed';font-size:17px;letter-spacing:.6px;text-transform:uppercase;color:var(--dim);border-bottom:3px solid transparent}
+.tab.active{color:var(--ink);border-bottom-color:var(--accent)}
+main{padding:22px 28px;max-width:1500px}
+.grid{display:grid;gap:18px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
+.panel h2{font-size:20px;letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px;color:var(--accent)}
+.panel h3{font-size:16px;margin:8px 0 4px;color:var(--accent2)}
+.note{color:var(--dim);font-size:13px;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font-family:'Barlow Condensed';font-size:14px;letter-spacing:.6px;text-transform:uppercase;color:var(--dim);text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:6px 8px;border-bottom:1px solid #2a3034;vertical-align:middle}
+input[type=number]{width:58px;background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:4px 6px;border-radius:4px;font-family:var(--mono);font-size:13px}
+input[type=range]{width:110px;accent-color:var(--accent)}
+.score-cell input{width:46px;text-align:center}
+.rank-row{display:flex;align-items:center;gap:12px;margin:7px 0}
+.rank-num{font-family:'Barlow Condensed';font-size:22px;width:30px;color:var(--accent2);text-align:right}
+.rank-name{width:300px;font-weight:500}
+.bar-wrap{flex:1;background:var(--panel2);border-radius:3px;height:22px;position:relative}
+.bar{height:100%;border-radius:3px;background:linear-gradient(90deg,#4d7a2a,var(--accent));transition:width .4s}
+.bar-val{position:absolute;right:8px;top:2px;font-family:var(--mono);font-size:13px}
+.pill{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;font-family:var(--mono)}
+.pill.g{background:#2c4218;color:#b6e08a}.pill.y{background:#4a3a12;color:#ecc764}.pill.r{background:#4a221a;color:#eb9c8a}
+.chip{display:inline-block;background:var(--panel2);border:1px solid var(--line);padding:2px 8px;border-radius:4px;font-size:12px;color:var(--dim);margin:2px 3px 0 0}
+.toggle{cursor:pointer;width:38px;height:20px;border-radius:10px;background:var(--line);position:relative;flex-shrink:0}
+.toggle.on{background:var(--accent)}
+.toggle::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left .15s}
+.toggle.on::after{left:20px}
+.kpi{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:14px}
+.kpi .box{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:10px 16px;min-width:160px}
+.kpi .lab{font-family:'Barlow Condensed';text-transform:uppercase;font-size:13px;letter-spacing:.6px;color:var(--dim)}
+.kpi .val{font-family:var(--mono);font-size:22px;margin-top:2px}
+.kpi .val.over{color:var(--red)}
+.gate{border-left:3px solid var(--accent2);padding:8px 12px;margin:8px 0;background:var(--panel2);border-radius:0 4px 4px 0}
+.gate b{font-family:'Barlow Condensed';font-size:16px;letter-spacing:.3px}
+.gate .q{color:var(--dim);font-size:13px;margin-top:3px}
+.btn{background:var(--accent);color:#15181a;border:none;padding:8px 16px;border-radius:4px;font-family:'Barlow Condensed';font-size:16px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;font-weight:600}
+.btn.sec{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+.toolbar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:1000px){.two-col{grid-template-columns:1fr}.rank-name{width:160px}}
+canvas{max-height:340px}
+.mono{font-family:var(--mono);font-size:13px}
+.hint{font-size:12px;color:var(--dim);font-style:italic}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600&family=Fira+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+<header>
+  <div>
+    <h1>Bombay <span>Bioenergy</span> — Opportunity Decision Tool</h1>
+    <div class="sub">Score → Rank → Build portfolio under capital &amp; bandwidth constraints → Define validation gates</div>
+  </div>
+  <div class="toolbar">
+    <button class="btn sec" onclick="exportState()">Export JSON</button>
+    <button class="btn sec" onclick="document.getElementById('imp').click()">Import JSON</button>
+    <input type="file" id="imp" style="display:none" accept=".json" onchange="importState(this)">
+    <button class="btn sec" onclick="if(confirm('Reset all edits to defaults?')){localStorage.removeItem('bbe_dt');location.reload()}">Reset</button>
+  </div>
+</header>
+<div class="tabs">
+  <div class="tab active" data-t="score">1 · Scorecard &amp; Ranking</div>
+  <div class="tab" data-t="port">2 · Portfolio Builder</div>
+  <div class="tab" data-t="gates">3 · Validation Gates</div>
+  <div class="tab" data-t="strat">4 · Strategic Decisions</div>
+</div>
+<main>
+
+<!-- TAB 1 -->
+<section id="t-score" class="grid">
+  <div class="panel">
+    <h2>Criteria Weights</h2>
+    <div class="note">Total must equal 100. These encode what you believe matters; the ranking is only as honest as the weights.</div>
+    <table id="wtable"></table>
+    <div style="margin-top:8px" class="mono">Weight total: <span id="wtot"></span></div>
+  </div>
+  <div class="panel">
+    <h2>Opportunity Scores (1 = poor · 5 = excellent)</h2>
+    <div class="note">Defaults are pre-filled judgements from what you've described — edit anything. Capital criterion: 5 = very low capital needed. Time: 5 = fast to first revenue.</div>
+    <div style="overflow-x:auto"><table id="stable"></table></div>
+  </div>
+  <div class="two-col">
+    <div class="panel">
+      <h2>Weighted Ranking</h2>
+      <div id="ranking"></div>
+    </div>
+    <div class="panel">
+      <h2>Risk vs Reward Map</h2>
+      <div class="note">X = execution risk (capital need + complexity + partner dependence, inverted). Y = attractiveness (offtake + margin + feedstock). Bubble = capital required.</div>
+      <canvas id="scatter"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- TAB 2 -->
+<section id="t-port" class="grid" style="display:none">
+  <div class="panel">
+    <h2>Constraints</h2>
+    <div class="kpi">
+      <div class="box"><div class="lab">Capital available (₹ Cr)</div><input type="number" id="capAvail" value="10" step="0.5" style="width:90px;font-size:20px" oninput="S.capAvail=+this.value;render()"></div>
+      <div class="box"><div class="lab">Capital committed</div><div class="val" id="capUsed">0</div></div>
+      <div class="box"><div class="lab">Founder bandwidth used</div><div class="val" id="bwUsed">0%</div></div>
+      <div class="box"><div class="lab">Months to first ₹ (slowest pick)</div><div class="val" id="ttc">—</div></div>
+    </div>
+    <div class="note">Toggle opportunities into the portfolio. Capital = your equity/working-capital outlay, not project cost. Bandwidth = % of founder/management attention. Anything over 100% bandwidth means execution will slip — that has been the death of every diversified biomass startup.</div>
+    <table id="ptable"></table>
+  </div>
+  <div class="two-col">
+    <div class="panel"><h2>Capital Allocation</h2><canvas id="capChart"></canvas></div>
+    <div class="panel"><h2>Cash Timeline</h2><div class="note">When each selected opportunity starts producing revenue. Front-load fast-cash items to fund slower builds.</div><canvas id="tlChart"></canvas></div>
+  </div>
+</section>
+
+<!-- TAB 3 -->
+<section id="t-gates" class="grid" style="display:none">
+  <div class="panel">
+    <h2>Validation Gates — what must be true before committing capital</h2>
+    <div class="note">Each lead is a conversation, not a deal. These are the cheapest tests that kill or confirm each one. Run gates before spending; a gate failed early is money saved.</div>
+    <div id="gates"></div>
+  </div>
+</section>
+
+<!-- TAB 4 -->
+<section id="t-strat" class="grid" style="display:none">
+  <div class="panel">
+    <h2>Open Strategic Decisions</h2>
+    <div class="note">These cut across multiple opportunities — decide them once, apply everywhere.</div>
+    <div id="strat"></div>
+  </div>
+</section>
+</main>
+
+<script>
+const CRITERIA = [
+ {k:'feed', n:'Feedstock security & cost', w:15, d:'Locked supply, competitive landed cost, low diversion risk'},
+ {k:'off',  n:'Offtake certainty',         w:15, d:'Identified buyers, price visibility, contract likelihood'},
+ {k:'cap',  n:'Capital lightness',          w:12, d:'5 = needs very little of OUR capital'},
+ {k:'ttr',  n:'Speed to revenue',           w:12, d:'5 = cash within months'},
+ {k:'mar',  n:'Margin potential',           w:12, d:'Gross margin per tonne after transport'},
+ {k:'tra',  n:'Transport economics',        w:10, d:'Feedstock catchment density + distance to buyers'},
+ {k:'par',  n:'Partner independence',       w:8,  d:'5 = we control the asset; 1 = hostage to one partner'},
+ {k:'exe',  n:'Execution simplicity',       w:8,  d:'Proven tech, known process, hiring feasible'},
+ {k:'sea',  n:'Seasonality resilience',     w:4,  d:'Year-round feedstock vs 2-month windows'},
+ {k:'opt',  n:'Strategic optionality',      w:4,  d:'Opens export/biochar/CBG doors later'}
+];
+
+const OPPS = [
+ {id:'nb-plant', n:'Nandurbar — bamboo pellet plant', cap:6.0, bw:30, ttc:12,
+  s:{feed:4,off:3,cap:2,ttr:2,mar:3,tra:3,par:3,exe:3,sea:4,opt:5},
+  notes:'RM ~₹4.5k/t + land access offered. Export-grade bamboo pellets possible (your KAHL/steam-conditioning specs apply). Big capex, slow build.'},
+ {id:'gd-plant', n:'Gadchiroli — bamboo pellet plant', cap:6.0, bw:30, ttc:14,
+  s:{feed:4,off:3,cap:2,ttr:2,mar:3,tra:2,par:3,exe:2,sea:4,opt:5},
+  notes:'Similar to Nandurbar but harder logistics/security context; longer distances to ports and industrial buyers. Likely sequenced AFTER Nandurbar proves the model.'},
+ {id:'nb-trade', n:'Nandurbar — bamboo trading (straighten/grade/sell)', cap:0.6, bw:15, ttc:3,
+  s:{feed:4,off:4,cap:5,ttr:5,mar:4,tra:3,par:3,exe:4,sea:3,opt:4},
+  notes:'₹4.5k/t in; construction-grade straightened/aged bamboo sells multiples higher. Working-capital business, fast cash, builds local supply relationships that de-risk the plant later.'},
+ {id:'nl-husk', n:'Nellore — rice husk pellets/briquettes (co-invest)', cap:2.0, bw:20, ttc:8,
+  s:{feed:5,off:4,cap:4,ttr:3,mar:3,tra:4,par:2,exe:4,sea:4,opt:3},
+  notes:'Mill-gate feedstock = zero collection cost, year-round. Partner brings capital + site. Risk: partner dependence and husk price drift (husk has competing uses — check local FBC boiler demand).'},
+ {id:'sm-areca', n:'Shimoga — arecanut residue plant', cap:4.0, bw:25, ttc:10,
+  s:{feed:4,off:3,cap:3,ttr:3,mar:4,tra:3,par:4,exe:3,sea:3,opt:3},
+  notes:'Genuinely untapped feedstock = low competition and likely cheap. But pelletisation behaviour of areca husk/leaf needs lab trials first (ash, binding). Unproven process = gate before capex.'},
+ {id:'lt-soy', n:'Latur/Solapur — soy husk + SCT/tur husk plant', cap:4.0, bw:25, ttc:9,
+  s:{feed:3,off:4,cap:3,ttr:3,mar:3,tra:4,par:4,exe:4,sea:2,opt:3},
+  notes:'Home turf — your network, Godbole supply chain. Strong NTPC/industrial offtake fit. But agri-residue here is seasonal and increasingly contested (price discovery risk).'},
+ {id:'pt-cbg', n:'Pathmeda CBG — fix & operate partnership', cap:1.0, bw:20, ttc:6,
+  s:{feed:4,off:4,cap:4,ttr:3,mar:3,tra:5,par:2,exe:2,sea:5,opt:4},
+  notes:'You already did the technical assessment. SATAT offtake exists. Low capital but high management drain and total dependence on goushala relationship. Could be structured as fee + success share instead of capital.'},
+ {id:'ne-bamboo', n:'Assam/Meghalaya — bamboo procurement + pellets', cap:5.0, bw:30, ttc:15,
+  s:{feed:5,off:3,cap:2,ttr:1,mar:3,tra:2,par:3,exe:2,sea:4,opt:4},
+  notes:'Cheapest, most abundant bamboo in India — but 2,500+ km from your base, weak logistics, and you have zero ground presence. Classic trap: great feedstock, terrible span of control. Park unless a strong local partner emerges.'},
+ {id:'ntpc', n:'NTPC supply — non-bamboo pellets (aggregate/trade)', cap:1.5, bw:20, ttc:5,
+  s:{feed:3,off:5,cap:4,ttr:4,mar:2,tra:3,par:4,exe:4,sea:3,opt:3},
+  notes:'SAMARTH tier-3 in your strategy but the only buyer with published tenders today. Thin margins, payment cycles, spec/penalty risk — but real revenue and credibility while plants are built. Could start as aggregation/trading before own production.'}
+];
+
+const GATES = [
+ {o:'Nandurbar bamboo (both plays)', items:[
+   'Written feedstock MOU: volume/yr, price band, who harvests, 3-yr-age guarantee mechanism',
+   'Land terms on paper — lease vs allotment, power availability (pellet mill needs reliable HT supply)',
+   'Trading first: buy 2–3 truckloads, straighten/grade, sell to 2 construction buyers. Measure realised ₹/t and cycle time. This is a <₹10L experiment that validates the whole Nandurbar thesis.']},
+ {o:'Gadchiroli', items:[
+   'Do NOT run in parallel with Nandurbar. Single gate: does the Nandurbar model hit target conversion cost/t within 6 months of commissioning?',
+   'Meanwhile: map transport cost Gadchiroli → nearest port (export) and → nearest 5 industrial clusters.']},
+ {o:'Nellore rice husk', items:[
+   'Term sheet with mill owner: capital split, husk price formula (indexed, not fixed), exit clause',
+   'Verify husk isn\'t already committed — check what local FBC boilers / husk traders currently pay',
+   'One pilot: 20t husk → pellets at a job-work facility, send samples to 3 target buyers with quotes.']},
+ {o:'Shimoga arecanut', items:[
+   'Lab pelletisation trial FIRST (₹50k–1L): ash %, durability, die wear. Areca residue is unproven — your 42CrMo die standard may not survive high-silica feedstock',
+   'Quantify available tonnage within 50 km and current disposal practice (is it actually free/cheap?)']},
+ {o:'Latur/Solapur', items:[
+   'Godbole-led feedstock census: contracted tonnage at what price, this season vs 3-yr trend',
+   'Two LOIs from industrial boiler buyers (textile/food processing) before any capex — this is your Tier-1 market, prove it here first.']},
+ {o:'Pathmeda CBG', items:[
+   'Restructure: technical-fee + revenue-share, NOT capital injection. You\'ve done the assessment; price your knowledge',
+   'Gate: goushala signs off on the recommendations report and funds the critical fixes themselves.']},
+ {o:'Assam/Meghalaya', items:[
+   'Parked. Only gate: a credible local operating partner with skin in the game approaches you. Don\'t go looking.']},
+ {o:'NTPC', items:[
+   'Decide: bid as producer (need plant) vs aggregator (need supplier network + working capital line)',
+   'Model one live tender end-to-end: spec, EMD, penalty clauses, payment terms, landed cost. Decide go/no-go on actual numbers, not the headline price.']}
+];
+
+const STRAT = [
+ {q:'Bamboo: white pellets vs torrefied vs biochar?', a:[
+   'White pellets → domestic industrial + NTPC; lowest capex; price ceiling ~coal parity (remember: market G3/G4 ₹12k+/t in shocks, not CIL notified price)',
+   'Torrefied → Japan/Korea export thesis (your Tier-2); premium pricing but adds reactor capex + unproven at your scale (your 5TPH machinery workbook covers this)',
+   'Biochar (steel PCI) → highest margin/t but smallest, slowest market to develop',
+   'Sequencing answer, not either/or: white pellets fund the plant → add torrefaction line once export LOI exists → biochar as R&D stream.']},
+ {q:'Build plants vs trade first?', a:[
+   'Trading (bamboo poles, NTPC aggregation) generates cash in months, teaches the market, and builds the supplier network the plants will need',
+   'Plants lock 4–6 Cr each for 12+ months before first revenue',
+   'Default sequence: trade → one plant → replicate. Resist building two plants simultaneously.']},
+ {q:'Domestic vs export?', a:[
+   'Your stated strategy is private industry first, export second, SAMARTH third — the leads above mostly serve tier 1 and 3',
+   'Export needs: torrefaction or very high durability white pellets, port-proximate plant, certifications (ENplus/ISO 17225), container economics. Nandurbar→JNPT ~400km is workable; Gadchiroli and NE are not, yet.']},
+ {q:'Partner structure discipline?', a:[
+   'Three leads (Nellore, Pathmeda, NE) are partner-dependent. Standard: you contribute tech + market access, partner contributes site/feedstock/capital; you keep operating control and offtake relationships; MOUs drafted in your favour (Godbole template exists).']}
+];
+
+// ---------- state ----------
+let S = load() || {
+  weights: Object.fromEntries(CRITERIA.map(c=>[c.k,c.w])),
+  scores: Object.fromEntries(OPPS.map(o=>[o.id,{...o.s}])),
+  caps: Object.fromEntries(OPPS.map(o=>[o.id,o.cap])),
+  bws: Object.fromEntries(OPPS.map(o=>[o.id,o.bw])),
+  ttcs: Object.fromEntries(OPPS.map(o=>[o.id,o.ttc])),
+  sel: {'nb-trade':true,'ntpc':true},
+  capAvail: 10
+};
+function save(){localStorage.setItem('bbe_dt',JSON.stringify(S))}
+function load(){try{return JSON.parse(localStorage.getItem('bbe_dt'))}catch(e){return null}}
+function exportState(){
+  const a=document.createElement('a');
+  a.href='data:application/json,'+encodeURIComponent(JSON.stringify(S,null,2));
+  a.download='bbe_decision_state.json';a.click();
+}
+function importState(inp){
+  const f=inp.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{S=JSON.parse(r.result);save();render()};
+  r.readAsText(f);
+}
+
+// ---------- scoring ----------
+function wtot(){return Object.values(S.weights).reduce((a,b)=>a+(+b),0)}
+function score(o){
+  let t=0; CRITERIA.forEach(c=>{t += (S.scores[o.id][c.k]||0) * S.weights[c.k]});
+  return t/ (5*wtot()) *100; // % of max
+}
+
+// ---------- render ----------
+let scatterC, capC, tlC;
+function render(){
+  save();
+  // weights table
+  document.getElementById('wtable').innerHTML =
+    '<tr><th>Criterion</th><th>Meaning</th><th style="width:170px">Weight</th></tr>'+
+    CRITERIA.map(c=>`<tr><td><b>${c.n}</b></td><td class="hint">${c.d}</td>
+      <td><input type="range" min="0" max="25" value="${S.weights[c.k]}" oninput="S.weights['${c.k}']=+this.value;render()">
+      <span class="mono"> ${S.weights[c.k]}</span></td></tr>`).join('');
+  const wt=wtot();
+  document.getElementById('wtot').innerHTML = wt===100?`<span style="color:var(--accent)">${wt} ✓</span>`:`<span style="color:var(--red)">${wt} — adjust to 100</span>`;
+
+  // scores table
+  document.getElementById('stable').innerHTML =
+    '<tr><th>Opportunity</th>'+CRITERIA.map(c=>`<th title="${c.n}">${c.n.split(' ')[0]}</th>`).join('')+'<th>Score</th></tr>'+
+    OPPS.map(o=>`<tr><td style="min-width:230px"><b>${o.n}</b><div class="hint">${o.notes}</div></td>`+
+      CRITERIA.map(c=>`<td class="score-cell"><input type="number" min="1" max="5" value="${S.scores[o.id][c.k]}" oninput="S.scores['${o.id}']['${c.k}']=Math.min(5,Math.max(1,+this.value));render()"></td>`).join('')+
+      `<td class="mono"><b>${score(o).toFixed(1)}</b></td></tr>`).join('');
+
+  // ranking
+  const ranked=[...OPPS].sort((a,b)=>score(b)-score(a));
+  document.getElementById('ranking').innerHTML = ranked.map((o,i)=>{
+    const s=score(o);
+    return `<div class="rank-row"><div class="rank-num">${i+1}</div><div class="rank-name">${o.n}</div>
+      <div class="bar-wrap"><div class="bar" style="width:${s}%"></div><div class="bar-val">${s.toFixed(1)}</div></div></div>`;
+  }).join('');
+
+  // scatter
+  const pts=OPPS.map(o=>{
+    const sc=S.scores[o.id];
+    const risk=(18-(sc.cap+sc.exe+sc.par))/15*100; // higher = riskier
+    const att=(sc.off+sc.mar+sc.feed)/15*100;
+    return {x:risk, y:att, r:Math.sqrt(S.caps[o.id])*6+4, label:o.n};
+  });
+  if(scatterC)scatterC.destroy();
+  scatterC=new Chart(document.getElementById('scatter'),{type:'bubble',
+    data:{datasets:[{data:pts,backgroundColor:'rgba(127,181,68,.55)',borderColor:'#7fb544'}]},
+    options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>pts[ctx.dataIndex].label}}},
+      scales:{x:{title:{display:true,text:'Execution risk →',color:'#9aa4a8'},min:0,max:100,grid:{color:'#2a3034'},ticks:{color:'#9aa4a8'}},
+              y:{title:{display:true,text:'Attractiveness →',color:'#9aa4a8'},min:0,max:100,grid:{color:'#2a3034'},ticks:{color:'#9aa4a8'}}}}});
+
+  // portfolio table
+  document.getElementById('ptable').innerHTML =
+    '<tr><th>In</th><th>Opportunity</th><th>Capital (₹ Cr)</th><th>Bandwidth %</th><th>Months to first ₹</th><th>Score</th></tr>'+
+    ranked.map(o=>`<tr>
+      <td><div class="toggle ${S.sel[o.id]?'on':''}" onclick="S.sel['${o.id}']=!S.sel['${o.id}'];render()"></div></td>
+      <td><b>${o.n}</b></td>
+      <td><input type="number" step="0.1" value="${S.caps[o.id]}" oninput="S.caps['${o.id}']=+this.value;render()"></td>
+      <td><input type="number" step="5" value="${S.bws[o.id]}" oninput="S.bws['${o.id}']=+this.value;render()"></td>
+      <td><input type="number" value="${S.ttcs[o.id]}" oninput="S.ttcs['${o.id}']=+this.value;render()"></td>
+      <td class="mono">${score(o).toFixed(1)}</td></tr>`).join('');
+
+  const sel=OPPS.filter(o=>S.sel[o.id]);
+  const capU=sel.reduce((a,o)=>a+S.caps[o.id],0);
+  const bwU=sel.reduce((a,o)=>a+S.bws[o.id],0);
+  const slow=sel.length?Math.max(...sel.map(o=>S.ttcs[o.id])):null;
+  const cu=document.getElementById('capUsed'); cu.textContent=capU.toFixed(1)+' / '+S.capAvail;
+  cu.className='val'+(capU>S.capAvail?' over':'');
+  const bu=document.getElementById('bwUsed'); bu.textContent=bwU+'%';
+  bu.className='val'+(bwU>100?' over':'');
+  document.getElementById('ttc').textContent=slow?slow+' mo':'—';
+  document.getElementById('capAvail').value=S.capAvail;
+
+  if(capC)capC.destroy();
+  capC=new Chart(document.getElementById('capChart'),{type:'doughnut',
+    data:{labels:[...sel.map(o=>o.n),'Unallocated'],
+      datasets:[{data:[...sel.map(o=>S.caps[o.id]),Math.max(0,S.capAvail-capU)],
+        backgroundColor:['#7fb544','#e0a532','#5b8bd4','#d4654f','#9b6fc4','#4fc4b0','#c4c44f','#d48bb0','#8a8a8a','#2a3034'].slice(0,sel.length+1)}]},
+    options:{plugins:{legend:{position:'right',labels:{color:'#e8e6e0',font:{size:11},boxWidth:12}}}}});
+
+  if(tlC)tlC.destroy();
+  const tsel=[...sel].sort((a,b)=>S.ttcs[a.id]-S.ttcs[b.id]);
+  tlC=new Chart(document.getElementById('tlChart'),{type:'bar',
+    data:{labels:tsel.map(o=>o.n),datasets:[{label:'Months to first revenue',data:tsel.map(o=>S.ttcs[o.id]),backgroundColor:'#e0a532'}]},
+    options:{indexAxis:'y',plugins:{legend:{display:false}},
+      scales:{x:{grid:{color:'#2a3034'},ticks:{color:'#9aa4a8'},title:{display:true,text:'months',color:'#9aa4a8'}},
+              y:{grid:{display:false},ticks:{color:'#e8e6e0',font:{size:11}}}}}});
+
+  // gates
+  document.getElementById('gates').innerHTML = GATES.map(g=>
+    `<div class="gate"><b>${g.o}</b>${g.items.map(i=>`<div class="q">▸ ${i}</div>`).join('')}</div>`).join('');
+
+  // strat
+  document.getElementById('strat').innerHTML = STRAT.map(s=>
+    `<div class="gate" style="border-left-color:var(--accent)"><b>${s.q}</b>${s.a.map(i=>`<div class="q">▸ ${i}</div>`).join('')}</div>`).join('');
+}
+
+// tabs
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  ['score','port','gates','strat'].forEach(k=>document.getElementById('t-'+k).style.display = t.dataset.t===k?'grid':'none');
+});
+render();
+</script>
+</body>
+</html>
